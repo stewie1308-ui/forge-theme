@@ -87,6 +87,15 @@ theme editor under **Theme settings → Presets**:
 
 Set these up in **Shopify Admin → Settings → Custom data → Products**.
 
+> **Create the definitions before importing any CSV.** Shopify's product importer
+> silently drops metafield columns that have no matching definition — the import
+> reports success and the panels stay empty, with no error to explain why.
+> Namespace and key must match exactly; the theme reads them literally.
+>
+> For `reviews.rating` and `reviews.rating_count`, add Shopify's **standard**
+> definitions ("Product rating" / "Product rating count") rather than creating
+> custom ones — `reviews` is reserved for review apps.
+
 ### Demo data for a dev store
 
 Shopify's own test data is snowboards with no supplement metafields, so none of the
