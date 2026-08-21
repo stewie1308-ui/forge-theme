@@ -87,6 +87,29 @@ theme editor under **Theme settings → Presets**:
 
 Set these up in **Shopify Admin → Settings → Custom data → Products**.
 
+### Demo data for a dev store
+
+Shopify's own test data is snowboards with no supplement metafields, so none of the
+panels render on a fresh store. `demo/products-with-metafields.csv` has 10 supplement
+products with all 15 metafields populated — supplement facts rows, ingredient panels,
+allergen flags, COA links and ratings.
+
+Import it at **Products → Import**, ticking "overwrite existing products with the same
+handle". Create the metafield definitions below first if you want the values editable in
+the admin afterwards; the import works either way.
+
+Image Src points at Unsplash by default. To use your own images:
+
+```bash
+python demo/set-image-urls.py --list          # filenames to upload
+# upload those to Content → Files, copy any one URL, then:
+python demo/set-image-urls.py --sample-url "<that URL>"
+# imports demo/products-with-images.csv
+```
+
+Product images cannot come from `assets/` — Shopify's importer fetches `Image Src` over
+HTTP during the import, and theme assets only get a CDN URL once the theme is uploaded.
+
 ### Namespace: `forge`
 
 | Key | Type | Used for |
