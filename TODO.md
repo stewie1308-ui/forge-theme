@@ -186,6 +186,14 @@ the live storefront of any merchant who left the section unconfigured, not just 
 homepage. `templates/index.json` also pins `"collection": "all"` so the shipped homepage
 states its intent rather than relying on the fallback.
 
+Hero placeholder overlay (found on the dev store, 2026-08-21): with no image or video set,
+`sections/hero-banner.liquid` rendered `.hero__media--placeholder`, an absolutely positioned
+`inset: 0` div filled with `--color-background-secondary` (#f5f5f3). It painted over the
+`background_color` setting the section already applies, so the shipped homepage showed a
+near-white box — with `.hero__heading`'s white text on top of it, about 1.05:1 contrast.
+Removed the placeholder branch and its CSS rule; the configured `background_color`
+(#0a0a0a by default) now shows through, which is what the white text was designed for.
+
 Also fixed along the way: account CSS was trapped in `main-account.liquid` (login/register were
 completely unstyled), `.page-header` defined twice, and five `| t:` filter-precedence bugs I
 introduced and caught before they shipped.
