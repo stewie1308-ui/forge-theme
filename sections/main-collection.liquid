@@ -281,8 +281,9 @@
       var cols = btn.dataset.cols;
       var grid = document.getElementById('ProductGrid');
       if (grid) {
+        /* Attribute only — the [data-cols] rules in theme.css own the layout, so
+           the responsive breakpoints still win on smaller screens. */
         grid.dataset.cols = cols;
-        grid.style.gridTemplateColumns = 'repeat(' + cols + ', 1fr)';
       }
       document.querySelectorAll('.collection-view-btn').forEach(function (b) {
         b.classList.remove('is-active');

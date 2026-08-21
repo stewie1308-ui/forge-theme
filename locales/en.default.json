@@ -247,6 +247,7 @@
       "date": "Date",
       "payment_status": "Payment",
       "fulfillment_status": "Fulfilment",
+      "unfulfilled": "Unfulfilled",
       "total": "Total",
       "billing_address": "Billing address",
       "shipping_address": "Shipping address",

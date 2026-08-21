@@ -19,6 +19,7 @@
           <p class="account-empty">{{ 'customer.orders.none' | t }}</p>
           <a href="{{ routes.all_products_collection_url }}" class="btn btn--primary mt-4">{{ 'customer.account.start_shopping' | t }}</a>
         {%- else -%}
+          {%- paginate customer.orders by 20 -%}
           <table class="orders-table">
             <thead>
               <tr>
@@ -30,17 +31,20 @@
               </tr>
             </thead>
             <tbody>
+              {%- assign unfulfilled_label = 'customer.orders.unfulfilled' | t -%}
               {%- for order in customer.orders -%}
                 <tr>
                   <td><a href="{{ order.customer_url }}" class="orders-table__order-link">{{ order.name }}</a></td>
                   <td><time datetime="{{ order.created_at | date: '%Y-%m-%d' }}">{{ order.created_at | date: '%d %b %Y' }}</time></td>
                   <td><span class="order-badge order-badge--{{ order.financial_status }}">{{ order.financial_status_label }}</span></td>
-                  <td><span class="order-badge order-badge--{{ order.fulfillment_status }}">{{ order.fulfillment_status_label | default: 'Unfulfilled' }}</span></td>
+                  <td><span class="order-badge order-badge--{{ order.fulfillment_status }}">{{ order.fulfillment_status_label | default: unfulfilled_label }}</span></td>
                   <td>{{ order.total_price | money }}</td>
                 </tr>
               {%- endfor -%}
             </tbody>
           </table>
+          {%- render 'pagination', paginate: paginate -%}
+          {%- endpaginate -%}
         {%- endif -%}
       </div>
 

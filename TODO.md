@@ -11,31 +11,17 @@ and on a Shopify-hosted video CDN URL).
 
 ---
 
-## 🟠 Correctness / UX
-
-### 1. Collection grid toggle overrides responsive breakpoints
-`sections/main-collection.liquid:285` — `grid.style.gridTemplateColumns = 'repeat(N, 1fr)'`
-sets an inline style that beats every media query. Pick "4 columns" on desktop, shrink the
-window, and you get 4 columns on a phone. Not persisted across navigation either.
-
-Fix: toggle a `data-cols` attribute (already present on the grid) and drive it from CSS.
-
-### 2. Order history isn't paginated
-`sections/main-account.liquid` loops `customer.orders` with no `{% paginate %}`.
-A long-standing customer gets every order in one page. Wrap in `{% paginate customer.orders by 20 %}`
-and render the existing `pagination` snippet.
-
 ---
 
 ## 🟡 Accessibility
 
-### 3. Hero autoplay video ignores `prefers-reduced-motion`
+### 1. Hero autoplay video ignores `prefers-reduced-motion`
 `sections/hero-banner.liquid` has 0 occurrences of `prefers-reduced-motion`. The CSS
 media query in `theme.css` disables animations but can't stop a video with `autoplay`.
 
 Fix: gate autoplay behind a JS `matchMedia` check, or render the poster only.
 
-### 4. Formal accessibility verification
+### 2. Formal accessibility verification
 Never done, and the README now says so explicitly rather than claiming otherwise:
 - [ ] WCAG 2.1 AA contrast audit across all three presets
 - [ ] Touch-target sizes measured (claim was 24×24px minimum)
@@ -45,18 +31,18 @@ Never done, and the README now says so explicitly rather than claiming otherwise
 
 ## 🟢 SEO / structured data polish
 
-### 5. `aggregateRating` invents a review count
+### 3. `aggregateRating` invents a review count
 `snippets/structured_data.liquid:47` — `rating_count.value | default: 1`. If a rating exists
 with no count, this asserts "1 review" to Google. Fabricated review data is a rich-results
 penalty risk.
 
 Fix: only emit `aggregateRating` when `rating_count.value > 0`.
 
-### 6. `og:image` has width but no height
+### 4. `og:image` has width but no height
 `snippets/og-tags.liquid` emits `og:image:width` (0 occurrences of `og:image:height`).
 Some scrapers need both to render a large card.
 
-### 7. Organization logo uses the social share image
+### 5. Organization logo uses the social share image
 `snippets/structured_data.liquid:81` uses `settings.share_image` (1200×630 landscape) as the
 schema.org `logo`. Google wants an actual logo. Consider a dedicated setting.
 
@@ -64,19 +50,19 @@ schema.org `logo`. Google wants an actual logo. Consider a dedicated setting.
 
 ## 🔵 Performance
 
-### 8. Collection filtering does a full page reload
+### 6. Collection filtering does a full page reload
 `sections/main-collection.liquid:301` — `filtersForm.submit()` on every checkbox change.
 The cart already uses the Section Rendering API; filters could too, with no loading state
 currently shown either way.
 
-### 9. Product cards always load a second image
+### 7. Product cards always load a second image
 `snippets/product-card.liquid` renders `product-card__img--hover` whenever a product has
 >1 image, doubling image requests on collection pages for a hover effect most mobile users
 never see.
 
 Fix: skip it under `@media (hover: none)`, or load it lazily on first hover.
 
-### 10. Variant switch swaps in a full-resolution image
+### 8. Variant switch swaps in a full-resolution image
 `sections/main-product.liquid` — `mainImg.src = variant.featured_image.src` uses the raw
 CDN URL with no width parameter.
 
@@ -86,7 +72,7 @@ Fix: build a sized `image_url` server-side into the variant JSON, or append `&wi
 
 ## ⚪ Nice to have
 
-### 11. Default copy in rich-text and benefits makes claims
+### 9. Default copy in rich-text and benefits makes claims
 `sections/rich-text.liquid` ships default body copy asserting "verified by independent
 laboratories" and "peer-reviewed science", naming Forge products directly;
 `sections/benefits.liquid` defaults a block heading to "Clinically dosed". Both auto-apply
@@ -97,28 +83,28 @@ data, and a merchant is more likely to rewrite body copy than a number. Left as 
 blank them, or reword to something obviously illustrative.
 
 
-### 12. No newsletter signup in the footer
+### 10. No newsletter signup in the footer
 0 occurrences of `form 'customer'` in `sections/footer.liquid`. Standard for the category,
 and supplement brands lean hard on email. The password page already has a working
 `{% form 'customer' %}` to copy.
 
-### 13. No blog comment form
+### 11. No blog comment form
 0 occurrences of `form 'new_comment'` in `sections/main-article.liquid`, but
 `locales/en.default.json` already carries all 10 `blog.comment_*` keys — they're written
 and unused. Cheap to wire up.
 
-### 14. Theme editor re-render quirks
+### 12. Theme editor re-render quirks
 - `sections/main-collection.liquid` appends a new filter overlay `<div>` to `<body>` every
   time the section re-renders — duplicates stack up while editing.
 - `sections/header.liquid` binds the search drawer inside `DOMContentLoaded`, which never
   fires again after a Section Rendering re-render, so search breaks in the editor.
 
-### 15. Dead code
+### 13. Dead code
 `layout/theme.liquid:193` — `var count = 0;` in `refreshDrawer()` is computed from the
 parsed response and then thrown away; the function refetches `/cart.js` instead.
 Either use it or delete it and the parse above it.
 
-### 16. Odd coupling: tax note gated behind the VAT toggle
+### 14. Odd coupling: tax note gated behind the VAT toggle
 `cart.taxes_and_shipping_policy_at_checkout_html` renders only when
 `settings.show_vat_note` is on. Two unrelated concerns sharing one switch.
 
@@ -217,6 +203,18 @@ on a non-blank rating, so it now waits for the merchant's own numbers. `template
 pins all three, so the demo homepage is unchanged. Also gave the product gallery
 placeholder `role="img"` (an `aria-label` on a bare div is ignored) and moved two
 hardcoded English strings in `testimonials.liquid` into `sections.testimonials.*`.
+
+Collection grid toggle (was #1): the toggle set an inline `gridTemplateColumns`, which the
+mobile rule needed `!important` to fight. The `[data-cols]` attribute it also sets already
+drives the CSS, so the inline style was redundant — dropped it, added an explicit
+`[data-cols="4"]` rule, and removed the `!important`. (The TODO's stated symptom was
+slightly off: author `!important` outranks a normal inline style, so mobile was in fact
+holding at 2 columns. The redundancy and the `!important` were real.)
+
+Order history pagination (was #2): `sections/main-account.liquid` now wraps the orders
+table in `{% paginate customer.orders by 20 %}` and renders the existing `pagination`
+snippet. Also replaced a hardcoded English `default: 'Unfulfilled'` with the new
+`customer.orders.unfulfilled` locale key.
 
 Also fixed along the way: account CSS was trapped in `main-account.liquid` (login/register were
 completely unstyled), `.page-header` defined twice, and five `| t:` filter-precedence bugs I

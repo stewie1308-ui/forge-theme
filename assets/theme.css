@@ -2554,6 +2554,7 @@ details[open] .filter-group__chevron { transform: rotate(180deg); }
 }
 .collection-grid[data-cols="2"] { grid-template-columns: repeat(2, 1fr); }
 .collection-grid[data-cols="3"] { grid-template-columns: repeat(3, 1fr); }
+.collection-grid[data-cols="4"] { grid-template-columns: repeat(4, 1fr); }
 
 .collection-empty {
   padding: 4rem 0;
@@ -2579,7 +2580,7 @@ details[open] .filter-group__chevron { transform: rotate(180deg); }
     box-shadow: var(--shadow-xl);
   }
   .collection-filters.is-open { transform: translateX(0); }
-  .collection-grid { grid-template-columns: repeat(2, 1fr) !important; }
+  .collection-grid, .collection-grid[data-cols] { grid-template-columns: repeat(2, 1fr); }
 }
 @media (max-width: 480px) {
   .collection-grid { gap: 0.75rem; }
