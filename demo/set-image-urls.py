@@ -28,6 +28,7 @@ import csv
 import io
 import os
 import sys
+from urllib.parse import quote
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
@@ -36,18 +37,21 @@ SRC = os.path.join(ROOT, 'demo', 'products-with-metafields.csv')
 DST = os.path.join(ROOT, 'demo', 'products-with-images.csv')
 
 # One image per product, named after the product handle so the mapping is obvious.
-FILENAMES = [
-    'daily-essentials-multivitamin',
-    'omega-3-fish-oil',
-    'vitamin-d3-k2',
-    'magnesium-glycinate',
-    'whey-protein-concentrate',
-    'creatine-monohydrate',
-    'pre-workout-formula',
-    'ashwagandha-ksm66',
-    'lions-mane-mushroom',
-    'zinc-copper-balance',
-]
+# handle -> the image file supplied in demo/images/ (upload these to Content -> Files).
+# Keyed by handle so the CSV rows map cleanly; the value is the uploaded filename.
+IMAGES = {
+    'daily-essentials-multivitamin': 'Daily.png',
+    'omega-3-fish-oil':              'Omega 3.png',
+    'vitamin-d3-k2':                 'D3.png',
+    'magnesium-glycinate':           'Magnesium.png',
+    'whey-protein-concentrate':      'Whey.png',
+    'creatine-monohydrate':          'Creatine.png',
+    'pre-workout-formula':           'Pre workout.png',
+    'ashwagandha-ksm66':             'ashwa.png',
+    'lions-mane-mushroom':           'Lions mane.png',
+    'zinc-copper-balance':           'Zink and Copper.png',
+}
+FILENAMES = list(IMAGES)
 
 
 def base_from_sample(url):
@@ -64,15 +68,15 @@ def main():
     g = ap.add_mutually_exclusive_group()
     g.add_argument('--sample-url', help='any one uploaded image URL; its directory is reused')
     g.add_argument('--base', help='directory URL to build from, no trailing slash')
-    ap.add_argument('--ext', default='.jpg', help='image extension (default: .jpg)')
+    ap.add_argument('--ext', default='.png', help='image extension (default: .png)')
     ap.add_argument('--list', action='store_true', help='just print the filenames to upload')
     args = ap.parse_args()
 
     ext = args.ext if args.ext.startswith('.') else '.' + args.ext
 
     if args.list:
-        for n in FILENAMES:
-            print(n + ext)
+        for h in FILENAMES:
+            print('%-32s <- demo/images/%s' % (h, IMAGES[h]))
         return
 
     if not args.sample_url and not args.base:
@@ -94,7 +98,9 @@ def main():
         if handle not in FILENAMES:
             unknown.append(handle)
             continue
-        r['Image Src'] = '%s/%s%s' % (base, handle, ext)
+        # Shopify slugifies uploaded filenames: spaces become underscores.
+        fname = IMAGES[handle].rsplit('.', 1)[0].replace(' ', '_') + ext
+        r['Image Src'] = '%s/%s' % (base, quote(fname))
         if not r.get('Image Alt Text'):
             r['Image Alt Text'] = r.get('Title') or handle
         swapped += 1

@@ -48,9 +48,26 @@
         {%- endfor -%}
       </video>
     </div>
+  {%- elsif section.settings.use_bundled_image -%}
+    {%- comment -%}
+      An image_picker can only read the store's Files, so a theme cannot ship a
+      selectable hero image. This falls back to one bundled in assets/ instead.
+      Untick the setting for a plain background_color hero.
+    {%- endcomment -%}
+    <div class="hero__media" aria-hidden="true">
+      <img
+        class="hero__img"
+        src="{{ 'hero-banner.png' | asset_url }}"
+        alt=""
+        loading="eager"
+        fetchpriority="high"
+        width="1536"
+        height="1024"
+      >
+    </div>
   {%- endif -%}
 
-  {%- if section.settings.image != blank or section.settings.video != blank -%}
+  {%- if section.settings.image != blank or section.settings.video != blank or section.settings.use_bundled_image -%}
     <div class="hero__overlay" aria-hidden="true"></div>
   {%- endif -%}
 
@@ -126,6 +143,13 @@
       "info": "Optional. Falls back to the video's own preview frame."
     },
     {
+      "type": "checkbox",
+      "id": "use_bundled_image",
+      "label": "Use the theme's bundled hero image",
+      "info": "Shown only when no image or video is selected above. Untick for a plain background colour.",
+      "default": true
+    },
+    {
       "type": "color",
       "id": "background_color",
       "label": "Fallback background colour",
@@ -166,9 +190,18 @@
       "id": "content_alignment",
       "label": "Content alignment",
       "options": [
-        { "value": "left",   "label": "Left" },
-        { "value": "center", "label": "Centre" },
-        { "value": "right",  "label": "Right" }
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Centre"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
       ],
       "default": "left"
     },
@@ -221,9 +254,18 @@
       "id": "button_style",
       "label": "Button style",
       "options": [
-        { "value": "primary",   "label": "Primary (dark)" },
-        { "value": "secondary", "label": "Secondary (outline)" },
-        { "value": "accent",    "label": "Accent (lime)" }
+        {
+          "value": "primary",
+          "label": "Primary (dark)"
+        },
+        {
+          "value": "secondary",
+          "label": "Secondary (outline)"
+        },
+        {
+          "value": "accent",
+          "label": "Accent (lime)"
+        }
       ],
       "default": "accent"
     },
@@ -246,9 +288,18 @@
       "id": "button_style_2",
       "label": "Button style",
       "options": [
-        { "value": "primary",   "label": "Primary (dark)" },
-        { "value": "secondary", "label": "Secondary (outline)" },
-        { "value": "accent",    "label": "Accent (lime)" }
+        {
+          "value": "primary",
+          "label": "Primary (dark)"
+        },
+        {
+          "value": "secondary",
+          "label": "Secondary (outline)"
+        },
+        {
+          "value": "accent",
+          "label": "Accent (lime)"
+        }
       ],
       "default": "secondary"
     }
