@@ -113,7 +113,8 @@
 
     {%- if settings.show_rating and product.metafields.reviews.rating.value != blank -%}
       {%- liquid
-        assign r = product.metafields.reviews.rating.value | times: 1
+        assign rating_raw = product.metafields.reviews.rating.value
+        assign r = rating_raw.rating | default: rating_raw | times: 1
         assign rc = product.metafields.reviews.rating_count.value | default: 0
       -%}
       <div class="product-card__rating" aria-label="{{ r }} out of 5 stars">

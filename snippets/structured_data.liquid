@@ -41,9 +41,13 @@
       {%- endfor -%}
     ]
     {%- if product.metafields.reviews.rating.value != blank -%}
+      {%- liquid
+        assign rating_raw = product.metafields.reviews.rating.value
+        assign rating_num = rating_raw.rating | default: rating_raw
+      -%}
       ,"aggregateRating": {
         "@type": "AggregateRating",
-        "ratingValue": {{ product.metafields.reviews.rating.value | json }},
+        "ratingValue": {{ rating_num | json }},
         "reviewCount": {{ product.metafields.reviews.rating_count.value | default: 1 | json }}
       }
     {%- endif -%}

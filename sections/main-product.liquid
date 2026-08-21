@@ -88,7 +88,8 @@
         <!-- Rating -->
         {%- if product.metafields.reviews.rating.value != blank -%}
           {%- liquid
-            assign rating_val = product.metafields.reviews.rating.value | times: 1
+            assign rating_raw = product.metafields.reviews.rating.value
+            assign rating_val = rating_raw.rating | default: rating_raw | times: 1
             assign rating_count = product.metafields.reviews.rating_count.value | default: 0
           -%}
           <div class="product-rating" aria-label="{{ 'products.product.rating_label' | t: rating: rating_val }}">
