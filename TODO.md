@@ -1,7 +1,9 @@
 # Forge Theme — outstanding work
 
 Everything left after the blocker and high-severity passes.
-Verified against the codebase on 2026-08-20 — every item below still exists.
+Verified against the codebase on 2026-08-21 — every item below still exists.
+
+**No submission blockers remain as of 2026-08-21.**
 
 Current state: `shopify theme check` passes with **0 errors, 4 warnings**
 (all four are false positives — `RemoteAsset` firing on `<link rel="canonical/prev/next">`
@@ -9,37 +11,21 @@ and on a Shopify-hosted video CDN URL).
 
 ---
 
-## 🔴 Do first — blocks submission
-
-### 1. Documentation URL still a placeholder
-`config/settings_schema.json:7` still ships:
-```json
-"theme_documentation_url": "https://example.com/forge-theme/docs",
-```
-It's a **required property** — an empty string fails `ValidJSON`, which is why it's a
-placeholder rather than blank. Decided on 2026-08-21 to point it at the project README,
-but this isn't a git repo yet and the README isn't hosted anywhere, so there's no URL to
-use. Needs either the repo URL once it exists, or a real docs page.
-
-`theme_support_email` is done — set to `stewart@brunelweb.co.uk`.
-
----
-
 ## 🟠 Correctness / UX
 
-### 2. Collection grid toggle overrides responsive breakpoints
+### 1. Collection grid toggle overrides responsive breakpoints
 `sections/main-collection.liquid:285` — `grid.style.gridTemplateColumns = 'repeat(N, 1fr)'`
 sets an inline style that beats every media query. Pick "4 columns" on desktop, shrink the
 window, and you get 4 columns on a phone. Not persisted across navigation either.
 
 Fix: toggle a `data-cols` attribute (already present on the grid) and drive it from CSS.
 
-### 3. Order history isn't paginated
+### 2. Order history isn't paginated
 `sections/main-account.liquid` loops `customer.orders` with no `{% paginate %}`.
 A long-standing customer gets every order in one page. Wrap in `{% paginate customer.orders by 20 %}`
 and render the existing `pagination` snippet.
 
-### 4. Homepage ships showing placeholder cards
+### 3. Homepage ships showing placeholder cards
 `templates/index.json` sets `featured-products` to `products_source: "collection"` but leaves
 `collection` unset, so it falls through to the placeholder branch. Out of the box the demo
 homepage shows grey boxes, not products.
@@ -50,13 +36,13 @@ Fix: default to `products_source: "manual"`, or point it at `all`.
 
 ## 🟡 Accessibility
 
-### 5. Hero autoplay video ignores `prefers-reduced-motion`
+### 4. Hero autoplay video ignores `prefers-reduced-motion`
 `sections/hero-banner.liquid` has 0 occurrences of `prefers-reduced-motion`. The CSS
 media query in `theme.css` disables animations but can't stop a video with `autoplay`.
 
 Fix: gate autoplay behind a JS `matchMedia` check, or render the poster only.
 
-### 6. Formal accessibility verification
+### 5. Formal accessibility verification
 Never done, and the README now says so explicitly rather than claiming otherwise:
 - [ ] WCAG 2.1 AA contrast audit across all three presets
 - [ ] Touch-target sizes measured (claim was 24×24px minimum)
@@ -66,18 +52,18 @@ Never done, and the README now says so explicitly rather than claiming otherwise
 
 ## 🟢 SEO / structured data polish
 
-### 7. `aggregateRating` invents a review count
+### 6. `aggregateRating` invents a review count
 `snippets/structured_data.liquid:47` — `rating_count.value | default: 1`. If a rating exists
 with no count, this asserts "1 review" to Google. Fabricated review data is a rich-results
 penalty risk.
 
 Fix: only emit `aggregateRating` when `rating_count.value > 0`.
 
-### 8. `og:image` has width but no height
+### 7. `og:image` has width but no height
 `snippets/og-tags.liquid` emits `og:image:width` (0 occurrences of `og:image:height`).
 Some scrapers need both to render a large card.
 
-### 9. Organization logo uses the social share image
+### 8. Organization logo uses the social share image
 `snippets/structured_data.liquid:81` uses `settings.share_image` (1200×630 landscape) as the
 schema.org `logo`. Google wants an actual logo. Consider a dedicated setting.
 
@@ -85,19 +71,19 @@ schema.org `logo`. Google wants an actual logo. Consider a dedicated setting.
 
 ## 🔵 Performance
 
-### 10. Collection filtering does a full page reload
+### 9. Collection filtering does a full page reload
 `sections/main-collection.liquid:301` — `filtersForm.submit()` on every checkbox change.
 The cart already uses the Section Rendering API; filters could too, with no loading state
 currently shown either way.
 
-### 11. Product cards always load a second image
+### 10. Product cards always load a second image
 `snippets/product-card.liquid` renders `product-card__img--hover` whenever a product has
 >1 image, doubling image requests on collection pages for a hover effect most mobile users
 never see.
 
 Fix: skip it under `@media (hover: none)`, or load it lazily on first hover.
 
-### 12. Variant switch swaps in a full-resolution image
+### 11. Variant switch swaps in a full-resolution image
 `sections/main-product.liquid` — `mainImg.src = variant.featured_image.src` uses the raw
 CDN URL with no width parameter.
 
@@ -107,28 +93,28 @@ Fix: build a sized `image_url` server-side into the variant JSON, or append `&wi
 
 ## ⚪ Nice to have
 
-### 13. No newsletter signup in the footer
+### 12. No newsletter signup in the footer
 0 occurrences of `form 'customer'` in `sections/footer.liquid`. Standard for the category,
 and supplement brands lean hard on email. The password page already has a working
 `{% form 'customer' %}` to copy.
 
-### 14. No blog comment form
+### 13. No blog comment form
 0 occurrences of `form 'new_comment'` in `sections/main-article.liquid`, but
 `locales/en.default.json` already carries all 10 `blog.comment_*` keys — they're written
 and unused. Cheap to wire up.
 
-### 15. Theme editor re-render quirks
+### 14. Theme editor re-render quirks
 - `sections/main-collection.liquid` appends a new filter overlay `<div>` to `<body>` every
   time the section re-renders — duplicates stack up while editing.
 - `sections/header.liquid` binds the search drawer inside `DOMContentLoaded`, which never
   fires again after a Section Rendering re-render, so search breaks in the editor.
 
-### 16. Dead code
+### 15. Dead code
 `layout/theme.liquid:193` — `var count = 0;` in `refreshDrawer()` is computed from the
 parsed response and then thrown away; the function refetches `/cart.js` instead.
 Either use it or delete it and the parse above it.
 
-### 17. Odd coupling: tax note gated behind the VAT toggle
+### 16. Odd coupling: tax note gated behind the VAT toggle
 `cart.taxes_and_shipping_policy_at_checkout_html` renders only when
 `settings.show_vat_note` is on. Two unrelated concerns sharing one switch.
 
@@ -191,6 +177,13 @@ deliberately NOT converted between NRV and DV — documented in the README and i
 snippet header. Also replaced a hardcoded English `aria-label` on the panel that had
 escaped the translation pass, and neutralised the now format-specific "Show Supplement
 Facts panel" label in `main-product.liquid`.
+
+Support details (was blocker #1): `theme_support_email` set to `stewart@brunelweb.co.uk`.
+`theme_documentation_url` set to https://github.com/stewie1308-ui/forge-theme#readme —
+the project was initialised as a git repo and pushed to a public GitHub repo on
+2026-08-21 so the README resolves as real documentation. Verified anonymously
+reachable (HTTP 200). If the repo is ever made private, this URL 404s for reviewers
+and the blocker returns.
 
 Also fixed along the way: account CSS was trapped in `main-account.liquid` (login/register were
 completely unstyled), `.page-header` defined twice, and five `| t:` filter-precedence bugs I
