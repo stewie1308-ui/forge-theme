@@ -308,6 +308,10 @@
       "copyright": "© {{ year }} {{ shop_name }}",
       "social_links": "Social media links",
       "payment_methods": "Accepted payment methods"
+    },
+    "testimonials": {
+      "rating_html": "<strong>{{ rating }}</strong> out of 5",
+      "based_on_reviews": "Based on {{ count }} verified reviews"
     }
   }
 }

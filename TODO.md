@@ -86,28 +86,39 @@ Fix: build a sized `image_url` server-side into the variant JSON, or append `&wi
 
 ## ⚪ Nice to have
 
-### 11. No newsletter signup in the footer
+### 11. Default copy in rich-text and benefits makes claims
+`sections/rich-text.liquid` ships default body copy asserting "verified by independent
+laboratories" and "peer-reviewed science", naming Forge products directly;
+`sections/benefits.liquid` defaults a block heading to "Clinically dosed". Both auto-apply
+when a merchant adds the section, so the claims land on their store unedited.
+
+Softer than the review figures (now blanked) because they read as sample prose rather than
+data, and a merchant is more likely to rewrite body copy than a number. Left as your call:
+blank them, or reword to something obviously illustrative.
+
+
+### 12. No newsletter signup in the footer
 0 occurrences of `form 'customer'` in `sections/footer.liquid`. Standard for the category,
 and supplement brands lean hard on email. The password page already has a working
 `{% form 'customer' %}` to copy.
 
-### 12. No blog comment form
+### 13. No blog comment form
 0 occurrences of `form 'new_comment'` in `sections/main-article.liquid`, but
 `locales/en.default.json` already carries all 10 `blog.comment_*` keys — they're written
 and unused. Cheap to wire up.
 
-### 13. Theme editor re-render quirks
+### 14. Theme editor re-render quirks
 - `sections/main-collection.liquid` appends a new filter overlay `<div>` to `<body>` every
   time the section re-renders — duplicates stack up while editing.
 - `sections/header.liquid` binds the search drawer inside `DOMContentLoaded`, which never
   fires again after a Section Rendering re-render, so search breaks in the editor.
 
-### 14. Dead code
+### 15. Dead code
 `layout/theme.liquid:193` — `var count = 0;` in `refreshDrawer()` is computed from the
 parsed response and then thrown away; the function refetches `/cart.js` instead.
 Either use it or delete it and the parse above it.
 
-### 15. Odd coupling: tax note gated behind the VAT toggle
+### 16. Odd coupling: tax note gated behind the VAT toggle
 `cart.taxes_and_shipping_policy_at_checkout_html` renders only when
 `settings.show_vat_note` is on. Two unrelated concerns sharing one switch.
 
@@ -193,6 +204,19 @@ Hero placeholder overlay (found on the dev store, 2026-08-21): with no image or 
 near-white box — with `.hero__heading`'s white text on top of it, about 1.05:1 contrast.
 Removed the placeholder branch and its CSS rule; the configured `background_color`
 (#0a0a0a by default) now shows through, which is what the white text was designed for.
+
+Placeholder sweep (2026-08-21): the other three placeholder branches — product card,
+product gallery, collection list — are legitimate; they fire on genuinely missing data
+rather than unset settings, and cover nothing configured. All remaining `inset: 0`
+overlays check out too. The sweep instead turned up fabricated review claims shipping as
+schema defaults: `hero-banner.trust_bar` ("4.9/5 from 2,400+ reviews"),
+`testimonials.aggregate_rating` ("4.9") and `testimonials.review_count` ("2,400+").
+All four sections have presets, so adding one put invented figures on a live storefront.
+Defaults blanked and moved to `placeholder`/`info` hints — the aggregate block is gated
+on a non-blank rating, so it now waits for the merchant's own numbers. `templates/index.json`
+pins all three, so the demo homepage is unchanged. Also gave the product gallery
+placeholder `role="img"` (an `aria-label` on a bare div is ignored) and moved two
+hardcoded English strings in `testimonials.liquid` into `sections.testimonials.*`.
 
 Also fixed along the way: account CSS was trapped in `main-account.liquid` (login/register were
 completely unstyled), `.page-header` defined twice, and five `| t:` filter-precedence bugs I

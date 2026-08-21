@@ -22,10 +22,10 @@
           {%- endfor -%}
         </div>
         <p class="testimonials-aggregate__score">
-          <strong>{{ section.settings.aggregate_rating }}</strong> out of 5
+          {{ 'sections.testimonials.rating_html' | t: rating: section.settings.aggregate_rating }}
         </p>
         {%- if section.settings.review_count != blank -%}
-          <p class="testimonials-aggregate__count">Based on {{ section.settings.review_count }} verified reviews</p>
+          <p class="testimonials-aggregate__count">{{ 'sections.testimonials.based_on_reviews' | t: count: section.settings.review_count }}</p>
         {%- endif -%}
       </div>
     {%- endif -%}
@@ -133,14 +133,16 @@
     {
       "type": "text",
       "id": "aggregate_rating",
-      "label": "Rating (e.g. 4.9)",
-      "default": "4.9"
+      "label": "Rating",
+      "info": "Your own verified figure. Blank hides the whole aggregate block.",
+      "placeholder": "4.9"
     },
     {
       "type": "text",
       "id": "review_count",
-      "label": "Review count (e.g. 2,400+)",
-      "default": "2,400+"
+      "label": "Review count",
+      "info": "Your own verified figure.",
+      "placeholder": "2,400+"
     },
     {
       "type": "header",
