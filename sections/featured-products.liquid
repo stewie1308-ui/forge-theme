@@ -1,6 +1,33 @@
 {%- liquid
   assign products_source = section.settings.products_source
   assign cols = section.settings.columns | default: 4
+
+  comment
+    A 'collection' source with no collection chosen used to fall straight through to
+    the skeleton placeholders below — and those shipped to the live storefront, not
+    just the editor. Fall back to the automatic 'all' collection instead, so an
+    unconfigured section shows real products.
+  endcomment
+  assign fp_collection = section.settings.collection
+  if products_source == 'collection' and fp_collection == blank
+    assign fp_collection = collections['all']
+  endif
+
+  comment
+    Placeholders are now shown only when there is genuinely nothing to render —
+    a new store with no products, which is the editor case they were written for.
+  endcomment
+  assign fp_has_products = false
+  if products_source == 'manual'
+    for block in section.blocks
+      if block.settings.product != blank
+        assign fp_has_products = true
+        break
+      endif
+    endfor
+  elsif fp_collection.products.size > 0
+    assign fp_has_products = true
+  endif
 -%}
 
 <section class="section{% if section.settings.bg_secondary %} bg-secondary{% endif %}">
@@ -21,12 +48,19 @@
     {%- endif -%}
 
     <div class="fp-grid fp-grid--{{ cols }} stagger">
-      {%- if products_source == 'collection' and section.settings.collection != blank -%}
-        {%- for product in section.settings.collection.products limit: section.settings.products_limit -%}
-          {%- render 'product-card',
-            product: product,
-            show_quick_add: section.settings.show_quick_add
-          -%}
+      {%- if fp_has_products == false -%}
+        {%- comment -%} Nothing to show yet — skeletons while the merchant sets up {%- endcomment -%}
+        {%- for i in (1..4) -%}
+          <div class="product-card product-card--placeholder">
+            <div class="product-card__media">
+              <div class="product-card__placeholder" style="background:var(--color-background-secondary);aspect-ratio:1;"></div>
+            </div>
+            <div class="product-card__body">
+              <div class="skeleton" style="height:14px;width:60%;margin-bottom:8px;"></div>
+              <div class="skeleton" style="height:20px;width:80%;margin-bottom:8px;"></div>
+              <div class="skeleton" style="height:14px;width:40%;"></div>
+            </div>
+          </div>
         {%- endfor -%}
 
       {%- elsif products_source == 'manual' -%}
@@ -40,18 +74,11 @@
         {%- endfor -%}
 
       {%- else -%}
-        {%- comment -%} Placeholder cards in editor {%- endcomment -%}
-        {%- for i in (1..4) -%}
-          <div class="product-card product-card--placeholder">
-            <div class="product-card__media">
-              <div class="product-card__placeholder" style="background:var(--color-background-secondary);aspect-ratio:1;"></div>
-            </div>
-            <div class="product-card__body">
-              <div class="skeleton" style="height:14px;width:60%;margin-bottom:8px;"></div>
-              <div class="skeleton" style="height:20px;width:80%;margin-bottom:8px;"></div>
-              <div class="skeleton" style="height:14px;width:40%;"></div>
-            </div>
-          </div>
+        {%- for product in fp_collection.products limit: section.settings.products_limit -%}
+          {%- render 'product-card',
+            product: product,
+            show_quick_add: section.settings.show_quick_add
+          -%}
         {%- endfor -%}
       {%- endif -%}
     </div>

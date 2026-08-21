@@ -63,6 +63,7 @@
         "eyebrow": "Shop",
         "heading": "Our bestsellers",
         "products_source": "collection",
+        "collection": "all",
         "products_limit": 4,
         "columns": 4,
         "show_quick_add": true,

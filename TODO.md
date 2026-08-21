@@ -25,24 +25,17 @@ Fix: toggle a `data-cols` attribute (already present on the grid) and drive it f
 A long-standing customer gets every order in one page. Wrap in `{% paginate customer.orders by 20 %}`
 and render the existing `pagination` snippet.
 
-### 3. Homepage ships showing placeholder cards
-`templates/index.json` sets `featured-products` to `products_source: "collection"` but leaves
-`collection` unset, so it falls through to the placeholder branch. Out of the box the demo
-homepage shows grey boxes, not products.
-
-Fix: default to `products_source: "manual"`, or point it at `all`.
-
 ---
 
 ## 🟡 Accessibility
 
-### 4. Hero autoplay video ignores `prefers-reduced-motion`
+### 3. Hero autoplay video ignores `prefers-reduced-motion`
 `sections/hero-banner.liquid` has 0 occurrences of `prefers-reduced-motion`. The CSS
 media query in `theme.css` disables animations but can't stop a video with `autoplay`.
 
 Fix: gate autoplay behind a JS `matchMedia` check, or render the poster only.
 
-### 5. Formal accessibility verification
+### 4. Formal accessibility verification
 Never done, and the README now says so explicitly rather than claiming otherwise:
 - [ ] WCAG 2.1 AA contrast audit across all three presets
 - [ ] Touch-target sizes measured (claim was 24×24px minimum)
@@ -52,18 +45,18 @@ Never done, and the README now says so explicitly rather than claiming otherwise
 
 ## 🟢 SEO / structured data polish
 
-### 6. `aggregateRating` invents a review count
+### 5. `aggregateRating` invents a review count
 `snippets/structured_data.liquid:47` — `rating_count.value | default: 1`. If a rating exists
 with no count, this asserts "1 review" to Google. Fabricated review data is a rich-results
 penalty risk.
 
 Fix: only emit `aggregateRating` when `rating_count.value > 0`.
 
-### 7. `og:image` has width but no height
+### 6. `og:image` has width but no height
 `snippets/og-tags.liquid` emits `og:image:width` (0 occurrences of `og:image:height`).
 Some scrapers need both to render a large card.
 
-### 8. Organization logo uses the social share image
+### 7. Organization logo uses the social share image
 `snippets/structured_data.liquid:81` uses `settings.share_image` (1200×630 landscape) as the
 schema.org `logo`. Google wants an actual logo. Consider a dedicated setting.
 
@@ -71,19 +64,19 @@ schema.org `logo`. Google wants an actual logo. Consider a dedicated setting.
 
 ## 🔵 Performance
 
-### 9. Collection filtering does a full page reload
+### 8. Collection filtering does a full page reload
 `sections/main-collection.liquid:301` — `filtersForm.submit()` on every checkbox change.
 The cart already uses the Section Rendering API; filters could too, with no loading state
 currently shown either way.
 
-### 10. Product cards always load a second image
+### 9. Product cards always load a second image
 `snippets/product-card.liquid` renders `product-card__img--hover` whenever a product has
 >1 image, doubling image requests on collection pages for a hover effect most mobile users
 never see.
 
 Fix: skip it under `@media (hover: none)`, or load it lazily on first hover.
 
-### 11. Variant switch swaps in a full-resolution image
+### 10. Variant switch swaps in a full-resolution image
 `sections/main-product.liquid` — `mainImg.src = variant.featured_image.src` uses the raw
 CDN URL with no width parameter.
 
@@ -93,28 +86,28 @@ Fix: build a sized `image_url` server-side into the variant JSON, or append `&wi
 
 ## ⚪ Nice to have
 
-### 12. No newsletter signup in the footer
+### 11. No newsletter signup in the footer
 0 occurrences of `form 'customer'` in `sections/footer.liquid`. Standard for the category,
 and supplement brands lean hard on email. The password page already has a working
 `{% form 'customer' %}` to copy.
 
-### 13. No blog comment form
+### 12. No blog comment form
 0 occurrences of `form 'new_comment'` in `sections/main-article.liquid`, but
 `locales/en.default.json` already carries all 10 `blog.comment_*` keys — they're written
 and unused. Cheap to wire up.
 
-### 14. Theme editor re-render quirks
+### 13. Theme editor re-render quirks
 - `sections/main-collection.liquid` appends a new filter overlay `<div>` to `<body>` every
   time the section re-renders — duplicates stack up while editing.
 - `sections/header.liquid` binds the search drawer inside `DOMContentLoaded`, which never
   fires again after a Section Rendering re-render, so search breaks in the editor.
 
-### 15. Dead code
+### 14. Dead code
 `layout/theme.liquid:193` — `var count = 0;` in `refreshDrawer()` is computed from the
 parsed response and then thrown away; the function refetches `/cart.js` instead.
 Either use it or delete it and the parse above it.
 
-### 16. Odd coupling: tax note gated behind the VAT toggle
+### 15. Odd coupling: tax note gated behind the VAT toggle
 `cart.taxes_and_shipping_policy_at_checkout_html` renders only when
 `settings.show_vat_note` is on. Two unrelated concerns sharing one switch.
 
@@ -184,6 +177,14 @@ the project was initialised as a git repo and pushed to a public GitHub repo on
 2026-08-21 so the README resolves as real documentation. Verified anonymously
 reachable (HTTP 200). If the repo is ever made private, this URL 404s for reviewers
 and the blocker returns.
+
+Homepage placeholder cards (was #3): `sections/featured-products.liquid` now falls back
+to `collections['all']` when the source is a collection and none is chosen, and shows the
+skeleton placeholders only when there is genuinely nothing to render. Fixed in the section
+rather than only in `templates/index.json`, because the old behaviour shipped skeletons to
+the live storefront of any merchant who left the section unconfigured, not just to the demo
+homepage. `templates/index.json` also pins `"collection": "all"` so the shipped homepage
+states its intent rather than relying on the fallback.
 
 Also fixed along the way: account CSS was trapped in `main-account.liquid` (login/register were
 completely unstyled), `.page-header` defined twice, and five `| t:` filter-precedence bugs I
