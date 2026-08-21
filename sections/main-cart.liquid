@@ -1,0 +1,196 @@
+<section class="cart-page-section" data-cart-section="{{ section.id }}">
+  <div class="container">
+    <h1 class="cart-page__title reveal">{{ 'cart.title' | t }}</h1>
+
+    {%- if cart.item_count == 0 -%}
+      <div class="cart-page__empty reveal">
+        <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.25" aria-hidden="true" style="color:var(--color-foreground-subtle)">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25 5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z"/>
+        </svg>
+        <p>{{ 'cart.empty' | t }}</p>
+        <a href="{{ routes.all_products_collection_url }}" class="btn btn--primary btn--lg">{{ 'cart.continue_shopping' | t }}</a>
+      </div>
+
+    {%- else -%}
+      <div class="cart-page__layout">
+
+        <!-- Cart items -->
+        <div class="cart-page__items">
+          <form action="{{ routes.cart_url }}" method="post" id="CartPageForm">
+            <table class="cart-table">
+              <thead class="cart-table__head">
+                <tr>
+                  <th scope="col" colspan="2">{{ 'cart.product' | t }}</th>
+                  <th scope="col">{{ 'cart.price' | t }}</th>
+                  <th scope="col">{{ 'cart.quantity' | t }}</th>
+                  <th scope="col">{{ 'cart.total' | t }}</th>
+                </tr>
+              </thead>
+              <tbody>
+                {%- for item in cart.items -%}
+                  <tr class="cart-table__row">
+                    <td class="cart-table__img-cell">
+                      {%- if item.image -%}
+                        <a href="{{ item.url }}">
+                          <img
+                            src="{{ item.image | image_url: width: 200 }}"
+                            alt="{{ item.image.alt | default: item.title | escape }}"
+                            loading="lazy"
+                            width="100"
+                            height="100"
+                            class="cart-table__img"
+                          >
+                        </a>
+                      {%- endif -%}
+                    </td>
+                    <td class="cart-table__info">
+                      <a href="{{ item.url }}" class="cart-table__product-title">{{ item.product.title }}</a>
+                      {%- if item.variant.title != 'Default Title' -%}
+                        <p class="cart-table__variant">{{ item.variant.title }}</p>
+                      {%- endif -%}
+                      {%- if item.selling_plan_allocation != blank -%}
+                        <p class="cart-table__variant">{{ item.selling_plan_allocation.selling_plan.name }}</p>
+                      {%- endif -%}
+                      <a
+                        href="{{ routes.cart_change_url }}?line={{ forloop.index }}&quantity=0"
+                        class="cart-table__remove"
+                        aria-label="{{ 'cart.remove_item' | t: title: item.product.title }}"
+                      >{{ 'cart.remove' | t }}</a>
+                    </td>
+                    <td class="cart-table__price" data-label="{{ 'cart.price' | t }}">
+                      {%- if item.original_price != item.final_price -%}
+                        <s class="cart-table__compare">{{ item.original_price | money }}</s>
+                        <span class="cart-table__sale">{{ item.final_price | money }}</span>
+                      {%- else -%}
+                        {{ item.original_price | money }}
+                      {%- endif -%}
+                    </td>
+                    <td class="cart-table__qty" data-label="{{ 'cart.quantity' | t }}">
+                      <div class="qty">
+                        <button class="qty__btn" type="button" data-action="decrease">−</button>
+                        <input
+                          class="qty__input"
+                          type="number"
+                          name="updates[]"
+                          value="{{ item.quantity }}"
+                          min="0"
+                          max="99"
+                          data-cart-line="{{ forloop.index }}"
+                          aria-label="{{ 'cart.quantity_for' | t: title: item.product.title }}"
+                        >
+                        <button class="qty__btn" type="button" data-action="increase">+</button>
+                      </div>
+                    </td>
+                    <td class="cart-table__total" data-label="{{ 'cart.total' | t }}">
+                      {{ item.final_line_price | money }}
+                    </td>
+                  </tr>
+                {%- endfor -%}
+              </tbody>
+            </table>
+
+            {%- if section.settings.show_note -%}
+              <div class="cart-note">
+                <label class="form-label" for="CartNote">{{ 'cart.note_label' | t }}</label>
+                <textarea
+                  id="CartNote"
+                  name="note"
+                  class="form-textarea"
+                  placeholder="{{ 'cart.note_placeholder' | t }}"
+                  rows="3"
+                >{{ cart.note }}</textarea>
+              </div>
+            {%- endif -%}
+
+            <div class="cart-page__actions">
+              <a href="{{ routes.all_products_collection_url }}" class="btn btn--secondary">{{ 'cart.continue_shopping' | t }}</a>
+              <button type="submit" name="update" class="btn btn--secondary">{{ 'cart.update' | t }}</button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Order summary -->
+        <aside class="cart-page__summary">
+          <div class="cart-summary">
+            <h2 class="cart-summary__title">{{ 'cart.order_summary' | t }}</h2>
+
+            <div class="cart-summary__row">
+              <span>{{ 'cart.subtotal' | t }}</span>
+              <span>{{ cart.total_price | money }}</span>
+            </div>
+
+            {%- if cart.cart_level_discount_applications.size > 0 -%}
+              {%- for discount in cart.cart_level_discount_applications -%}
+                <div class="cart-summary__row cart-summary__row--discount">
+                  <span>{{ discount.title }}</span>
+                  <span>−{{ discount.total_allocated_amount | money }}</span>
+                </div>
+              {%- endfor -%}
+            {%- endif -%}
+
+            {%- if settings.show_vat_note -%}
+              <p class="cart-summary__note">{{ settings.vat_note_text }}</p>
+            {%- endif -%}
+
+            <p class="cart-summary__note">{{ 'cart.shipping_at_checkout' | t }}</p>
+
+            <a href="{{ routes.checkout_url }}" class="btn btn--primary btn--full btn--lg cart-summary__checkout">
+              {{ 'cart.proceed_to_checkout' | t }}
+            </a>
+
+            {%- if settings.show_bnpl and settings.bnpl_text != blank -%}
+              <p class="cart-summary__bnpl">{{ settings.bnpl_text }}</p>
+            {%- endif -%}
+
+            {%- for block in section.blocks -%}
+              {%- if block.type == '@app' -%}
+                <div class="cart-app-block" {{ block.shopify_attributes }}>
+                  {%- render block -%}
+                </div>
+              {%- endif -%}
+            {%- endfor -%}
+
+            {%- if section.settings.show_payment_icons -%}
+              <div class="cart-summary__payments" aria-label="{{ 'cart.payment_methods' | t }}">
+                {{ shop.enabled_payment_types | payment_type_svg_tag: class: 'payment-icon' }}
+              </div>
+            {%- endif -%}
+          </div>
+        </aside>
+
+      </div>
+    {%- endif -%}
+
+  </div>
+</section>
+
+
+{% schema %}
+{
+  "name": "Cart page",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_note",
+      "label": "Show order note field",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_payment_icons",
+      "label": "Show accepted payment icons",
+      "default": true
+    }
+  ],
+  "blocks": [
+    {
+      "type": "@app"
+    }
+  ],
+  "enabled_on": {
+    "templates": [
+      "cart"
+    ]
+  }
+}
+{% endschema %}

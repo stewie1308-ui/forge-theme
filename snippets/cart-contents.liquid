@@ -1,0 +1,83 @@
+{%- comment -%}
+  Shared cart line items — the inner content of #CartItemsInner.
+
+  Rendered by BOTH:
+    - snippets/cart-drawer.liquid  (initial paint, in theme.liquid)
+    - sections/cart-items.liquid   (Section Rendering API refresh)
+
+  Both callers own the #CartItemsInner wrapper themselves, because the JS in
+  theme.liquid swaps innerHTML between them. Keep this snippet wrapper-free.
+{%- endcomment -%}
+
+{%- if cart.item_count == 0 -%}
+  <div class="cart-drawer__empty">
+    <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.25" aria-hidden="true" style="color:var(--color-foreground-subtle)">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25 5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z"/>
+    </svg>
+    <p style="font-weight:var(--font-weight-bold);">{{ 'cart.empty' | t }}</p>
+    <a href="{{ routes.all_products_collection_url }}" class="btn btn--primary btn--sm">{{ 'cart.continue_shopping' | t }}</a>
+  </div>
+{%- else -%}
+  <ul class="cart-items" aria-label="{{ 'cart.items_label' | t }}">
+    {%- for item in cart.items -%}
+      <li class="cart-item">
+        <a href="{{ item.url }}" class="cart-item__img-wrap" tabindex="-1" aria-hidden="true">
+          {%- if item.image -%}
+            <img class="cart-item__img" src="{{ item.image | image_url: width: 176 }}" alt="{{ item.image.alt | default: item.title | escape }}" loading="lazy" width="88" height="88">
+          {%- endif -%}
+        </a>
+        <div class="cart-item__info">
+          <a href="{{ item.url }}" class="cart-item__title">{{ item.product.title }}</a>
+          {%- if item.variant.title != 'Default Title' -%}
+            <p class="cart-item__variant">{{ item.variant.title }}</p>
+          {%- endif -%}
+          <div class="cart-item__bottom">
+            <div class="qty qty--sm" aria-label="{{ 'cart.item_quantity' | t }}">
+              <button class="qty__btn" type="button" data-action="decrease" aria-label="{{ 'cart.decrease_quantity' | t }}">−</button>
+              <input class="qty__input" type="number" value="{{ item.quantity }}" min="0" max="99" data-cart-line="{{ forloop.index }}" aria-label="{{ 'cart.item_quantity' | t }}" style="width:44px;">
+              <button class="qty__btn" type="button" data-action="increase" aria-label="{{ 'cart.increase_quantity' | t }}">+</button>
+            </div>
+            <span class="cart-item__price">{{ item.final_line_price | money }}</span>
+          </div>
+          <button class="cart-item__remove" type="button" data-cart-remove="{{ forloop.index }}" aria-label="{{ 'cart.remove_item' | t: title: item.product.title }}">{{ 'cart.remove' | t }}</button>
+        </div>
+      </li>
+    {%- endfor -%}
+  </ul>
+
+  {%- if settings.cart_enable_upsell and settings.cart_upsell_collection != blank -%}
+    {%- assign upsell_col = settings.cart_upsell_collection -%}
+    {%- assign cart_product_ids = cart.items | map: 'product_id' -%}
+    {%- comment -%}
+      Single pass: capture the markup, then emit the wrapper only if anything came out.
+      Deliberately no `limit:` on the loop — products already in the cart are skipped,
+      so a limit would silently drop eligible upsells whenever the first N are in the
+      cart. `break` stops the walk as soon as two are found, which is the common case.
+    {%- endcomment -%}
+    {%- capture upsell_items -%}
+      {%- assign shown = 0 -%}
+      {%- for up in upsell_col.products -%}
+        {%- if shown >= 2 -%}{%- break -%}{%- endif -%}
+        {%- unless cart_product_ids contains up.id -%}
+          <div class="cart-upsell-item">
+            {%- if up.featured_image -%}
+              <img class="cart-upsell-item__img" src="{{ up.featured_image | image_url: width: 112 }}" alt="{{ up.featured_image.alt | default: up.title | escape }}" loading="lazy" width="56" height="56">
+            {%- endif -%}
+            <div class="cart-upsell-item__info">
+              <p class="cart-upsell-item__name">{{ up.title }}</p>
+              <p class="cart-upsell-item__price">{{ up.price | money }}</p>
+            </div>
+            <button class="btn btn--secondary btn--sm" type="button" data-quick-add="{{ up.selected_or_first_available_variant.id }}">{{ 'cart.add' | t }}</button>
+          </div>
+          {%- assign shown = shown | plus: 1 -%}
+        {%- endunless -%}
+      {%- endfor -%}
+    {%- endcapture -%}
+    {%- if upsell_items != blank -%}
+      <div class="cart-upsells">
+        <p class="cart-upsells__title">{{ settings.cart_upsell_heading }}</p>
+        {{ upsell_items }}
+      </div>
+    {%- endif -%}
+  {%- endif -%}
+{%- endif -%}

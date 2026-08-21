@@ -1,0 +1,18 @@
+{
+  "type": "header",
+  "name": "Header group",
+  "sections": {
+    "header": {
+      "type": "header",
+      "settings": {
+        "show_announcement": false,
+        "announcement_text": "Free UK delivery on orders over £40",
+        "announcement_dismissible": true,
+        "show_search": true,
+        "logo_max_width": 140,
+        "menu": "main-menu"
+      }
+    }
+  },
+  "order": ["header"]
+}

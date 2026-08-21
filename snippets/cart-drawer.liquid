@@ -1,0 +1,48 @@
+{%- comment -%}
+  Cart drawer — rendered in theme.liquid via {% render 'cart-drawer' %}
+  Refreshed via JS fetch after cart mutations.
+
+  The item list and footer come from 'cart-contents' / 'cart-footer', shared with
+  sections/cart-items.liquid so the initial paint and the refreshed markup cannot drift.
+{%- endcomment -%}
+
+<div
+  class="cart-drawer-overlay"
+  aria-hidden="true"
+  data-cart-overlay
+></div>
+
+<div
+  id="CartDrawer"
+  class="cart-drawer"
+  role="dialog"
+  aria-modal="true"
+  aria-label="{{ 'cart.title' | t }}"
+  aria-hidden="true"
+>
+  <div class="cart-drawer__header">
+    <h2 class="cart-drawer__title">
+      {{ 'cart.title' | t }}
+      <span class="cart-drawer__count" data-cart-count-drawer>({{ cart.item_count }})</span>
+    </h2>
+    <button
+      class="cart-drawer__close header-action"
+      aria-label="{{ 'accessibility.close' | t }}"
+      data-cart-close
+    >
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12"/>
+      </svg>
+    </button>
+  </div>
+
+  <div class="cart-drawer__body" id="CartDrawerBody">
+    <div id="CartItemsInner">
+      {%- render 'cart-contents' -%}
+    </div>
+  </div>
+
+  <div class="cart-drawer__footer" id="CartFooterInner">
+    {%- render 'cart-footer' -%}
+  </div>
+</div>

@@ -1,0 +1,177 @@
+{%- comment -%}
+  Renders the field set for a customer address form.
+  Accepts:
+    - form:    {Object} the customer_address form object (required)
+    - address: {Object} the address being edited (required)
+    - prefix:  {String} unique suffix for element ids (required)
+
+  Must be called from inside a customer_address form block.
+{%- endcomment -%}
+
+{%- liquid
+  assign p            = prefix | append: ''
+  assign country_id   = 'AddressCountry-'  | append: p
+  assign province_id  = 'AddressProvince-' | append: p
+  assign province_wid = 'AddressProvinceWrapper-' | append: p
+-%}
+
+<div class="address-form__grid">
+  <div class="form-group">
+    <label class="form-label" for="AddressFirstName-{{ p }}">
+      {{ 'customer.addresses.first_name' | t }}
+    </label>
+    <input
+      id="AddressFirstName-{{ p }}"
+      type="text"
+      name="address[first_name]"
+      class="form-input"
+      value="{{ form.first_name }}"
+      autocomplete="given-name"
+    >
+  </div>
+
+  <div class="form-group">
+    <label class="form-label" for="AddressLastName-{{ p }}">
+      {{ 'customer.addresses.last_name' | t }}
+    </label>
+    <input
+      id="AddressLastName-{{ p }}"
+      type="text"
+      name="address[last_name]"
+      class="form-input"
+      value="{{ form.last_name }}"
+      autocomplete="family-name"
+    >
+  </div>
+</div>
+
+<div class="form-group mt-4">
+  <label class="form-label" for="AddressCompany-{{ p }}">
+    {{ 'customer.addresses.company' | t }}
+  </label>
+  <input
+    id="AddressCompany-{{ p }}"
+    type="text"
+    name="address[company]"
+    class="form-input"
+    value="{{ form.company }}"
+    autocomplete="organization"
+  >
+</div>
+
+<div class="form-group mt-4">
+  <label class="form-label" for="AddressLine1-{{ p }}">
+    {{ 'customer.addresses.address1' | t }}
+  </label>
+  <input
+    id="AddressLine1-{{ p }}"
+    type="text"
+    name="address[address1]"
+    class="form-input"
+    value="{{ form.address1 }}"
+    autocomplete="address-line1"
+  >
+</div>
+
+<div class="form-group mt-4">
+  <label class="form-label" for="AddressLine2-{{ p }}">
+    {{ 'customer.addresses.address2' | t }}
+  </label>
+  <input
+    id="AddressLine2-{{ p }}"
+    type="text"
+    name="address[address2]"
+    class="form-input"
+    value="{{ form.address2 }}"
+    autocomplete="address-line2"
+  >
+</div>
+
+<div class="address-form__grid mt-4">
+  <div class="form-group">
+    <label class="form-label" for="AddressCity-{{ p }}">
+      {{ 'customer.addresses.city' | t }}
+    </label>
+    <input
+      id="AddressCity-{{ p }}"
+      type="text"
+      name="address[city]"
+      class="form-input"
+      value="{{ form.city }}"
+      autocomplete="address-level2"
+    >
+  </div>
+
+  <div class="form-group">
+    <label class="form-label" for="AddressZip-{{ p }}">
+      {{ 'customer.addresses.zip' | t }}
+    </label>
+    <input
+      id="AddressZip-{{ p }}"
+      type="text"
+      name="address[zip]"
+      class="form-input"
+      value="{{ form.zip }}"
+      autocomplete="postal-code"
+      autocapitalize="characters"
+    >
+  </div>
+</div>
+
+<div class="form-group mt-4">
+  <label class="form-label" for="{{ country_id }}">
+    {{ 'customer.addresses.country' | t }}
+  </label>
+  <select
+    id="{{ country_id }}"
+    name="address[country]"
+    class="form-select"
+    autocomplete="country"
+    data-country-select
+    data-selected="{{ address.country | default: shop.address.country | escape }}"
+    data-province-select="{{ province_id }}"
+    data-province-wrapper="{{ province_wid }}"
+  >
+    {{ all_country_option_tags }}
+  </select>
+</div>
+
+<div class="form-group mt-4" id="{{ province_wid }}" hidden>
+  <label class="form-label" for="{{ province_id }}">
+    {{ 'customer.addresses.province' | t }}
+  </label>
+  <select
+    id="{{ province_id }}"
+    name="address[province]"
+    class="form-select"
+    autocomplete="address-level1"
+    data-selected="{{ address.province | escape }}"
+  ></select>
+</div>
+
+<div class="form-group mt-4">
+  <label class="form-label" for="AddressPhone-{{ p }}">
+    {{ 'customer.addresses.phone' | t }}
+  </label>
+  <input
+    id="AddressPhone-{{ p }}"
+    type="tel"
+    name="address[phone]"
+    class="form-input"
+    value="{{ form.phone }}"
+    autocomplete="tel"
+  >
+</div>
+
+<div class="form-group mt-4">
+  <label class="checkbox-field" for="AddressDefault-{{ p }}">
+    <input
+      id="AddressDefault-{{ p }}"
+      type="checkbox"
+      name="address[default]"
+      value="1"
+      {% if address == customer.default_address %}checked{% endif %}
+    >
+    <span>{{ 'customer.addresses.set_default' | t }}</span>
+  </label>
+</div>

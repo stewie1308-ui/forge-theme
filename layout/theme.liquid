@@ -1,0 +1,382 @@
+<!doctype html>
+<html lang="{{ request.locale.iso_code }}">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+  {%- render 'seo' -%}
+  {%- render 'og-tags' -%}
+
+  {{ content_for_header }}
+
+  {%- if settings.favicon != blank -%}
+    <link rel="icon" type="image/png" href="{{ settings.favicon | image_url: width: 32, height: 32 }}">
+  {%- endif -%}
+
+  {%- liquid
+    assign body_font    = settings.type_body_font
+    assign heading_font = settings.type_header_font
+    assign body_bold    = body_font | font_modify: 'weight', 'bold'
+  -%}
+
+  {%- style -%}
+    {{ body_font    | font_face: font_display: 'swap' }}
+    {{ heading_font | font_face: font_display: 'swap' }}
+    {%- if body_bold -%}{{ body_bold | font_face: font_display: 'swap' }}{%- endif -%}
+
+    :root {
+      /* Typography */
+      --font-body-family:    {{ body_font.family | json }}, {{ body_font.fallback_families }};
+      --font-body-weight:    {{ body_font.weight }};
+      --font-heading-family: {{ heading_font.family | json }}, {{ heading_font.fallback_families }};
+      --font-heading-weight: {{ heading_font.weight }};
+      --font-heading-style:  {{ heading_font.style }};
+
+      /* Brand colours */
+      --color-background:           {{ settings.color_background }};
+      --color-background-secondary: {{ settings.color_background_secondary }};
+      --color-foreground:           {{ settings.color_foreground }};
+      --color-foreground-muted:     {{ settings.color_foreground_muted }};
+      --color-accent:               {{ settings.color_accent }};
+      --color-accent-light:         {{ settings.color_accent_light }};
+      --color-accent-highlight:     {{ settings.color_accent_highlight }};
+
+      /* Button colours */
+      --color-button:                  {{ settings.color_button }};
+      --color-button-text:             {{ settings.color_button_text }};
+      --color-button-hover:            {{ settings.color_button_hover }};
+      --color-button-secondary-text:   {{ settings.color_button_secondary_text }};
+      --color-button-secondary-border: {{ settings.color_button_secondary_border }};
+
+      /* Border radius */
+      --radius-sm: {{ settings.border_radius_small }}px;
+      --radius-md: {{ settings.border_radius_medium }}px;
+      --radius-lg: {{ settings.border_radius_large }}px;
+    }
+  {%- endstyle -%}
+
+  {{ 'theme.css' | asset_url | stylesheet_tag }}
+
+  <script>
+    window.Forge = {
+      cartCount: {{ cart.item_count }},
+      locale:    {{ request.locale.iso_code | json }},
+      currency:  {{ cart.currency.iso_code | json }},
+      cartType:  {{ settings.cart_type | json }},
+      strings: {
+        cartCount: {{ 'sections.header.cart_count' | t: count: '[count]' | json }},
+        added:     {{ 'cart.added'     | t | json }},
+        addError:  {{ 'cart.add_error' | t | json }},
+        updateError: {{ 'cart.update_error' | t | json }}
+      },
+      routes: {
+        root:       {{ routes.root_url | json }},
+        cart:       {{ routes.cart_url | json }},
+        cartAdd:    {{ routes.cart_add_url | json }},
+        cartChange: {{ routes.cart_change_url | json }}
+      }
+    };
+  </script>
+</head>
+
+<body class="template-{{ request.page_type | handle }}{% if customer %} customer-logged-in{% endif %}">
+
+  <a class="skip-to-content" href="#MainContent">
+    {{- 'accessibility.skip_to_content' | t -}}
+  </a>
+
+  {%- sections 'header-group' -%}
+
+  <main id="MainContent" class="main-content" tabindex="-1">
+    {{ content_for_layout }}
+  </main>
+
+  {%- if settings.cart_type != 'page' -%}
+    {%- render 'cart-drawer' -%}
+  {%- endif -%}
+
+  {%- sections 'footer-group' -%}
+
+  <script src="{{ 'theme.js' | asset_url }}" defer></script>
+
+  <script>
+  /* Cart drawer + quick add — wired up after theme.js loads */
+  (function () {
+
+    var drawer  = document.getElementById('CartDrawer');
+    var overlay = document.querySelector('[data-cart-overlay]');
+    var removeTrap;
+
+    function openCart() {
+      if (!drawer) return;
+      drawer.classList.add('is-open');
+      drawer.setAttribute('aria-hidden', 'false');
+      overlay && overlay.classList.add('is-open');
+      document.body.classList.add('no-scroll');
+      if (window.Forge) window.Forge._returnFocus = document.activeElement;
+      removeTrap = window.Forge && window.Forge.trapFocus
+        ? window.Forge.trapFocus(drawer)
+        : null;
+      /* update opener button state */
+      document.querySelectorAll('[data-cart-open]').forEach(function (b) {
+        b.setAttribute('aria-expanded', 'true');
+      });
+    }
+
+    function closeCart() {
+      if (!drawer) return;
+      drawer.classList.remove('is-open');
+      drawer.setAttribute('aria-hidden', 'true');
+      overlay && overlay.classList.remove('is-open');
+      document.body.classList.remove('no-scroll');
+      if (removeTrap) { removeTrap(); removeTrap = null; }
+      document.querySelectorAll('[data-cart-open]').forEach(function (b) {
+        b.setAttribute('aria-expanded', 'false');
+      });
+
+      /* Send focus back to whatever opened the drawer — without this it drops to
+         <body> and a keyboard user restarts from the top of the page. */
+      var returnTo = window.Forge && window.Forge._returnFocus;
+      if (returnTo && document.contains(returnTo)) returnTo.focus();
+      if (window.Forge) window.Forge._returnFocus = null;
+    }
+
+    /* Open triggers */
+    document.addEventListener('click', function (e) {
+      if (e.target.closest('[data-cart-open]'))  { openCart();  return; }
+      if (e.target.closest('[data-cart-close]')) { closeCart(); return; }
+      if (e.target === overlay)                  { closeCart(); return; }
+    });
+
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && drawer && drawer.classList.contains('is-open')) {
+        closeCart();
+      }
+    });
+
+    /* -------------------------------------------------------
+       CART API HELPERS
+       ------------------------------------------------------- */
+    function updateCartCount(count) {
+      document.querySelectorAll('[data-cart-count]').forEach(function (el) {
+        el.textContent = count;
+        el.style.display = count > 0 ? 'flex' : 'none';
+      });
+      document.querySelectorAll('[data-cart-count-drawer]').forEach(function (el) {
+        el.textContent = '(' + count + ')';
+      });
+      /* update aria-label on cart button */
+      document.querySelectorAll('[data-cart-open]').forEach(function (b) {
+        b.setAttribute('aria-label', Forge.strings.cartCount.replace('[count]', count));
+      });
+    }
+
+    async function refreshDrawer() {
+      try {
+        var res  = await fetch(Forge.routes.root + '?sections=cart-items');
+        var data = await res.json();
+        var html = data['cart-items'];
+        if (!html) return;
+
+        var parser = new DOMParser();
+        var doc    = parser.parseFromString(html, 'text/html');
+
+        /* swap cart items */
+        var newItems = doc.getElementById('CartItemsInner');
+        var oldItems = document.getElementById('CartItemsInner');
+        if (newItems && oldItems) oldItems.innerHTML = newItems.innerHTML;
+
+        /* swap footer */
+        var newFooter = doc.getElementById('CartFooterInner');
+        var oldFooter = document.getElementById('CartFooterInner');
+        if (newFooter && oldFooter) oldFooter.innerHTML = newFooter.innerHTML;
+
+        /* update count badge */
+        var countEls = doc.querySelectorAll('[data-cart-count-drawer]');
+        var count = 0;
+        if (countEls.length) {
+          var match = countEls[0].textContent.match(/\d+/);
+          if (match) count = parseInt(match[0], 10);
+        }
+        /* fallback: fetch count from cart.js */
+        var cartRes  = await fetch(Forge.routes.cart + '.js');
+        var cartData = await cartRes.json();
+        updateCartCount(cartData.item_count);
+
+      } catch (err) {
+        console.error('Cart refresh error', err);
+      }
+    }
+
+    /* The cart page renders its own markup (a table), not the drawer's item list,
+       so a drawer refresh leaves its line totals and order summary stale.
+       Re-render the whole section instead. No-op on every other template. */
+    async function refreshCartPage() {
+      var host = document.querySelector('[data-cart-section]');
+      if (!host) return;
+
+      /* Remember where focus was — the innerHTML swap below would otherwise drop
+         it to <body> after every stepper click. */
+      var active      = document.activeElement;
+      var qtyWrap     = active && active.closest ? active.closest('.qty') : null;
+      var lineInput   = qtyWrap && qtyWrap.querySelector('[data-cart-line]');
+      var focusLine   = lineInput ? lineInput.dataset.cartLine : null;
+      var focusAction = active && active.dataset ? active.dataset.action : null;
+
+      var res   = await fetch(Forge.routes.cart + '?section_id=' + host.dataset.cartSection);
+      var html  = await res.text();
+      var doc   = new DOMParser().parseFromString(html, 'text/html');
+      var fresh = doc.querySelector('[data-cart-section]');
+      if (!fresh) return;
+      host.innerHTML = fresh.innerHTML;
+
+      /* Restore focus to the same control on the same line, if it still exists
+         (it won't when the line was just removed). */
+      if (focusLine) {
+        var input  = host.querySelector('[data-cart-line="' + focusLine + '"]');
+        var wrap   = input && input.closest('.qty');
+        var target = focusAction && wrap
+          ? wrap.querySelector('[data-action="' + focusAction + '"]')
+          : input;
+        if (target) target.focus();
+      }
+    }
+
+    /* Cart line numbers are positional, so two mutations in flight at once can
+       target the wrong line. Serialise them, and mark the cart page busy so the
+       markup can't be clicked again before it re-renders. */
+    var cartMutation = Promise.resolve();
+
+    function mutateCart(fn) {
+      cartMutation = cartMutation.then(async function () {
+        var host = document.querySelector('[data-cart-section]');
+        if (host) host.setAttribute('aria-busy', 'true');
+        try {
+          await fn();
+          await Promise.all([refreshDrawer(), refreshCartPage()]);
+        } catch (err) {
+          console.error('Cart update failed', err);
+          window.Forge && window.Forge.showToast
+            && window.Forge.showToast(Forge.strings.updateError, 'error');
+        } finally {
+          if (host) host.removeAttribute('aria-busy');
+        }
+      });
+      return cartMutation;
+    }
+
+    /* -------------------------------------------------------
+       ADD TO CART — intercept all [data-atc-form] forms
+       ------------------------------------------------------- */
+    document.addEventListener('submit', async function (e) {
+      var form = e.target.closest('[data-atc-form]');
+      if (!form) return;
+      e.preventDefault();
+
+      var btn = form.querySelector('[data-atc-btn]');
+      if (btn) btn.classList.add('btn--loading');
+
+      try {
+        var body = new FormData(form);
+        var res  = await fetch(Forge.routes.cartAdd + '.js', {
+          method: 'POST',
+          headers: { 'X-Requested-With': 'XMLHttpRequest' },
+          body: body
+        });
+        if (!res.ok) throw new Error('Add to cart failed');
+        if (Forge.cartType === 'page') {
+          window.location.href = Forge.routes.cart;
+          return;
+        }
+        await refreshDrawer();
+        openCart();
+        window.Forge && window.Forge.showToast && window.Forge.showToast(Forge.strings.added, 'success');
+      } catch (err) {
+        window.Forge && window.Forge.showToast && window.Forge.showToast(Forge.strings.addError, 'error');
+      } finally {
+        if (btn) btn.classList.remove('btn--loading');
+      }
+    });
+
+    /* -------------------------------------------------------
+       QUICK ADD — buttons with data-quick-add="variantId"
+       ------------------------------------------------------- */
+    document.addEventListener('click', async function (e) {
+      var btn = e.target.closest('[data-quick-add]');
+      if (!btn) return;
+
+      var variantId = btn.dataset.quickAdd;
+      if (!variantId) return;
+
+      btn.classList.add('btn--loading');
+      try {
+        var res = await fetch(Forge.routes.cartAdd + '.js', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest'
+          },
+          body: JSON.stringify({ id: variantId, quantity: 1 })
+        });
+        if (!res.ok) throw new Error();
+        if (Forge.cartType === 'page') {
+          window.location.href = Forge.routes.cart;
+          return;
+        }
+        await refreshDrawer();
+        openCart();
+        window.Forge && window.Forge.showToast && window.Forge.showToast(Forge.strings.added, 'success');
+      } catch {
+        window.Forge && window.Forge.showToast && window.Forge.showToast(Forge.strings.addError, 'error');
+      } finally {
+        btn.classList.remove('btn--loading');
+      }
+    });
+
+    /* -------------------------------------------------------
+       CART QUANTITY CHANGE
+       ------------------------------------------------------- */
+    document.addEventListener('change', function (e) {
+      var input = e.target.closest('[data-cart-line]');
+      if (!input) return;
+
+      var line = input.dataset.cartLine;
+      var qty  = parseInt(input.value, 10);
+      if (isNaN(qty)) return;
+
+      mutateCart(async function () {
+        var res = await fetch(Forge.routes.cartChange + '.js', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ line: line, quantity: qty })
+        });
+        if (!res.ok) throw new Error('Cart change failed');
+      });
+    });
+
+    /* -------------------------------------------------------
+       CART REMOVE
+       ------------------------------------------------------- */
+    document.addEventListener('click', function (e) {
+      var btn = e.target.closest('[data-cart-remove]');
+      if (!btn) return;
+
+      var line = btn.dataset.cartRemove;
+      mutateCart(async function () {
+        var res = await fetch(Forge.routes.cartChange + '.js', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ line: line, quantity: 0 })
+        });
+        if (!res.ok) throw new Error('Cart remove failed');
+      });
+    });
+
+  }());
+  </script>
+
+  {%- render 'structured_data' -%}
+
+</body>
+</html>

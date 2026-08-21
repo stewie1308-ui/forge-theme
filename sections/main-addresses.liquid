@@ -1,0 +1,199 @@
+{%- comment -%}
+  Customer address book. Uses the customer_address form for create,
+  update and delete. Country/province pairing is handled by the inline
+  script below using the data-provinces payload that country_option_tags
+  already emits — no external Shopify JS required.
+{%- endcomment -%}
+
+<section class="account-section">
+  <div class="container">
+
+    <div class="account-header reveal">
+      <div>
+        <h1 class="account-header__title">{{ 'customer.addresses.title' | t }}</h1>
+      </div>
+      <a href="{{ routes.account_url }}" class="btn btn--secondary btn--sm">
+        {{ 'customer.order.back_to_account' | t }}
+      </a>
+    </div>
+
+    {%- paginate customer.addresses by 10 -%}
+
+      {{- '<!-- New address -->' -}}
+      <div class="address-new reveal">
+        <button
+          type="button"
+          class="btn btn--primary"
+          aria-expanded="false"
+          aria-controls="AddressNewForm"
+          data-address-toggle="AddressNewForm"
+        >
+          {{ 'customer.addresses.add_new' | t }}
+        </button>
+
+        <div id="AddressNewForm" class="address-form-wrap" hidden>
+          <h2 class="account-section__heading">{{ 'customer.addresses.new_title' | t }}</h2>
+          {%- form 'customer_address', customer.new_address -%}
+            {%- render 'address-fields', form: form, address: customer.new_address, prefix: 'New' -%}
+            <div class="address-form__actions">
+              <button type="submit" class="btn btn--primary">
+                {{ 'customer.addresses.save' | t }}
+              </button>
+              <button type="button" class="btn btn--secondary" data-address-cancel="AddressNewForm">
+                {{ 'customer.addresses.cancel' | t }}
+              </button>
+            </div>
+          {%- endform -%}
+        </div>
+      </div>
+
+      {{- '<!-- Existing addresses -->' -}}
+      {%- if customer.addresses.size == 0 -%}
+        <p class="account-empty mt-6">{{ 'customer.addresses.no_addresses' | t }}</p>
+      {%- else -%}
+        <ul class="address-list reveal" role="list">
+          {%- for address in customer.addresses -%}
+            {%- assign form_id = 'AddressEditForm-' | append: address.id -%}
+            <li class="address-card">
+              {%- if address == customer.default_address -%}
+                <span class="order-badge order-badge--paid address-card__default">
+                  {{ 'customer.addresses.default' | t }}
+                </span>
+              {%- endif -%}
+
+              <address class="account-address__display">
+                {{ address | format_address }}
+              </address>
+
+              <div class="address-card__actions">
+                <button
+                  type="button"
+                  class="btn btn--secondary btn--sm"
+                  aria-expanded="false"
+                  aria-controls="{{ form_id }}"
+                  data-address-toggle="{{ form_id }}"
+                >
+                  {{ 'customer.addresses.edit' | t }}
+                </button>
+
+                {%- form 'customer_address', address -%}
+                  <input type="hidden" name="_method" value="delete">
+                  <button
+                    type="submit"
+                    class="btn btn--secondary btn--sm address-card__delete"
+                    data-confirm-message="{{ 'customer.addresses.delete_confirm' | t | escape }}"
+                  >
+                    {{ 'customer.addresses.delete' | t }}
+                  </button>
+                {%- endform -%}
+              </div>
+
+              <div id="{{ form_id }}" class="address-form-wrap" hidden>
+                <h2 class="account-section__heading">{{ 'customer.addresses.edit_title' | t }}</h2>
+                {%- form 'customer_address', address -%}
+                  {%- render 'address-fields', form: form, address: address, prefix: address.id -%}
+                  <div class="address-form__actions">
+                    <button type="submit" class="btn btn--primary">
+                      {{ 'customer.addresses.save' | t }}
+                    </button>
+                    <button type="button" class="btn btn--secondary" data-address-cancel="{{ form_id }}">
+                      {{ 'customer.addresses.cancel' | t }}
+                    </button>
+                  </div>
+                {%- endform -%}
+              </div>
+            </li>
+          {%- endfor -%}
+        </ul>
+
+        {%- render 'pagination', paginate: paginate -%}
+      {%- endif -%}
+
+    {%- endpaginate -%}
+
+  </div>
+</section>
+
+<script>
+(function () {
+  /* Show / hide the new + edit address forms */
+  document.querySelectorAll('[data-address-toggle]').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var panel = document.getElementById(btn.dataset.addressToggle);
+      if (!panel) return;
+      var isOpen = !panel.hidden;
+      if (isOpen) {
+        panel.setAttribute('hidden', '');
+      } else {
+        panel.removeAttribute('hidden');
+      }
+      btn.setAttribute('aria-expanded', isOpen ? 'false' : 'true');
+      if (!isOpen) {
+        var firstField = panel.querySelector('input, select');
+        if (firstField) firstField.focus();
+      }
+    });
+  });
+
+  document.querySelectorAll('[data-address-cancel]').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var panel = document.getElementById(btn.dataset.addressCancel);
+      if (!panel) return;
+      panel.setAttribute('hidden', '');
+      var toggle = document.querySelector('[data-address-toggle="' + btn.dataset.addressCancel + '"]');
+      if (toggle) {
+        toggle.setAttribute('aria-expanded', 'false');
+        toggle.focus();
+      }
+    });
+  });
+
+  /* Confirm before deleting an address */
+  document.querySelectorAll('.address-card__delete').forEach(function (btn) {
+    btn.addEventListener('click', function (e) {
+      if (!window.confirm(btn.dataset.confirmMessage)) e.preventDefault();
+    });
+  });
+
+  /* Country -> province pairing, driven by data-provinces on each option */
+  document.querySelectorAll('[data-country-select]').forEach(function (countrySelect) {
+    var wrapper = document.getElementById(countrySelect.dataset.provinceWrapper);
+    var province = document.getElementById(countrySelect.dataset.provinceSelect);
+    if (!wrapper || !province) return;
+
+    if (countrySelect.dataset.selected) {
+      countrySelect.value = countrySelect.dataset.selected;
+    }
+
+    function syncProvinces() {
+      var opt = countrySelect.options[countrySelect.selectedIndex];
+      var raw = opt ? opt.getAttribute('data-provinces') : '[]';
+      var list = [];
+      try { list = JSON.parse(raw || '[]'); } catch (err) { list = []; }
+
+      province.innerHTML = '';
+      if (!list.length) {
+        wrapper.hidden = true;
+        province.disabled = true;
+        return;
+      }
+      list.forEach(function (pair) {
+        var o = document.createElement('option');
+        o.value = pair[0];
+        o.textContent = pair[1];
+        province.appendChild(o);
+      });
+      province.disabled = false;
+      wrapper.hidden = false;
+      if (province.dataset.selected) province.value = province.dataset.selected;
+    }
+
+    countrySelect.addEventListener('change', syncProvinces);
+    syncProvinces();
+  });
+}());
+</script>
+
+{% schema %}
+{ "name": "Addresses", "settings": [] }
+{% endschema %}

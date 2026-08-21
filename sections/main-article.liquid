@@ -1,0 +1,106 @@
+{%- render 'breadcrumbs' -%}
+
+<article class="article-section">
+  <div class="container container--narrow">
+
+    <header class="article-header reveal">
+      {%- if article.tags.size > 0 -%}
+        <div class="article-header__tags">
+          {%- for tag in article.tags limit: 3 -%}
+            <a href="{{ blog.url }}/tagged/{{ tag | handle }}" class="blog-tag blog-tag--sm">{{ tag }}</a>
+          {%- endfor -%}
+        </div>
+      {%- endif -%}
+
+      <h1 class="article-header__title">{{ article.title }}</h1>
+
+      <div class="article-header__meta">
+        <span>By {{ article.author }}</span>
+        <span aria-hidden="true">·</span>
+        <time datetime="{{ article.published_at | date: '%Y-%m-%d' }}">
+          {{ article.published_at | date: '%d %B %Y' }}
+        </time>
+        {%- if section.settings.show_read_time -%}
+          {%- assign words = article.content | strip_html | split: ' ' | size -%}
+          {%- assign read_time = words | divided_by: 200 | plus: 1 -%}
+          <span aria-hidden="true">·</span>
+          <span>{{ read_time }} min read</span>
+        {%- endif -%}
+      </div>
+    </header>
+
+    {%- if article.image -%}
+      <div class="article-hero-img reveal">
+        <img
+          src="{{ article.image | image_url: width: 1200 }}"
+          alt="{{ article.image.alt | default: article.title | escape }}"
+          loading="eager"
+          width="{{ article.image.width }}"
+          height="{{ article.image.height }}"
+          sizes="(min-width: 860px) 860px, 100vw"
+          srcset="
+            {{ article.image | image_url: width: 600  }} 600w,
+            {{ article.image | image_url: width: 900  }} 900w,
+            {{ article.image | image_url: width: 1200 }} 1200w
+          "
+          style="width:100%;border-radius:var(--radius-lg);aspect-ratio:16/9;object-fit:cover;"
+        >
+      </div>
+    {%- endif -%}
+
+    <div class="article-body rte reveal">
+      {{ article.content }}
+    </div>
+
+    {%- if section.settings.show_share -%}
+      <div class="article-share reveal">
+        <p class="article-share__label">{{ 'blog.share_article' | t }}</p>
+        <div class="article-share__links">
+          <a
+            href="https://twitter.com/intent/tweet?text={{ article.title | url_encode }}&url={{ request.origin | append: article.url | url_encode }}"
+            rel="nofollow noopener"
+            target="_blank"
+            class="article-share__btn"
+            aria-label="{{ 'blog.share_on' | t: network: 'X' }}"
+          >X</a>
+          <a
+            href="https://www.facebook.com/sharer/sharer.php?u={{ request.origin | append: article.url | url_encode }}"
+            rel="nofollow noopener"
+            target="_blank"
+            class="article-share__btn"
+            aria-label="{{ 'blog.share_on' | t: network: 'Facebook' }}"
+          >Facebook</a>
+        </div>
+      </div>
+    {%- endif -%}
+
+    <!-- Back to blog -->
+    <div class="article-footer reveal">
+      <a href="{{ blog.url }}" class="btn btn--secondary">
+        ← Back to {{ blog.title }}
+      </a>
+    </div>
+
+  </div>
+</article>
+
+
+{% schema %}
+{
+  "name": "Article",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_read_time",
+      "label": "Show estimated read time",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_share",
+      "label": "Show share buttons",
+      "default": true
+    }
+  ]
+}
+{% endschema %}

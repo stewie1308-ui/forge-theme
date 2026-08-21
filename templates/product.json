@@ -1,0 +1,35 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-product",
+      "blocks": {
+        "trust-1": {
+          "type": "trust_item",
+          "settings": {
+            "text": "Free UK delivery on orders over £40"
+          }
+        },
+        "trust-2": {
+          "type": "trust_item",
+          "settings": {
+            "text": "Third-party lab tested for purity and potency"
+          }
+        },
+        "trust-3": {
+          "type": "trust_item",
+          "settings": {
+            "text": "30-day money-back guarantee"
+          }
+        }
+      },
+      "block_order": ["trust-1", "trust-2", "trust-3"],
+      "settings": {
+        "show_supplement_facts": true,
+        "show_ingredients_panel": true,
+        "show_trust_signals": true,
+        "show_sticky_atc": true
+      }
+    }
+  },
+  "order": ["main"]
+}

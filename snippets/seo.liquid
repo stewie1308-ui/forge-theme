@@ -1,0 +1,29 @@
+{%- liquid
+  assign seo_title       = page_title | default: shop.name
+  assign seo_description = page_description | default: shop.description | default: ''
+  assign fallback_url    = request.origin | append: request.path
+  assign seo_url         = canonical_url | default: fallback_url
+-%}
+
+<title>
+  {%- if seo_title contains shop.name -%}
+    {{ seo_title }}
+  {%- else -%}
+    {{ seo_title }} – {{ shop.name }}
+  {%- endif -%}
+</title>
+
+{%- if seo_description != blank -%}
+  <meta name="description" content="{{ seo_description | strip_html | escape | truncate: 155 }}">
+{%- endif -%}
+
+<link rel="canonical" href="{{ seo_url }}">
+
+{%- if paginate.pages > 1 -%}
+  {%- if paginate.previous -%}
+    <link rel="prev" href="{{ paginate.previous.url }}">
+  {%- endif -%}
+  {%- if paginate.next -%}
+    <link rel="next" href="{{ paginate.next.url }}">
+  {%- endif -%}
+{%- endif -%}

@@ -1,0 +1,146 @@
+<section class="section{% if section.settings.bg_secondary %} bg-secondary{% elsif section.settings.bg_dark %} bg-dark{% endif %}">
+  <div class="container">
+    <div class="rich-text rich-text--{{ section.settings.width }} reveal">
+
+      {%- if section.settings.eyebrow != blank -%}
+        <span class="section-heading__eyebrow">{{ section.settings.eyebrow }}</span>
+      {%- endif -%}
+
+      {%- if section.settings.heading != blank -%}
+        <h2 class="rich-text__heading">{{ section.settings.heading }}</h2>
+      {%- endif -%}
+
+      {%- if section.settings.text != blank -%}
+        <div class="rich-text__body rte">{{ section.settings.text }}</div>
+      {%- endif -%}
+
+      {%- if section.settings.button_label != blank -%}
+        <div class="rich-text__buttons">
+          <a
+            href="{{ section.settings.button_link | default: '#' }}"
+            class="btn btn--{{ section.settings.button_style }} btn--lg"
+          >
+            {{ section.settings.button_label }}
+          </a>
+          {%- if section.settings.button_label_2 != blank -%}
+            <a
+              href="{{ section.settings.button_link_2 | default: '#' }}"
+              class="btn btn--{{ section.settings.button_style_2 }}"
+            >
+              {{ section.settings.button_label_2 }}
+            </a>
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+
+    </div>
+  </div>
+</section>
+
+
+{% schema %}
+{
+  "name": "Rich text",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Our promise to you"
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "Text",
+      "default": "<p>We believe supplements should do what they say on the label. That's why every Forge product is formulated to clinically relevant doses, verified by independent laboratories, and built on peer-reviewed science.</p>"
+    },
+    {
+      "type": "select",
+      "id": "width",
+      "label": "Content width",
+      "options": [
+        { "value": "narrow", "label": "Narrow (centred)" },
+        { "value": "medium", "label": "Medium" },
+        { "value": "full",   "label": "Full" }
+      ],
+      "default": "narrow"
+    },
+    {
+      "type": "header",
+      "content": "Button 1"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Label"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Link"
+    },
+    {
+      "type": "select",
+      "id": "button_style",
+      "label": "Style",
+      "options": [
+        { "value": "primary",   "label": "Primary" },
+        { "value": "secondary", "label": "Secondary" },
+        { "value": "accent",    "label": "Accent" }
+      ],
+      "default": "primary"
+    },
+    {
+      "type": "header",
+      "content": "Button 2"
+    },
+    {
+      "type": "text",
+      "id": "button_label_2",
+      "label": "Label"
+    },
+    {
+      "type": "url",
+      "id": "button_link_2",
+      "label": "Link"
+    },
+    {
+      "type": "select",
+      "id": "button_style_2",
+      "label": "Style",
+      "options": [
+        { "value": "primary",   "label": "Primary" },
+        { "value": "secondary", "label": "Secondary" },
+        { "value": "accent",    "label": "Accent" }
+      ],
+      "default": "secondary"
+    },
+    {
+      "type": "header",
+      "content": "Background"
+    },
+    {
+      "type": "checkbox",
+      "id": "bg_secondary",
+      "label": "Secondary background",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "bg_dark",
+      "label": "Dark background",
+      "default": false
+    }
+  ],
+  "presets": [
+    {
+      "name": "Rich text"
+    }
+  ]
+}
+{% endschema %}

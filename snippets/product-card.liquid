@@ -1,0 +1,153 @@
+{%- comment -%}
+  Renders a product card.
+  Accepts:
+    - product: {Object} Product Liquid object (required)
+    - show_quick_add: {Boolean} Show quick add button on hover (default: false)
+    - class: {String} Extra CSS class on the article element
+{%- endcomment -%}
+
+{%- liquid
+  assign first_variant = product.selected_or_first_available_variant
+  assign on_sale = false
+  if first_variant.compare_at_price > first_variant.price
+    assign on_sale = true
+  endif
+  assign sold_out = true
+  if product.available
+    assign sold_out = false
+  endif
+  assign is_bestseller = false
+  if product.tags contains 'bestseller' or product.tags contains 'Bestseller'
+    assign is_bestseller = true
+  endif
+  assign is_new = false
+  if product.tags contains 'new' or product.tags contains 'New'
+    assign is_new = true
+  endif
+-%}
+
+{%- liquid
+  assign ratio = settings.card_image_ratio | default: 'square'
+-%}
+
+<article
+  class="product-card{% if class %} {{ class }}{% endif %}"
+  aria-label="{{ product.title | escape }}"
+>
+
+  <div class="product-card__media product-card__media--{{ ratio }}">
+    <a href="{{ product.url }}" tabindex="-1" aria-hidden="true">
+      {%- if product.featured_image -%}
+        <img
+          class="product-card__img"
+          src="{{ product.featured_image | image_url: width: 600 }}"
+          alt="{{ product.featured_image.alt | default: product.title | escape }}"
+          loading="lazy"
+          width="{{ product.featured_image.width }}"
+          height="{{ product.featured_image.height }}"
+          sizes="(min-width: 1200px) 25vw, (min-width: 768px) 33vw, 50vw"
+          srcset="
+            {{ product.featured_image | image_url: width: 400 }} 400w,
+            {{ product.featured_image | image_url: width: 600 }} 600w,
+            {{ product.featured_image | image_url: width: 800 }} 800w
+          "
+        >
+        {%- if product.images.size > 1 -%}
+          <img
+            class="product-card__img product-card__img--hover"
+            src="{{ product.images[1] | image_url: width: 600 }}"
+            alt="{{ product.images[1].alt | default: product.title | escape }}"
+            loading="lazy"
+            width="{{ product.images[1].width }}"
+            height="{{ product.images[1].height }}"
+            aria-hidden="true"
+          >
+        {%- endif -%}
+      {%- else -%}
+        <div class="product-card__placeholder" aria-hidden="true"></div>
+      {%- endif -%}
+    </a>
+
+    {{- '<!-- Badges -->' -}}
+    <div class="product-card__badges">
+      {%- if sold_out -%}
+        <span class="badge badge--sold-out">{{ 'products.product.sold_out' | t }}</span>
+      {%- elsif on_sale -%}
+        {%- assign savings_pct = first_variant.compare_at_price | minus: first_variant.price | times: 100 | divided_by: first_variant.compare_at_price | round -%}
+        <span class="badge badge--sale">{{ 'products.product.save_percent' | t: percent: savings_pct }}</span>
+      {%- endif -%}
+      {%- if is_bestseller -%}
+        <span class="badge badge--bestseller">{{ 'products.product.bestseller' | t }}</span>
+      {%- elsif is_new -%}
+        <span class="badge badge--new">{{ 'products.product.new' | t }}</span>
+      {%- endif -%}
+    </div>
+
+    {{- '<!-- Quick add -->' -}}
+    {%- if show_quick_add and first_variant.available -%}
+      <div class="product-card__quick-add">
+        <button
+          class="btn btn--primary btn--sm btn--full"
+          type="button"
+          data-quick-add="{{ first_variant.id }}"
+          aria-label="{{ 'products.product.add_to_cart' | t }}: {{ product.title | escape }}"
+        >
+          {{ 'products.product.add_to_cart' | t }}
+        </button>
+      </div>
+    {%- endif -%}
+  </div>
+
+  <div class="product-card__body">
+    {%- if settings.show_vendor and product.vendor != blank -%}
+      <p class="product-card__vendor label">{{ product.vendor }}</p>
+    {%- endif -%}
+
+    <h3 class="product-card__title">
+      <a href="{{ product.url }}">{{ product.title }}</a>
+    </h3>
+
+    {%- if product.metafields.forge.subtitle != blank -%}
+      <p class="product-card__subtitle">{{ product.metafields.forge.subtitle }}</p>
+    {%- endif -%}
+
+    {%- if settings.show_rating and product.metafields.reviews.rating.value != blank -%}
+      {%- liquid
+        assign r = product.metafields.reviews.rating.value | times: 1
+        assign rc = product.metafields.reviews.rating_count.value | default: 0
+      -%}
+      <div class="product-card__rating" aria-label="{{ r }} out of 5 stars">
+        <div class="product-card__stars" aria-hidden="true">
+          {%- for i in (1..5) -%}
+            {%- if i <= r -%}
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" style="color:#f59e0b"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+            {%- else -%}
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="color:#d1d5db"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+            {%- endif -%}
+          {%- endfor -%}
+        </div>
+        {%- if rc > 0 -%}
+          <span class="product-card__rating-count">({{ rc }})</span>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+
+    <div class="product-card__price-row">
+      {%- if on_sale -%}
+        <span class="product-card__price product-card__price--sale">{{ first_variant.price | money }}</span>
+        <span class="product-card__price product-card__price--compare">{{ first_variant.compare_at_price | money }}</span>
+      {%- else -%}
+        <span class="product-card__price">
+          {%- if product.price_varies -%}
+            {%- assign card_min_price = product.price_min | money -%}
+            {{ 'products.product.from_price_html' | t: price: card_min_price }}
+          {%- else -%}
+            {{ first_variant.price | money }}
+          {%- endif -%}
+        </span>
+      {%- endif -%}
+    </div>
+  </div>
+
+</article>
+

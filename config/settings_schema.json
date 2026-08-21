@@ -1,0 +1,371 @@
+[
+  {
+    "name": "theme_info",
+    "theme_name": "Forge",
+    "theme_version": "1.0.0",
+    "theme_author": "Stewart H",
+    "theme_documentation_url": "https://example.com/forge-theme/docs",
+    "theme_support_email": "stewart@brunelweb.co.uk"
+  },
+  {
+    "name": "Colours",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Background"
+      },
+      {
+        "type": "color",
+        "id": "color_background",
+        "label": "Page background",
+        "default": "#ffffff"
+      },
+      {
+        "type": "color",
+        "id": "color_background_secondary",
+        "label": "Secondary background",
+        "default": "#f5f5f3"
+      },
+      {
+        "type": "header",
+        "content": "Text"
+      },
+      {
+        "type": "color",
+        "id": "color_foreground",
+        "label": "Body text",
+        "default": "#0a0a0a"
+      },
+      {
+        "type": "color",
+        "id": "color_foreground_muted",
+        "label": "Muted text",
+        "default": "#6b6b6b"
+      },
+      {
+        "type": "header",
+        "content": "Accent"
+      },
+      {
+        "type": "color",
+        "id": "color_accent",
+        "label": "Accent colour",
+        "default": "#1b4332"
+      },
+      {
+        "type": "color",
+        "id": "color_accent_light",
+        "label": "Accent light (tint)",
+        "default": "#d8f3dc"
+      },
+      {
+        "type": "color",
+        "id": "color_accent_highlight",
+        "label": "Accent highlight",
+        "info": "Used for sale badges and CTA highlights",
+        "default": "#c8f24b"
+      },
+      {
+        "type": "header",
+        "content": "Buttons"
+      },
+      {
+        "type": "color",
+        "id": "color_button",
+        "label": "Primary button background",
+        "default": "#0a0a0a"
+      },
+      {
+        "type": "color",
+        "id": "color_button_text",
+        "label": "Primary button text",
+        "default": "#ffffff"
+      },
+      {
+        "type": "color",
+        "id": "color_button_hover",
+        "label": "Primary button hover",
+        "default": "#1b4332"
+      },
+      {
+        "type": "color",
+        "id": "color_button_secondary_text",
+        "label": "Secondary button text",
+        "default": "#0a0a0a"
+      },
+      {
+        "type": "color",
+        "id": "color_button_secondary_border",
+        "label": "Secondary button border",
+        "default": "#0a0a0a"
+      }
+    ]
+  },
+  {
+    "name": "Typography",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Headings"
+      },
+      {
+        "type": "font_picker",
+        "id": "type_header_font",
+        "label": "Heading font",
+        "default": "playfair_display_n4"
+      },
+      {
+        "type": "header",
+        "content": "Body"
+      },
+      {
+        "type": "font_picker",
+        "id": "type_body_font",
+        "label": "Body font",
+        "default": "inter_n4"
+      }
+    ]
+  },
+  {
+    "name": "Layout & Spacing",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Border radius"
+      },
+      {
+        "type": "range",
+        "id": "border_radius_small",
+        "label": "Small radius (buttons, inputs)",
+        "min": 0,
+        "max": 12,
+        "step": 1,
+        "default": 4,
+        "unit": "px"
+      },
+      {
+        "type": "range",
+        "id": "border_radius_medium",
+        "label": "Medium radius (cards)",
+        "min": 0,
+        "max": 24,
+        "step": 2,
+        "default": 8,
+        "unit": "px"
+      },
+      {
+        "type": "range",
+        "id": "border_radius_large",
+        "label": "Large radius (sections)",
+        "min": 0,
+        "max": 40,
+        "step": 4,
+        "default": 16,
+        "unit": "px"
+      }
+    ]
+  },
+  {
+    "name": "Product cards",
+    "settings": [
+      {
+        "type": "checkbox",
+        "id": "show_vendor",
+        "label": "Show product vendor",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "show_rating",
+        "label": "Show product ratings",
+        "info": "Requires a reviews app that writes to product.metafields.reviews.rating",
+        "default": true
+      },
+      {
+        "type": "select",
+        "id": "card_image_ratio",
+        "label": "Image ratio",
+        "options": [
+          {
+            "value": "square",
+            "label": "Square (1:1)"
+          },
+          {
+            "value": "portrait",
+            "label": "Portrait (3:4)"
+          },
+          {
+            "value": "landscape",
+            "label": "Landscape (4:3)"
+          }
+        ],
+        "default": "square"
+      }
+    ]
+  },
+  {
+    "name": "Cart",
+    "settings": [
+      {
+        "type": "select",
+        "id": "cart_type",
+        "label": "Cart behaviour",
+        "options": [
+          {
+            "value": "drawer",
+            "label": "Slide-out drawer"
+          },
+          {
+            "value": "page",
+            "label": "Go to cart page"
+          }
+        ],
+        "default": "drawer"
+      },
+      {
+        "type": "checkbox",
+        "id": "cart_enable_upsell",
+        "label": "Show upsell products in cart",
+        "default": true
+      },
+      {
+        "type": "text",
+        "id": "cart_upsell_heading",
+        "label": "Upsell heading",
+        "default": "Complete your routine"
+      },
+      {
+        "type": "collection",
+        "id": "cart_upsell_collection",
+        "label": "Upsell products source"
+      }
+    ]
+  },
+  {
+    "name": "UK & EU Compliance",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Supplement panel"
+      },
+      {
+        "type": "select",
+        "id": "supplement_panel_format",
+        "label": "Panel format",
+        "info": "UK & EU brands must declare Nutrient Reference Values (NRV). Choose the US format only if you sell into the United States, where the FDA requires Supplement Facts with % Daily Value.",
+        "options": [
+          {
+            "value": "eu_nrv",
+            "label": "UK & EU — Nutrition Information (%NRV)"
+          },
+          {
+            "value": "fda",
+            "label": "US — Supplement Facts (% Daily Value)"
+          }
+        ],
+        "default": "eu_nrv"
+      },
+      {
+        "type": "header",
+        "content": "VAT"
+      },
+      {
+        "type": "checkbox",
+        "id": "show_vat_note",
+        "label": "Show VAT note on product pages",
+        "default": true
+      },
+      {
+        "type": "text",
+        "id": "vat_note_text",
+        "label": "VAT note text",
+        "default": "Price includes VAT"
+      },
+      {
+        "type": "header",
+        "content": "BNPL messaging"
+      },
+      {
+        "type": "checkbox",
+        "id": "show_bnpl",
+        "label": "Show Buy Now Pay Later messaging",
+        "default": false
+      },
+      {
+        "type": "text",
+        "id": "bnpl_text",
+        "label": "BNPL message",
+        "default": "Pay in 3 interest-free instalments"
+      },
+      {
+        "type": "header",
+        "content": "Disclaimer"
+      },
+      {
+        "type": "checkbox",
+        "id": "show_supplement_disclaimer",
+        "label": "Show supplement disclaimer sitewide",
+        "default": true
+      },
+      {
+        "type": "textarea",
+        "id": "supplement_disclaimer",
+        "label": "Disclaimer text",
+        "default": "Food supplements should not be used as a substitute for a varied diet. Do not exceed the recommended daily intake."
+      }
+    ]
+  },
+  {
+    "name": "Social media",
+    "settings": [
+      {
+        "type": "text",
+        "id": "twitter_handle",
+        "label": "Twitter / X handle",
+        "info": "Without the @ symbol"
+      },
+      {
+        "type": "url",
+        "id": "social_instagram_link",
+        "label": "Instagram URL"
+      },
+      {
+        "type": "url",
+        "id": "social_tiktok_link",
+        "label": "TikTok URL"
+      },
+      {
+        "type": "url",
+        "id": "social_facebook_link",
+        "label": "Facebook URL"
+      },
+      {
+        "type": "url",
+        "id": "social_youtube_link",
+        "label": "YouTube URL"
+      }
+    ]
+  },
+  {
+    "name": "Favicon",
+    "settings": [
+      {
+        "type": "image_picker",
+        "id": "favicon",
+        "label": "Favicon image",
+        "info": "Recommended: 32×32px PNG"
+      }
+    ]
+  },
+  {
+    "name": "Share image",
+    "settings": [
+      {
+        "type": "image_picker",
+        "id": "share_image",
+        "label": "Default share image",
+        "info": "Used as fallback for Open Graph and Twitter cards. Recommended: 1200×630px."
+      }
+    ]
+  }
+]

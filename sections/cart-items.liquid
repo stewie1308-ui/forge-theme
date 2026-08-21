@@ -1,0 +1,23 @@
+{%- comment -%}
+  Dedicated section for Section Rendering API.
+  Fetched via JS: GET /?sections=cart-items
+
+  Renders the same 'cart-contents' / 'cart-footer' snippets as the initial drawer paint
+  in snippets/cart-drawer.liquid. The wrapper IDs below are the swap targets the JS in
+  theme.liquid reads from — keep them in sync with the drawer's.
+{%- endcomment -%}
+
+<div id="CartItemsInner">
+  {%- render 'cart-contents' -%}
+</div>
+
+<div id="CartFooterInner">
+  {%- render 'cart-footer' -%}
+</div>
+
+{% schema %}
+{
+  "name": "Cart items",
+  "settings": []
+}
+{% endschema %}

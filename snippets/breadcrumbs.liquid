@@ -1,0 +1,54 @@
+{%- comment -%}
+  Accessible breadcrumb navigation.
+  Renders on product, collection, article and page templates.
+{%- endcomment -%}
+
+<nav class="breadcrumbs" aria-label="{{ 'general.breadcrumbs.title' | t }}">
+  <ol>
+    <li>
+      <a href="{{ routes.root_url }}">{{ 'general.breadcrumbs.home' | t }}</a>
+    </li>
+
+    {%- if template.name == 'product' -%}
+      {%- if collection -%}
+        <li>
+          <span class="breadcrumbs__sep" aria-hidden="true">›</span>
+          <a href="{{ collection.url }}">{{ collection.title }}</a>
+        </li>
+      {%- endif -%}
+      <li aria-current="page">
+        <span class="breadcrumbs__sep" aria-hidden="true">›</span>
+        {{ product.title }}
+      </li>
+
+    {%- elsif template.name == 'collection' -%}
+      <li aria-current="page">
+        <span class="breadcrumbs__sep" aria-hidden="true">›</span>
+        {{ collection.title }}
+      </li>
+
+    {%- elsif template.name == 'article' -%}
+      <li>
+        <span class="breadcrumbs__sep" aria-hidden="true">›</span>
+        <a href="{{ blog.url }}">{{ blog.title }}</a>
+      </li>
+      <li aria-current="page">
+        <span class="breadcrumbs__sep" aria-hidden="true">›</span>
+        {{ article.title }}
+      </li>
+
+    {%- elsif template.name == 'page' -%}
+      <li aria-current="page">
+        <span class="breadcrumbs__sep" aria-hidden="true">›</span>
+        {{ page.title }}
+      </li>
+
+    {%- elsif template.name == 'blog' -%}
+      <li aria-current="page">
+        <span class="breadcrumbs__sep" aria-hidden="true">›</span>
+        {{ blog.title }}
+      </li>
+
+    {%- endif -%}
+  </ol>
+</nav>

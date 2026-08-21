@@ -1,0 +1,19 @@
+{
+  "type": "footer",
+  "name": "Footer group",
+  "sections": {
+    "footer": {
+      "type": "footer",
+      "settings": {
+        "brand_description": "Science-backed supplements formulated for real results.",
+        "footer_title_1": "Shop",
+        "footer_menu_1": "footer",
+        "footer_title_2": "Support",
+        "footer_title_3": "Legal",
+        "copyright_text": "All rights reserved.",
+        "show_payment_icons": true
+      }
+    }
+  },
+  "order": ["footer"]
+}

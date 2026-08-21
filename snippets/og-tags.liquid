@@ -1,0 +1,71 @@
+{%- liquid
+  assign og_title       = page_title | default: shop.name
+  assign og_description = page_description | default: shop.description | default: ''
+  assign fallback_url   = request.origin | append: request.path
+  assign og_url         = canonical_url | default: fallback_url
+  assign og_type        = 'website'
+  assign og_image       = ''
+
+  if template.name == 'product'
+    assign og_type        = 'product'
+    assign og_title       = product.title
+    assign og_description = product.description | strip_html | truncate: 200
+    if product.featured_image
+      assign og_image = product.featured_image | image_url: width: 1200 | prepend: 'https:'
+    endif
+
+  elsif template.name == 'article'
+    assign og_type        = 'article'
+    assign og_title       = article.title
+    assign og_description = article.excerpt | default: article.content | strip_html | truncate: 200
+    if article.image
+      assign og_image = article.image | image_url: width: 1200 | prepend: 'https:'
+    endif
+
+  elsif template.name == 'collection'
+    if collection.image
+      assign og_image = collection.image | image_url: width: 1200 | prepend: 'https:'
+    endif
+
+  endif
+
+  unless og_image != blank
+    if settings.share_image
+      assign og_image = settings.share_image | image_url: width: 1200 | prepend: 'https:'
+    endif
+  endunless
+-%}
+
+<meta property="og:site_name"   content="{{ shop.name | escape }}">
+<meta property="og:url"         content="{{ og_url }}">
+<meta property="og:title"       content="{{ og_title | escape }}">
+<meta property="og:type"        content="{{ og_type }}">
+
+{%- if og_description != blank -%}
+  <meta property="og:description" content="{{ og_description | escape }}">
+{%- endif -%}
+
+{%- if og_image != blank -%}
+  <meta property="og:image"       content="{{ og_image }}">
+  <meta property="og:image:width" content="1200">
+{%- endif -%}
+
+{%- if template.name == 'product' -%}
+  <meta property="og:price:amount"   content="{{ product.price | divided_by: 100.0 }}">
+  <meta property="og:price:currency" content="{{ cart.currency.iso_code }}">
+{%- endif -%}
+
+<meta name="twitter:card"  content="summary_large_image">
+<meta name="twitter:title" content="{{ og_title | escape }}">
+
+{%- if og_description != blank -%}
+  <meta name="twitter:description" content="{{ og_description | escape }}">
+{%- endif -%}
+
+{%- if og_image != blank -%}
+  <meta name="twitter:image" content="{{ og_image }}">
+{%- endif -%}
+
+{%- if settings.twitter_handle != blank -%}
+  <meta name="twitter:site" content="@{{ settings.twitter_handle }}">
+{%- endif -%}

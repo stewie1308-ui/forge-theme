@@ -1,0 +1,59 @@
+{%- render 'breadcrumbs' -%}
+
+<section class="list-collections-section">
+  <div class="container">
+
+    <div class="page-header">
+      <h1 class="page-header__title">
+        {{ 'collections.title' | t }}
+      </h1>
+    </div>
+
+    {%- if collections.size == 0 -%}
+      <p class="account-empty">{{ 'collections.empty' | t }}</p>
+    {%- else -%}
+      {%- paginate collections by 24 -%}
+      <ul class="collection-list" role="list">
+        {%- for collection in collections -%}
+          <li class="collection-list__item">
+            <a href="{{ collection.url }}" class="collection-list__link">
+              <div class="collection-list__media">
+                {%- if collection.image -%}
+                  <img
+                    class="collection-list__img"
+                    src="{{ collection.image | image_url: width: 600 }}"
+                    alt="{{ collection.image.alt | default: collection.title | escape }}"
+                    loading="lazy"
+                    width="{{ collection.image.width }}"
+                    height="{{ collection.image.height }}"
+                    sizes="(min-width: 1024px) 33vw, 50vw"
+                    srcset="
+                      {{ collection.image | image_url: width: 400 }} 400w,
+                      {{ collection.image | image_url: width: 600 }} 600w,
+                      {{ collection.image | image_url: width: 900 }} 900w
+                    "
+                  >
+                {%- else -%}
+                  <div class="collection-list__placeholder"></div>
+                {%- endif -%}
+              </div>
+              <div class="collection-list__body">
+                <h2 class="collection-list__title">{{ collection.title }}</h2>
+                <p class="collection-list__count">
+                  {{ 'collections.product_count' | t: count: collection.all_products_count }}
+                </p>
+              </div>
+            </a>
+          </li>
+        {%- endfor -%}
+      </ul>
+      {%- render 'pagination', paginate: paginate -%}
+      {%- endpaginate -%}
+    {%- endif -%}
+
+  </div>
+</section>
+
+{% schema %}
+{ "name": "Collections list", "settings": [] }
+{% endschema %}

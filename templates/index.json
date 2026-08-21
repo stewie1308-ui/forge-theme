@@ -1,0 +1,137 @@
+{
+  "sections": {
+    "hero": {
+      "type": "hero-banner",
+      "settings": {
+        "eyebrow": "New formula",
+        "heading": "Built for people who actually train.",
+        "subheading": "Science-backed supplements formulated for real results — not marketing claims.",
+        "trust_bar": "★★★★★  4.9/5 from 2,400+ reviews",
+        "button_label": "Shop now",
+        "button_link": "/collections/all",
+        "button_style": "accent",
+        "button_label_2": "Learn more",
+        "button_link_2": "/pages/about",
+        "button_style_2": "secondary",
+        "content_alignment": "left",
+        "min_height": 600,
+        "overlay_opacity": 45,
+        "background_color": "#0a0a0a"
+      }
+    },
+    "benefits": {
+      "type": "benefits",
+      "blocks": {
+        "b1": {
+          "type": "item",
+          "settings": {
+            "icon": "🧪",
+            "heading": "Clinically dosed",
+            "text": "Every ingredient at the dose used in peer-reviewed research. No fairy dusting."
+          }
+        },
+        "b2": {
+          "type": "item",
+          "settings": {
+            "icon": "🔬",
+            "heading": "Third-party tested",
+            "text": "Every batch tested by an independent ISO-accredited laboratory for purity and potency."
+          }
+        },
+        "b3": {
+          "type": "item",
+          "settings": {
+            "icon": "🌿",
+            "heading": "Clean label",
+            "text": "No artificial colours, fillers, or proprietary blends. You know exactly what's inside."
+          }
+        }
+      },
+      "block_order": ["b1", "b2", "b3"],
+      "settings": {
+        "heading": "Why Forge?",
+        "eyebrow": "The difference",
+        "style": "icon",
+        "columns": 3,
+        "bg_secondary": false,
+        "bg_dark": false
+      }
+    },
+    "featured-products": {
+      "type": "featured-products",
+      "settings": {
+        "eyebrow": "Shop",
+        "heading": "Our bestsellers",
+        "products_source": "collection",
+        "products_limit": 4,
+        "columns": 4,
+        "show_quick_add": true,
+        "cta_label": "View all products",
+        "cta_link": "/collections/all",
+        "heading_align": "center"
+      }
+    },
+    "testimonials": {
+      "type": "testimonials",
+      "blocks": {
+        "r1": {
+          "type": "review",
+          "settings": {
+            "rating": 5,
+            "quote": "I've tried dozens of supplements. This is the first one where I actually noticed a real difference within two weeks.",
+            "name": "James T.",
+            "meta": "Competitive runner",
+            "verified": true
+          }
+        },
+        "r2": {
+          "type": "review",
+          "settings": {
+            "rating": 5,
+            "quote": "Clean label, no fillers, and you can actually read the ingredient list. Exactly what I've been looking for.",
+            "name": "Sarah M.",
+            "meta": "Personal trainer",
+            "verified": true
+          }
+        },
+        "r3": {
+          "type": "review",
+          "settings": {
+            "rating": 5,
+            "quote": "The lab reports are a nice touch. Rarely see brands this transparent about what's in their products.",
+            "name": "Dr. R. Patel",
+            "meta": "Sports nutritionist",
+            "verified": true
+          }
+        }
+      },
+      "block_order": ["r1", "r2", "r3"],
+      "settings": {
+        "eyebrow": "Real results",
+        "heading": "What our customers say",
+        "show_aggregate": true,
+        "aggregate_rating": "4.9",
+        "review_count": "2,400+",
+        "bg_secondary": true
+      }
+    },
+    "promise": {
+      "type": "rich-text",
+      "settings": {
+        "heading": "Our promise to you",
+        "text": "<p>We believe supplements should do what they say on the label. That's why every Forge product is formulated to clinically relevant doses, verified by independent laboratories, and built on peer-reviewed science.</p>",
+        "width": "narrow",
+        "button_label": "Our story",
+        "button_link": "/pages/about",
+        "button_style": "secondary"
+      }
+    }
+  },
+  "order": [
+    "hero",
+    "benefits",
+    "featured-products",
+    "testimonials",
+    "promise"
+  ]
+}

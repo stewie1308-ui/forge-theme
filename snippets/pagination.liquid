@@ -1,0 +1,58 @@
+{%- comment -%}
+  Accessible pagination.
+  Usage: {% render 'pagination', paginate: paginate %}
+{%- endcomment -%}
+
+{%- if paginate.pages > 1 -%}
+  <nav class="pagination" aria-label="{{ 'general.pagination.label' | t }}">
+
+    {%- if paginate.previous -%}
+      <a
+        class="pagination__item"
+        href="{{ paginate.previous.url }}"
+        aria-label="{{ 'general.pagination.previous' | t }}"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" d="m15 19-7-7 7-7"/>
+        </svg>
+        <span>{{ 'general.pagination.previous' | t }}</span>
+      </a>
+    {%- endif -%}
+
+    {%- for part in paginate.parts -%}
+      {%- if part.is_link -%}
+        <a
+          class="pagination__item"
+          href="{{ part.url }}"
+          aria-label="{{ 'general.pagination.page' | t }} {{ part.title }}"
+        >
+          {{ part.title }}
+        </a>
+      {%- elsif part.title == paginate.current_page -%}
+        <span
+          class="pagination__item"
+          aria-current="page"
+          aria-label="{{ 'general.pagination.current_page' | t }} {{ part.title }}"
+        >
+          {{ part.title }}
+        </span>
+      {%- else -%}
+        <span class="pagination__item" aria-hidden="true">{{ part.title }}</span>
+      {%- endif -%}
+    {%- endfor -%}
+
+    {%- if paginate.next -%}
+      <a
+        class="pagination__item"
+        href="{{ paginate.next.url }}"
+        aria-label="{{ 'general.pagination.next' | t }}"
+      >
+        <span>{{ 'general.pagination.next' | t }}</span>
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" d="m9 5 7 7-7 7"/>
+        </svg>
+      </a>
+    {%- endif -%}
+
+  </nav>
+{%- endif -%}

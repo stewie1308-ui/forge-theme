@@ -1,0 +1,67 @@
+{%- comment -%}
+  Country/currency + language selectors for Shopify Markets.
+  Renders nothing unless the store actually has more than one
+  country or language published.
+{%- endcomment -%}
+
+{%- if localization.available_countries.size > 1 or localization.available_languages.size > 1 -%}
+  <div class="localization" aria-label="{{ 'general.localization.title' | t }}">
+    {%- form 'localization', class: 'localization__form' -%}
+
+      {%- if localization.available_countries.size > 1 -%}
+        <div class="localization__field">
+          <label class="sr-only" for="LocalizationCountry">
+            {{ 'general.localization.country_label' | t }}
+          </label>
+          <select
+            id="LocalizationCountry"
+            name="country_code"
+            class="form-select localization__select"
+            data-localization-select
+          >
+            {%- for country in localization.available_countries -%}
+              <option
+                value="{{ country.iso_code }}"
+                {% if country.iso_code == localization.country.iso_code %}selected{% endif %}
+              >
+                {{ country.name }} ({{ country.currency.iso_code }} {{ country.currency.symbol }})
+              </option>
+            {%- endfor -%}
+          </select>
+        </div>
+      {%- endif -%}
+
+      {%- if localization.available_languages.size > 1 -%}
+        <div class="localization__field">
+          <label class="sr-only" for="LocalizationLanguage">
+            {{ 'general.localization.language_label' | t }}
+          </label>
+          <select
+            id="LocalizationLanguage"
+            name="locale_code"
+            class="form-select localization__select"
+            data-localization-select
+          >
+            {%- for language in localization.available_languages -%}
+              <option
+                value="{{ language.iso_code }}"
+                lang="{{ language.iso_code }}"
+                {% if language.iso_code == localization.language.iso_code %}selected{% endif %}
+              >
+                {{ language.endonym_name | capitalize }}
+              </option>
+            {%- endfor -%}
+          </select>
+        </div>
+      {%- endif -%}
+
+      {%- comment -%} Submits automatically with JS; this is the no-JS fallback. {%- endcomment -%}
+      <noscript>
+        <button type="submit" class="btn btn--secondary btn--sm">
+          {{ 'general.localization.update' | t }}
+        </button>
+      </noscript>
+
+    {%- endform -%}
+  </div>
+{%- endif -%}

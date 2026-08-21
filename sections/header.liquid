@@ -1,0 +1,538 @@
+{%- liquid
+  assign main_menu = linklists[section.settings.menu]
+-%}
+
+{%- if section.settings.show_announcement and section.settings.announcement_text != blank -%}
+  <div class="announcement-bar" role="region" aria-label="{{ 'sections.header.announcement' | t }}">
+    <p class="announcement-bar__text">
+      {%- if section.settings.announcement_link != blank -%}
+        <a href="{{ section.settings.announcement_link }}">{{ section.settings.announcement_text }}</a>
+      {%- else -%}
+        {{ section.settings.announcement_text }}
+      {%- endif -%}
+    </p>
+    {%- if section.settings.announcement_dismissible -%}
+      <button class="announcement-bar__close" aria-label="{{ 'sections.header.close_announcement' | t }}">
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12"/>
+        </svg>
+      </button>
+    {%- endif -%}
+  </div>
+{%- endif -%}
+
+<header class="site-header" role="banner" id="SiteHeader">
+  <div class="container">
+    <div class="site-header__inner">
+
+      {{- '<!-- Left: desktop nav -->' -}}
+      <nav class="site-header__nav" aria-label="{{ 'sections.header.menu' | t }}">
+        <ul class="header-nav" role="list">
+          {%- for link in main_menu.links -%}
+            <li class="header-nav__item">
+              {%- if link.links.size > 0 -%}
+                <button
+                  class="header-nav__link"
+                  aria-expanded="false"
+                  aria-haspopup="true"
+                  aria-controls="mega-menu-{{ section.id }}-{{ forloop.index }}"
+                >
+                  {{ link.title }}
+                  <svg class="header-nav__chevron" xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="m6 9 6 6 6-6"/>
+                  </svg>
+                </button>
+
+                <div
+                  id="mega-menu-{{ section.id }}-{{ forloop.index }}"
+                  class="mega-menu"
+                  role="region"
+                  aria-label="{{ link.title }}"
+                >
+                  {%- for child in link.links -%}
+                    <div class="mega-menu__col">
+                      {%- if child.links.size > 0 -%}
+                        <p class="mega-menu__col-title">{{ child.title }}</p>
+                        {%- for grandchild in child.links -%}
+                          <a
+                            class="mega-menu__link"
+                            href="{{ grandchild.url }}"
+                            {% if grandchild.current %}aria-current="page"{% endif %}
+                          >{{ grandchild.title }}</a>
+                        {%- endfor -%}
+                      {%- else -%}
+                        <a
+                          class="mega-menu__link mega-menu__link--solo"
+                          href="{{ child.url }}"
+                          {% if child.current %}aria-current="page"{% endif %}
+                        >{{ child.title }}</a>
+                      {%- endif -%}
+                    </div>
+                  {%- endfor -%}
+                </div>
+
+              {%- else -%}
+                <a
+                  class="header-nav__link"
+                  href="{{ link.url }}"
+                  {% if link.current %}aria-current="page"{% endif %}
+                >{{ link.title }}</a>
+              {%- endif -%}
+            </li>
+          {%- endfor -%}
+        </ul>
+      </nav>
+
+      {{- '<!-- Centre: logo -->' -}}
+      <a class="site-header__logo" href="{{ routes.root_url }}" aria-label="{{ shop.name }}">
+        {%- if section.settings.logo != blank -%}
+          <img
+            src="{{ section.settings.logo | image_url: height: 80 }}"
+            alt="{{ section.settings.logo.alt | default: shop.name | escape }}"
+            width="{{ section.settings.logo_max_width }}"
+            {%- comment -%}
+              Multiply before dividing: both operands are integers, so
+              `height | divided_by: width` truncates to 0 for any logo wider
+              than it is tall, which is every logo.
+            {%- endcomment -%}
+            height="{{ section.settings.logo_max_width | times: section.settings.logo.height | divided_by: section.settings.logo.width }}"
+            loading="eager"
+            class="site-header__logo-img"
+          >
+        {%- else -%}
+          <span class="site-header__logo-text">{{ shop.name }}</span>
+        {%- endif -%}
+      </a>
+
+      {{- '<!-- Right: actions -->' -}}
+      <div class="site-header__actions">
+        {%- if section.settings.show_search -%}
+          <button
+            class="header-action"
+            aria-label="{{ 'general.search.title' | t }}"
+            data-search-open
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <circle cx="11" cy="11" r="8"/>
+              <path stroke-linecap="round" d="m21 21-4.35-4.35"/>
+            </svg>
+          </button>
+        {%- endif -%}
+
+        {%- if shop.customer_accounts_enabled -%}
+          <a
+            class="header-action"
+            href="{% if customer %}{{ routes.account_url }}{% else %}{{ routes.account_login_url }}{% endif %}"
+            aria-label="{{ 'customer.account.title' | t }}"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z"/>
+            </svg>
+          </a>
+        {%- endif -%}
+
+        {%- if settings.cart_type == 'page' -%}
+        <a
+          class="header-action"
+          href="{{ routes.cart_url }}"
+          aria-label="{{ 'cart.title' | t }} ({{ cart.item_count }})"
+        >
+        {%- else -%}
+        <button
+          class="header-action"
+          aria-label="{{ 'cart.title' | t }} ({{ cart.item_count }})"
+          aria-expanded="false"
+          aria-controls="CartDrawer"
+          data-cart-open
+        >
+        {%- endif -%}
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25 5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z"/>
+          </svg>
+          <span
+            class="header-action__badge"
+            data-cart-count
+            aria-live="polite"
+            aria-atomic="true"
+            {% if cart.item_count == 0 %}style="display:none"{% endif %}
+          >{{ cart.item_count }}</span>
+        {%- if settings.cart_type == 'page' -%}</a>{%- else -%}</button>{%- endif -%}
+
+        <button
+          class="mobile-menu-btn"
+          aria-label="{{ 'sections.header.open_menu' | t }}"
+          aria-expanded="false"
+          aria-controls="MobileNav"
+        >
+          <span class="mobile-menu-btn__bar"></span>
+          <span class="mobile-menu-btn__bar"></span>
+          <span class="mobile-menu-btn__bar"></span>
+        </button>
+      </div>
+
+    </div>
+  </div>
+</header>
+
+{{- '<!-- Mobile nav -->' -}}
+<nav
+  id="MobileNav"
+  class="mobile-nav"
+  aria-label="{{ 'sections.header.mobile_navigation' | t }}"
+  aria-hidden="true"
+>
+  <div class="mobile-nav__inner">
+    {%- for link in main_menu.links -%}
+      {%- if link.links.size > 0 -%}
+        <div class="mobile-nav__group">
+          <button
+            class="mobile-nav__toggle"
+            aria-expanded="false"
+            aria-controls="mobile-sub-{{ forloop.index }}"
+          >
+            {{ link.title }}
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" d="m6 9 6 6 6-6"/>
+            </svg>
+          </button>
+          <ul id="mobile-sub-{{ forloop.index }}" class="mobile-nav__sub" role="list" hidden>
+            {%- for child in link.links -%}
+              <li>
+                <a class="mobile-nav__sub-link" href="{{ child.url }}">{{ child.title }}</a>
+              </li>
+            {%- endfor -%}
+          </ul>
+        </div>
+      {%- else -%}
+        <a
+          class="mobile-nav__link"
+          href="{{ link.url }}"
+          {% if link.current %}aria-current="page"{% endif %}
+        >{{ link.title }}</a>
+      {%- endif -%}
+    {%- endfor -%}
+
+    <div class="mobile-nav__footer">
+      {%- if shop.customer_accounts_enabled -%}
+        <a href="{% if customer %}{{ routes.account_url }}{% else %}{{ routes.account_login_url }}{% endif %}" class="btn btn--secondary btn--sm btn--full">
+          {% if customer %}{{ 'customer.account.title' | t }}{% else %}{{ 'customer.login.title' | t }}{% endif %}
+        </a>
+      {%- endif -%}
+    </div>
+  </div>
+</nav>
+
+<div class="mobile-nav-overlay" aria-hidden="true"></div>
+
+
+<script>
+(function () {
+  /* -------------------------------------------------------
+     HEADER SCROLL
+     ------------------------------------------------------- */
+  var header = document.getElementById('SiteHeader');
+  if (header) {
+    var onScroll = function () {
+      header.classList.toggle('site-header--scrolled', window.scrollY > 50);
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+  }
+
+  /* -------------------------------------------------------
+     MEGA MENU
+     ------------------------------------------------------- */
+  var navItems = document.querySelectorAll('.header-nav__item');
+
+  navItems.forEach(function (item) {
+    var trigger = item.querySelector('.header-nav__link[aria-expanded]');
+    var menu    = item.querySelector('.mega-menu');
+    if (!trigger || !menu) return;
+
+    var closeTimer;
+
+    function openMenu() {
+      clearTimeout(closeTimer);
+      // Close others
+      document.querySelectorAll('.mega-menu.is-open').forEach(function (m) {
+        if (m !== menu) {
+          m.classList.remove('is-open');
+          m.closest('.header-nav__item')
+           .querySelector('[aria-expanded]')
+           .setAttribute('aria-expanded', 'false');
+        }
+      });
+      trigger.setAttribute('aria-expanded', 'true');
+      menu.classList.add('is-open');
+    }
+
+    function closeMenuNow() {
+      clearTimeout(closeTimer);
+      trigger.setAttribute('aria-expanded', 'false');
+      menu.classList.remove('is-open');
+    }
+
+    /* Debounced so the pointer can travel from the trigger into the panel. */
+    function closeMenu() {
+      closeTimer = setTimeout(closeMenuNow, 120);
+    }
+
+    /* Pointer (mouse) */
+    item.addEventListener('mouseenter', openMenu);
+    item.addEventListener('mouseleave', closeMenu);
+    menu.addEventListener('mouseenter', function () { clearTimeout(closeTimer); });
+    menu.addEventListener('mouseleave', closeMenu);
+
+    /* Click / tap — the only way in on touch devices at desktop widths.
+       Also covers Enter and Space, which browsers dispatch as clicks. */
+    trigger.addEventListener('click', function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      if (trigger.getAttribute('aria-expanded') === 'true') {
+        closeMenuNow();
+      } else {
+        openMenu();
+      }
+    });
+
+    trigger.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') { closeMenuNow(); trigger.focus(); }
+    });
+
+    menu.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') { closeMenuNow(); trigger.focus(); }
+    });
+  });
+
+  // Close on outside click
+  document.addEventListener('click', function (e) {
+    if (!e.target.closest('.header-nav__item')) {
+      document.querySelectorAll('.mega-menu.is-open').forEach(function (m) {
+        m.classList.remove('is-open');
+        m.closest('.header-nav__item')
+         .querySelector('[aria-expanded]')
+         .setAttribute('aria-expanded', 'false');
+      });
+    }
+  });
+
+  /* -------------------------------------------------------
+     MOBILE NAV
+     ------------------------------------------------------- */
+  var menuLabels = {
+    open:  {{ 'sections.header.open_menu'  | t | json }},
+    close: {{ 'sections.header.close_menu' | t | json }}
+  };
+  var menuBtn = document.querySelector('.mobile-menu-btn');
+  var mobileNav = document.getElementById('MobileNav');
+  var overlay   = document.querySelector('.mobile-nav-overlay');
+  var removeTrap;
+
+  function openMobileNav() {
+    menuBtn.setAttribute('aria-expanded', 'true');
+    menuBtn.setAttribute('aria-label', menuLabels.close);
+    mobileNav.classList.add('is-open');
+    mobileNav.setAttribute('aria-hidden', 'false');
+    overlay.classList.add('is-visible');
+    document.body.classList.add('no-scroll');
+    removeTrap = window.Forge && window.Forge.trapFocus ? window.Forge.trapFocus(mobileNav) : null;
+  }
+
+  function closeMobileNav() {
+    menuBtn.setAttribute('aria-expanded', 'false');
+    menuBtn.setAttribute('aria-label', menuLabels.open);
+    mobileNav.classList.remove('is-open');
+    mobileNav.setAttribute('aria-hidden', 'true');
+    overlay.classList.remove('is-visible');
+    document.body.classList.remove('no-scroll');
+    if (removeTrap) { removeTrap(); removeTrap = null; }
+  }
+
+  if (menuBtn && mobileNav) {
+    menuBtn.addEventListener('click', function () {
+      menuBtn.getAttribute('aria-expanded') === 'true' ? closeMobileNav() : openMobileNav();
+    });
+    overlay && overlay.addEventListener('click', closeMobileNav);
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && mobileNav.classList.contains('is-open')) {
+        closeMobileNav();
+        menuBtn.focus();
+      }
+    });
+  }
+
+  // Mobile sub-nav toggles
+  document.querySelectorAll('.mobile-nav__toggle').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var subId = btn.getAttribute('aria-controls');
+      var sub   = document.getElementById(subId);
+      if (!sub) return;
+      var isOpen = !sub.hidden;
+      sub.hidden = isOpen;
+      btn.setAttribute('aria-expanded', isOpen ? 'false' : 'true');
+    });
+  });
+
+  // Search drawer
+  document.addEventListener('DOMContentLoaded', function () {
+    var searchDrawer  = document.getElementById('SearchDrawer');
+    var searchInput   = document.getElementById('SearchDrawerInput');
+    var searchBtns    = document.querySelectorAll('[data-search-open]');
+    var searchClose   = document.getElementById('SearchDrawerClose');
+    var searchOverlay = document.getElementById('SearchOverlay');
+    var searchTrap    = null;
+    var searchReturn  = null;
+
+    function openSearch() {
+      if (!searchDrawer) return;
+      searchReturn = document.activeElement;
+      searchDrawer.setAttribute('aria-hidden', 'false');
+      searchDrawer.classList.add('is-open');
+      if (searchOverlay) searchOverlay.classList.add('is-visible');
+      document.body.classList.add('no-scroll');
+      /* Deferred because .search-drawer is visibility:hidden until .is-open paints,
+         and a hidden element cannot take focus. trapFocus focuses the first control
+         itself, which is the search input. */
+      setTimeout(function () {
+        searchTrap = window.Forge && window.Forge.trapFocus
+          ? window.Forge.trapFocus(searchDrawer)
+          : null;
+        if (!searchTrap && searchInput) searchInput.focus();
+      }, 50);
+    }
+
+    function closeSearch() {
+      /* Guarded: this is bound to a document-level Escape listener, so without it
+         every Escape anywhere strips no-scroll off the body. */
+      if (!searchDrawer || !searchDrawer.classList.contains('is-open')) return;
+      searchDrawer.setAttribute('aria-hidden', 'true');
+      searchDrawer.classList.remove('is-open');
+      if (searchOverlay) searchOverlay.classList.remove('is-visible');
+      document.body.classList.remove('no-scroll');
+      if (searchTrap) { searchTrap(); searchTrap = null; }
+      /* Back to the button that opened it, not <body>. */
+      if (searchReturn && document.contains(searchReturn)) searchReturn.focus();
+      searchReturn = null;
+    }
+
+    searchBtns.forEach(function (btn) {
+      btn.addEventListener('click', openSearch);
+    });
+    searchClose   && searchClose.addEventListener('click', closeSearch);
+    searchOverlay && searchOverlay.addEventListener('click', closeSearch);
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') closeSearch();
+    });
+  });
+
+})();
+</script>
+
+<!-- Search drawer -->
+<div
+  id="SearchDrawer"
+  class="search-drawer"
+  aria-hidden="true"
+  aria-label="{{ 'general.search.title' | t }}"
+  role="dialog"
+>
+  <div class="search-drawer__inner">
+    <form action="{{ routes.search_url }}" method="get" class="search-drawer__form" role="search">
+      <input type="hidden" name="type" value="product">
+      <label class="sr-only" for="SearchDrawerInput">{{ 'general.search.title' | t }}</label>
+      <input
+        id="SearchDrawerInput"
+        class="search-drawer__input"
+        type="search"
+        name="q"
+        placeholder="{{ 'general.search.placeholder' | t }}"
+        autocomplete="off"
+        autocorrect="off"
+        autocapitalize="off"
+      >
+      <button type="submit" class="search-drawer__submit" aria-label="{{ 'general.search.submit' | t }}">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <circle cx="11" cy="11" r="8"/>
+          <path stroke-linecap="round" d="m21 21-4.35-4.35"/>
+        </svg>
+      </button>
+      <button type="button" class="search-drawer__close" id="SearchDrawerClose" aria-label="{{ 'general.search.close' | t }}">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12"/>
+        </svg>
+      </button>
+    </form>
+  </div>
+</div>
+<div id="SearchOverlay" class="search-overlay" aria-hidden="true"></div>
+
+
+{% schema %}
+{
+  "name": "Header",
+  "class": "forge-header-section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Logo"
+    },
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Logo image"
+    },
+    {
+      "type": "range",
+      "id": "logo_max_width",
+      "label": "Logo width",
+      "min": 60,
+      "max": 300,
+      "step": 10,
+      "default": 140,
+      "unit": "px"
+    },
+    {
+      "type": "header",
+      "content": "Navigation"
+    },
+    {
+      "type": "link_list",
+      "id": "menu",
+      "label": "Main menu",
+      "default": "main-menu"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_search",
+      "label": "Show search icon",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Announcement bar"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_announcement",
+      "label": "Show announcement bar",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "announcement_text",
+      "label": "Announcement text",
+      "default": "Free UK delivery on orders over £40"
+    },
+    {
+      "type": "url",
+      "id": "announcement_link",
+      "label": "Announcement link"
+    },
+    {
+      "type": "checkbox",
+      "id": "announcement_dismissible",
+      "label": "Allow visitors to dismiss",
+      "default": true
+    }
+  ]
+}
+{% endschema %}

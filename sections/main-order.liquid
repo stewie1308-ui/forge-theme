@@ -1,0 +1,139 @@
+<section class="account-section">
+  <div class="container">
+
+    <div class="account-header reveal">
+      <div>
+        <h1 class="account-header__title">
+          {{ 'customer.order.title' | t: name: order.name }}
+        </h1>
+        <p class="account-header__name">
+          {%- assign order_date = order.created_at | date: format: 'date' -%}
+          {{ 'customer.order.date_html' | t: date: order_date }}
+        </p>
+      </div>
+      <a href="{{ routes.account_url }}" class="btn btn--secondary btn--sm">
+        {{ 'customer.order.back_to_account' | t }}
+      </a>
+    </div>
+
+    {%- if order.cancelled -%}
+      <div class="account-form__errors reveal" role="status">
+        {%- assign cancelled_date = order.cancelled_at | date: format: 'date' -%}
+        <p>{{ 'customer.order.cancelled_html' | t: date: cancelled_date }}</p>
+        {%- if order.cancel_reason -%}
+          <p>{{ 'customer.order.cancelled_reason' | t: reason: order.cancel_reason_label }}</p>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+
+    <div class="account-layout">
+
+      <div class="order-detail reveal">
+        <table class="orders-table">
+          <thead>
+            <tr>
+              <th scope="col" colspan="2">{{ 'customer.order.product' | t }}</th>
+              <th scope="col">{{ 'customer.order.price' | t }}</th>
+              <th scope="col">{{ 'customer.order.quantity' | t }}</th>
+              <th scope="col">{{ 'customer.order.total' | t }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {%- for line_item in order.line_items -%}
+              <tr>
+                <td class="order-detail__img-cell">
+                  {%- if line_item.image -%}
+                    <img
+                      src="{{ line_item.image | image_url: width: 120 }}"
+                      alt="{{ line_item.image.alt | default: line_item.title | escape }}"
+                      loading="lazy"
+                      width="60"
+                      height="60"
+                      class="order-detail__img"
+                    >
+                  {%- endif -%}
+                </td>
+                <td>
+                  {%- if line_item.url -%}
+                    <a href="{{ line_item.url }}" class="orders-table__order-link">{{ line_item.title }}</a>
+                  {%- else -%}
+                    {{ line_item.title }}
+                  {%- endif -%}
+                  {%- if line_item.sku != blank -%}
+                    <p class="account-empty">{{ 'customer.order.sku' | t }}: {{ line_item.sku }}</p>
+                  {%- endif -%}
+                  {%- if line_item.fulfillment -%}
+                    {%- assign fulfilled_date = line_item.fulfillment.created_at | date: format: 'date' -%}
+                    <p class="account-empty">
+                      {{ 'customer.order.fulfilled_at_html' | t: date: fulfilled_date }}
+                      {%- if line_item.fulfillment.tracking_url -%}
+                        — <a href="{{ line_item.fulfillment.tracking_url }}" rel="nofollow noopener" target="_blank">
+                          {{- 'customer.order.track_shipment' | t -}}
+                        </a>
+                      {%- endif -%}
+                    </p>
+                  {%- endif -%}
+                </td>
+                <td>{{ line_item.final_price | money }}</td>
+                <td>{{ line_item.quantity }}</td>
+                <td>{{ line_item.final_line_price | money }}</td>
+              </tr>
+            {%- endfor -%}
+          </tbody>
+        </table>
+      </div>
+
+      <aside class="order-summary-side reveal">
+        <div class="order-summary">
+          <div class="order-summary__row">
+            <span>{{ 'customer.order.subtotal' | t }}</span>
+            <span>{{ order.line_items_subtotal_price | money }}</span>
+          </div>
+
+          {%- for discount_application in order.cart_level_discount_applications -%}
+            <div class="order-summary__row order-summary__row--discount">
+              <span>{{ discount_application.title }}</span>
+              <span>−{{ discount_application.total_allocated_amount | money }}</span>
+            </div>
+          {%- endfor -%}
+
+          {%- for shipping_method in order.shipping_methods -%}
+            <div class="order-summary__row">
+              <span>{{ 'customer.orders.shipping' | t }} ({{ shipping_method.title }})</span>
+              <span>{{ shipping_method.price | money }}</span>
+            </div>
+          {%- endfor -%}
+
+          {%- for tax_line in order.tax_lines -%}
+            <div class="order-summary__row">
+              <span>{{ 'customer.orders.tax' | t }} ({{ tax_line.title }} {{ tax_line.rate | times: 100 }}%)</span>
+              <span>{{ tax_line.price | money }}</span>
+            </div>
+          {%- endfor -%}
+
+          <div class="order-summary__row order-summary__row--total">
+            <span>{{ 'customer.order.total' | t }}</span>
+            <span>{{ order.total_price | money }}</span>
+          </div>
+        </div>
+
+        <div class="order-addresses">
+          <h2 class="account-section__heading">{{ 'customer.orders.shipping_address' | t }}</h2>
+          <address class="account-address__display">
+            {{ order.shipping_address | format_address }}
+          </address>
+
+          <h2 class="account-section__heading mt-6">{{ 'customer.orders.billing_address' | t }}</h2>
+          <address class="account-address__display">
+            {{ order.billing_address | format_address }}
+          </address>
+        </div>
+      </aside>
+
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{ "name": "Order", "settings": [] }
+{% endschema %}

@@ -1,0 +1,213 @@
+<footer class="site-footer" role="contentinfo">
+  <div class="container">
+
+    <div class="site-footer__top">
+
+      {{- '<!-- Brand column -->' -}}
+      <div class="site-footer__brand">
+        {%- if section.settings.logo != blank -%}
+          <img
+            src="{{ section.settings.logo | image_url: height: 80 }}"
+            alt="{{ shop.name | escape }}"
+            width="{{ section.settings.logo.width }}"
+            height="{{ section.settings.logo.height | default: 40 }}"
+            style="max-height:40px;width:auto;margin-bottom:1.25rem;filter:brightness(0) invert(1);"
+            loading="lazy"
+          >
+        {%- else -%}
+          <p class="site-footer__brand-name">{{ shop.name }}</p>
+        {%- endif -%}
+
+        {%- if section.settings.brand_description != blank -%}
+          <p class="site-footer__brand-text">{{ section.settings.brand_description }}</p>
+        {%- endif -%}
+
+        {%- if settings.show_supplement_disclaimer and settings.supplement_disclaimer != blank -%}
+          <p class="site-footer__disclaimer">{{ settings.supplement_disclaimer }}</p>
+        {%- endif -%}
+
+        {{- '<!-- Social links -->' -}}
+        {%- liquid
+          assign has_social = false
+          if settings.social_instagram_link != blank or settings.social_tiktok_link != blank or settings.social_facebook_link != blank or settings.social_youtube_link != blank
+            assign has_social = true
+          endif
+        -%}
+        {%- if has_social -%}
+          <ul class="site-footer__social" aria-label="{{ 'sections.footer.social_links' | t }}">
+            {%- if settings.social_instagram_link != blank -%}
+              <li>
+                <a href="{{ settings.social_instagram_link }}" rel="nofollow noopener" target="_blank" aria-label="Instagram" class="social-link">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+                </a>
+              </li>
+            {%- endif -%}
+            {%- if settings.social_tiktok_link != blank -%}
+              <li>
+                <a href="{{ settings.social_tiktok_link }}" rel="nofollow noopener" target="_blank" aria-label="TikTok" class="social-link">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.69a8.2 8.2 0 0 0 4.79 1.52V6.79a4.85 4.85 0 0 1-1.02-.1z"/></svg>
+                </a>
+              </li>
+            {%- endif -%}
+            {%- if settings.social_facebook_link != blank -%}
+              <li>
+                <a href="{{ settings.social_facebook_link }}" rel="nofollow noopener" target="_blank" aria-label="Facebook" class="social-link">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+                </a>
+              </li>
+            {%- endif -%}
+            {%- if settings.social_youtube_link != blank -%}
+              <li>
+                <a href="{{ settings.social_youtube_link }}" rel="nofollow noopener" target="_blank" aria-label="YouTube" class="social-link">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46a2.78 2.78 0 0 0-1.95 1.96A29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58A2.78 2.78 0 0 0 3.41 19.6C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 0 0 1.95-1.95A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z"/><polygon fill="#fff" points="9.75,15.02 15.5,12 9.75,8.98 9.75,15.02"/></svg>
+                </a>
+              </li>
+            {%- endif -%}
+          </ul>
+        {%- endif -%}
+      </div>
+
+      {{- '<!-- Link columns -->' -}}
+      {%- for i in (1..3) -%}
+        {%- liquid
+          assign col_menu  = 'footer_menu_'  | append: i
+          assign col_title = 'footer_title_' | append: i
+          assign menu_links = linklists[section.settings[col_menu]]
+        -%}
+        {%- if menu_links.links.size > 0 -%}
+          <div class="site-footer__col">
+            {%- if section.settings[col_title] != blank -%}
+              <p class="site-footer__col-title">{{ section.settings[col_title] }}</p>
+            {%- endif -%}
+            <ul role="list">
+              {%- for link in menu_links.links -%}
+                {%- liquid
+                  # Only nofollow links that actually leave the store. The old
+                  # test nofollowed every relative internal URL.
+                  assign is_external = false
+                  if link.url contains '://'
+                    assign is_external = true
+                    if link.url contains shop.domain
+                      assign is_external = false
+                    endif
+                    if link.url contains shop.permanent_domain
+                      assign is_external = false
+                    endif
+                  endif
+                -%}
+                <li>
+                  <a
+                    class="site-footer__link"
+                    href="{{ link.url }}"
+                    {% if is_external %}rel="nofollow noopener"{% endif %}
+                  >{{ link.title }}</a>
+                </li>
+              {%- endfor -%}
+            </ul>
+          </div>
+        {%- endif -%}
+      {%- endfor -%}
+
+    </div>
+
+    {%- render 'localization-form' -%}
+
+    <div class="site-footer__bottom">
+      <p class="site-footer__legal">
+        &copy; {{ 'now' | date: '%Y' }} {{ shop.name }}.
+        {%- if section.settings.copyright_text != blank -%}
+          {{ section.settings.copyright_text }}
+        {%- endif -%}
+      </p>
+
+      {%- if section.settings.show_payment_icons -%}
+        <div class="site-footer__payments" aria-label="{{ 'sections.footer.payment_methods' | t }}">
+          {{ shop.enabled_payment_types | payment_type_svg_tag: class: 'payment-icon' }}
+        </div>
+      {%- endif -%}
+    </div>
+
+  </div>
+</footer>
+
+
+{% schema %}
+{
+  "name": "Footer",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Footer logo"
+    },
+    {
+      "type": "textarea",
+      "id": "brand_description",
+      "label": "Brand description",
+      "default": "Science-backed supplements formulated for real results."
+    },
+    {
+      "type": "header",
+      "content": "Column 1"
+    },
+    {
+      "type": "text",
+      "id": "footer_title_1",
+      "label": "Column 1 heading",
+      "default": "Shop"
+    },
+    {
+      "type": "link_list",
+      "id": "footer_menu_1",
+      "label": "Column 1 menu",
+      "default": "footer"
+    },
+    {
+      "type": "header",
+      "content": "Column 2"
+    },
+    {
+      "type": "text",
+      "id": "footer_title_2",
+      "label": "Column 2 heading",
+      "default": "Support"
+    },
+    {
+      "type": "link_list",
+      "id": "footer_menu_2",
+      "label": "Column 2 menu"
+    },
+    {
+      "type": "header",
+      "content": "Column 3"
+    },
+    {
+      "type": "text",
+      "id": "footer_title_3",
+      "label": "Column 3 heading",
+      "default": "Legal"
+    },
+    {
+      "type": "link_list",
+      "id": "footer_menu_3",
+      "label": "Column 3 menu"
+    },
+    {
+      "type": "header",
+      "content": "Bottom bar"
+    },
+    {
+      "type": "text",
+      "id": "copyright_text",
+      "label": "Copyright text",
+      "default": "All rights reserved."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_payment_icons",
+      "label": "Show payment icons",
+      "default": true
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,121 @@
+{%- comment -%}
+  Renders a supplement panel in one of two regulatory formats, selected by the
+  `supplement_panel_format` theme setting (UK & EU Compliance group):
+
+    eu_nrv  — UK/EU "Nutrition Information", %NRV        (default)
+    fda     — US "Supplement Facts", % Daily Value
+
+  Only the framing changes: title, the amount column header, the caption and the
+  footnotes. The metafield shape and the row markup are identical either way, so a
+  merchant can switch format without re-entering data.
+
+  Accepts: product {Object}
+
+  Reads from product metafields:
+    product.metafields.supplement_facts.serving_size      (single_line_text)
+    product.metafields.supplement_facts.servings_per      (single_line_text)
+    product.metafields.supplement_facts.calories          (number_integer)
+    product.metafields.supplement_facts.rows              (json — array of objects)
+
+  Row object shape:
+    { "name": "Vitamin C", "amount": "500mg", "dv": "556%", "sub": false }
+
+  The `dv` value is whatever the merchant entered — a % Daily Value under FDA, a
+  %NRV under EU rules. It is not converted between the two; the merchant supplies
+  figures appropriate to the market they have selected.
+
+  If metafields are not yet set up the panel is silently hidden.
+{%- endcomment -%}
+
+{%- liquid
+  assign sf           = product.metafields.supplement_facts
+  assign serving_size = sf.serving_size.value | default: ''
+  assign servings_per = sf.servings_per.value | default: ''
+  assign calories     = sf.calories.value     | default: 0
+  assign sf_rows      = sf.rows.value
+
+  assign panel_format = settings.supplement_panel_format | default: 'eu_nrv'
+
+  if panel_format == 'fda'
+    assign panel_title    = 'products.product.supplement_facts' | t
+    assign panel_col_head = 'products.product.daily_value_star' | t
+    assign panel_col_name = 'products.product.daily_value' | t
+    assign panel_caption  = 'products.product.facts_per_serving' | t
+    assign panel_footnote = 'products.product.daily_value_footnote' | t
+    assign panel_not_est  = 'products.product.daily_value_not_established' | t
+    assign panel_energy   = 'products.product.calories' | t
+  else
+    assign panel_title    = 'products.product.nutrition_information' | t
+    assign panel_col_head = 'products.product.nrv_star' | t
+    assign panel_col_name = 'products.product.nrv' | t
+    assign panel_caption  = 'products.product.nutrition_per_serving' | t
+    assign panel_footnote = 'products.product.nrv_footnote' | t
+    assign panel_not_est  = 'products.product.nrv_not_established' | t
+    assign panel_energy   = 'products.product.energy' | t
+  endif
+-%}
+
+{%- if serving_size != blank or sf_rows != blank -%}
+<div class="supp-facts" role="region" aria-label="{{ panel_title | escape }} — {{ product.title | escape }}">
+
+  <div class="supp-facts__header">
+    <h2 class="supp-facts__title">{{ panel_title }}</h2>
+    {%- if serving_size != blank -%}
+      <p class="supp-facts__meta">{{ 'products.product.serving_size' | t }}: {{ serving_size }}</p>
+    {%- endif -%}
+    {%- if servings_per != blank -%}
+      <p class="supp-facts__meta">{{ 'products.product.servings_per_container' | t }}: {{ servings_per }}</p>
+    {%- endif -%}
+  </div>
+
+  {%- if calories > 0 -%}
+    <div class="supp-facts__calories">
+      <span class="supp-facts__calories-label">{{ panel_energy }}</span>
+      <span class="supp-facts__calories-value">
+        {%- if panel_format == 'fda' -%}
+          {{ calories }}
+        {%- else -%}
+          {%- comment -%}
+            EU declares energy with its unit. Merchants who must show kJ as well can
+            put the full string in a row instead — this metafield is a single integer.
+          {%- endcomment -%}
+          {{ 'products.product.energy_kcal' | t: amount: calories }}
+        {%- endif -%}
+      </span>
+    </div>
+  {%- endif -%}
+
+  <div class="supp-facts__dv-header">{{ panel_col_head }}</div>
+
+  {%- if sf_rows != blank -%}
+    <table class="supp-facts__table">
+      <caption class="sr-only">{{ panel_caption }}</caption>
+      <thead class="sr-only">
+        <tr>
+          <th scope="col">{{ 'products.product.ingredient' | t }}</th>
+          <th scope="col">{{ 'products.product.amount_per_serving' | t }}</th>
+          <th scope="col">{{ panel_col_name }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {%- for row in sf_rows -%}
+          <tr class="supp-facts__row{% if row.sub %} supp-facts__row--sub{% endif %}{% if row.bold %} supp-facts__row--bold{% endif %}">
+            <td class="supp-facts__name">{{ row.name }}</td>
+            <td class="supp-facts__amount">{{ row.amount }}</td>
+            <td class="supp-facts__dv">{{ row.dv | default: '†' }}</td>
+          </tr>
+        {%- endfor -%}
+      </tbody>
+    </table>
+  {%- endif -%}
+
+  <div class="supp-facts__footer">
+    <p>{{ panel_footnote }}</p>
+    <p>{{ panel_not_est }}</p>
+    {%- if product.metafields.forge.other_ingredients != blank -%}
+      <p class="supp-facts__other-ing"><strong>{{ 'products.product.other_ingredients' | t }}:</strong> {{ product.metafields.forge.other_ingredients.value }}</p>
+    {%- endif -%}
+  </div>
+
+</div>
+{%- endif -%}

@@ -1,0 +1,71 @@
+{%- comment -%}
+  Renders a detailed ingredients panel with per-ingredient descriptions.
+  Accepts: product {Object}
+
+  Reads from:
+    product.metafields.forge.ingredients       (rich_text  — used as fallback prose)
+    product.metafields.forge.ingredient_list   (json — array of ingredient objects)
+
+  Ingredient object shape:
+  {
+    "name":    "Ashwagandha KSM-66®",
+    "dose":    "600mg",
+    "benefit": "Clinically studied adaptogen shown to reduce cortisol and support stress resilience.",
+    "icon":    "🌿"   (optional emoji or leave blank for initials fallback)
+  }
+
+  If neither metafield is present the panel is silently hidden.
+{%- endcomment -%}
+
+{%- liquid
+  assign ing_list = product.metafields.forge.ingredient_list.value
+  assign ing_rte  = product.metafields.forge.ingredients.value
+-%}
+
+{%- if ing_list != blank or ing_rte != blank -%}
+<section
+  class="ing-panel"
+  aria-labelledby="ing-panel-title-{{ product.id }}"
+>
+  <div class="ing-panel__head">
+    <h2 class="ing-panel__title" id="ing-panel-title-{{ product.id }}">
+      {{ 'products.product.whats_inside' | t }}
+    </h2>
+    {%- if product.metafields.forge.ingredient_count != blank -%}
+      <p class="ing-panel__count">{{ 'products.product.active_ingredients' | t: count: product.metafields.forge.ingredient_count.value }}</p>
+    {%- endif -%}
+  </div>
+
+  {%- if ing_list != blank -%}
+    <ul class="ing-list" role="list">
+      {%- for ing in ing_list -%}
+        <li class="ing-item">
+          <div class="ing-item__icon" aria-hidden="true">
+            {%- if ing.icon != blank -%}
+              {{ ing.icon }}
+            {%- else -%}
+              {{ ing.name | slice: 0, 2 | upcase }}
+            {%- endif -%}
+          </div>
+          <div class="ing-item__body">
+            <div class="ing-item__header">
+              <h3 class="ing-item__name">{{ ing.name }}</h3>
+              {%- if ing.dose != blank -%}
+                <span class="ing-item__dose">{{ ing.dose }}</span>
+              {%- endif -%}
+            </div>
+            {%- if ing.benefit != blank -%}
+              <p class="ing-item__benefit">{{ ing.benefit }}</p>
+            {%- endif -%}
+          </div>
+        </li>
+      {%- endfor -%}
+    </ul>
+
+  {%- elsif ing_rte != blank -%}
+    <div class="ing-panel__rte rte">{{ ing_rte }}</div>
+  {%- endif -%}
+
+</section>
+{%- endif -%}
+

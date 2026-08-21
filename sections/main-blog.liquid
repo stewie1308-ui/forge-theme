@@ -1,0 +1,92 @@
+{%- render 'breadcrumbs' -%}
+
+<section class="blog-section">
+  <div class="container">
+
+    <div class="blog-header reveal">
+      <h1 class="blog-header__title">{{ blog.title }}</h1>
+      {%- if blog.all_tags.size > 0 -%}
+        <div class="blog-tags" role="navigation" aria-label="{{ 'blog.categories' | t }}">
+          <a
+            href="{{ blog.url }}"
+            class="blog-tag{% unless current_tags %} blog-tag--active{% endunless %}"
+          >{{ 'blog.all_categories' | t }}</a>
+          {%- for tag in blog.all_tags -%}
+            <a
+              href="{{ blog.url }}/tagged/{{ tag | handle }}"
+              class="blog-tag{% if current_tags contains tag %} blog-tag--active{% endif %}"
+            >{{ tag }}</a>
+          {%- endfor -%}
+        </div>
+      {%- endif -%}
+    </div>
+
+    {%- paginate blog.articles by section.settings.articles_per_page -%}
+      <div class="blog-grid stagger">
+        {%- for article in blog.articles -%}
+          <article class="article-card">
+            {%- if article.image -%}
+              <a href="{{ article.url }}" class="article-card__img-wrap" tabindex="-1">
+                <img
+                  src="{{ article.image | image_url: width: 800 }}"
+                  alt="{{ article.image.alt | default: article.title | escape }}"
+                  loading="lazy"
+                  width="800"
+                  height="533"
+                  class="article-card__img"
+                >
+              </a>
+            {%- endif -%}
+
+            <div class="article-card__body">
+              {%- if article.tags.size > 0 -%}
+                <div class="article-card__tags">
+                  {%- for tag in article.tags limit: 2 -%}
+                    <a href="{{ blog.url }}/tagged/{{ tag | handle }}" class="blog-tag blog-tag--sm">{{ tag }}</a>
+                  {%- endfor -%}
+                </div>
+              {%- endif -%}
+
+              <h2 class="article-card__title">
+                <a href="{{ article.url }}">{{ article.title }}</a>
+              </h2>
+
+              {%- if article.excerpt != blank -%}
+                <p class="article-card__excerpt">{{ article.excerpt | strip_html | truncate: 140 }}</p>
+              {%- endif -%}
+
+              <div class="article-card__meta">
+                <span>{{ article.author }}</span>
+                <span aria-hidden="true">·</span>
+                <time datetime="{{ article.published_at | date: '%Y-%m-%d' }}">
+                  {{ article.published_at | date: '%d %b %Y' }}
+                </time>
+              </div>
+            </div>
+          </article>
+        {%- endfor -%}
+      </div>
+
+      {%- render 'pagination', paginate: paginate -%}
+    {%- endpaginate -%}
+
+  </div>
+</section>
+
+
+{% schema %}
+{
+  "name": "Blog",
+  "settings": [
+    {
+      "type": "range",
+      "id": "articles_per_page",
+      "label": "Articles per page",
+      "min": 4,
+      "max": 24,
+      "step": 2,
+      "default": 12
+    }
+  ]
+}
+{% endschema %}

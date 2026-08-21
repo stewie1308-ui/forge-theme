@@ -1,0 +1,5 @@
+# Local-only files — never pushed to the store
+README.md
+TODO.md
+theme.json
+demo/

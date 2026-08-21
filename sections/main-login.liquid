@@ -1,0 +1,127 @@
+<section class="account-section">
+  <div class="container">
+    <div class="account-form-wrap reveal">
+      <h1 class="account-form__title">{{ 'customer.login.title' | t }}</h1>
+
+      {%- form 'customer_login' -%}
+        {%- if form.errors -%}
+          <div class="account-form__errors" role="alert">
+            {{ form.errors | default_errors }}
+          </div>
+        {%- endif -%}
+
+        <div class="form-group">
+          <label class="form-label" for="CustomerEmail">{{ 'customer.login.email' | t }}</label>
+          <input
+            id="CustomerEmail"
+            type="email"
+            name="customer[email]"
+            class="form-input"
+            autocomplete="email"
+            autocorrect="off"
+            autocapitalize="off"
+            required
+          >
+        </div>
+
+        <div class="form-group mt-4">
+          <label class="form-label" for="CustomerPassword">{{ 'customer.login.password' | t }}</label>
+          <input
+            id="CustomerPassword"
+            type="password"
+            name="customer[password]"
+            class="form-input"
+            autocomplete="current-password"
+            required
+          >
+        </div>
+
+        <div class="account-form__forgot">
+          <a href="#RecoverPassword" id="RecoverPasswordLink">{{ 'customer.login.forgot_password' | t }}</a>
+        </div>
+
+        <button type="submit" class="btn btn--primary btn--full btn--lg mt-6">
+          {{ 'customer.login.submit' | t }}
+        </button>
+      {%- endform -%}
+
+      <p class="account-form__alt">
+        {{ 'customer.login.create_account' | t }}
+        <a href="{{ routes.account_register_url }}">{{ 'customer.register.title' | t }}</a>
+      </p>
+
+      <!-- Recover password form (hidden by default) -->
+      <div id="RecoverPasswordForm" hidden>
+        <h2 class="account-form__title" style="font-size:var(--text-xl);margin-top:2rem;">
+          {{ 'customer.recover_password.title' | t }}
+        </h2>
+        <p style="font-size:var(--text-sm);color:var(--color-foreground-muted);margin-bottom:1rem;">
+          {{ 'customer.recover_password.subtext' | t }}
+        </p>
+        {%- form 'recover_customer_password' -%}
+          {%- if form.posted_successfully? -%}
+            <p class="account-form__success" id="RecoverSuccess" role="status">
+              {{ 'customer.recover_password.success' | t }}
+            </p>
+          {%- endif -%}
+          <div class="form-group">
+            <label class="form-label" for="RecoverEmail">{{ 'customer.recover_password.email' | t }}</label>
+            <input id="RecoverEmail" type="email" name="email" class="form-input" autocomplete="email" required>
+          </div>
+          <div style="display:flex;gap:0.75rem;margin-top:1.5rem;">
+            <button type="submit" class="btn btn--primary">{{ 'customer.recover_password.submit' | t }}</button>
+            <a href="#" id="HideRecoverPasswordLink" class="btn btn--secondary">{{ 'customer.recover_password.cancel' | t }}</a>
+          </div>
+        {%- endform -%}
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<script>
+(function () {
+  var loginForm   = document.getElementById('CustomerEmail')
+    ? document.getElementById('CustomerEmail').closest('form')
+    : null;
+  var recoverWrap = document.getElementById('RecoverPasswordForm');
+  var showLink    = document.getElementById('RecoverPasswordLink');
+  var hideLink    = document.getElementById('HideRecoverPasswordLink');
+
+  function showRecover() {
+    if (!recoverWrap) return;
+    recoverWrap.removeAttribute('hidden');
+    if (loginForm) loginForm.style.display = 'none';
+  }
+
+  function hideRecover() {
+    if (!recoverWrap) return;
+    recoverWrap.setAttribute('hidden', '');
+    if (loginForm) loginForm.style.display = '';
+  }
+
+  /* Shopify reloads the page after a successful reset request. The success
+     notice only renders on that reload, so its presence is the signal to
+     open the panel — the hash is a fallback for Shopify's #recover redirect. */
+  if (document.getElementById('RecoverSuccess') || window.location.hash === '#recover') {
+    showRecover();
+  }
+
+  showLink && showLink.addEventListener('click', function (e) {
+    e.preventDefault();
+    showRecover();
+    var input = document.getElementById('RecoverEmail');
+    if (input) input.focus();
+  });
+
+  hideLink && hideLink.addEventListener('click', function (e) {
+    e.preventDefault();
+    hideRecover();
+    showLink && showLink.focus();
+  });
+}());
+</script>
+
+{% schema %}
+{ "name": "Login", "settings": [] }
+{% endschema %}

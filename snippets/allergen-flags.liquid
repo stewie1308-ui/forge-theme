@@ -1,0 +1,46 @@
+{%- comment -%}
+  Renders allergen / free-from badges.
+  Accepts: product {Object}
+
+  Reads from:
+    product.metafields.forge.allergen_flags  (list.single_line_text)
+
+  Each value in the list is rendered as a badge.
+  Prefix with "Contains: " to render a warning badge instead of a free-from badge.
+  Example list values:
+    "Gluten-free"
+    "Dairy-free"
+    "Vegan"
+    "Contains: Soy"
+{%- endcomment -%}
+
+{%- assign flags = product.metafields.forge.allergen_flags.value -%}
+
+{%- if flags != blank -%}
+  <div class="allergen-flags" role="list" aria-label="{{ 'products.product.allergen_info' | t }}">
+    {%- for flag in flags -%}
+      {%- liquid
+        assign is_contains = false
+        if flag contains 'Contains:'
+          assign is_contains = true
+        endif
+      -%}
+      <span
+        class="allergen-flag{% if is_contains %} allergen-flag--contains{% else %} allergen-flag--free{% endif %}"
+        role="listitem"
+      >
+        {%- if is_contains -%}
+          <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z"/>
+          </svg>
+        {%- else -%}
+          <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5"/>
+          </svg>
+        {%- endif -%}
+        {{ flag }}
+      </span>
+    {%- endfor -%}
+  </div>
+{%- endif -%}
+

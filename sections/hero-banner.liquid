@@ -1,0 +1,263 @@
+<section
+  class="hero{% if section.settings.full_height %} hero--full{% endif %}"
+  style="
+    --hero-bg: {{ section.settings.background_color }};
+    --hero-overlay: {{ section.settings.overlay_opacity | divided_by: 100.0 }};
+    min-height: {{ section.settings.min_height }}px;
+  "
+>
+
+  {%- if section.settings.image != blank -%}
+    <div class="hero__media" aria-hidden="true">
+      <img
+        class="hero__img"
+        src="{{ section.settings.image | image_url: width: 2000 }}"
+        alt="{{ section.settings.image.alt | default: '' | escape }}"
+        loading="eager"
+        fetchpriority="high"
+        width="{{ section.settings.image.width }}"
+        height="{{ section.settings.image.height }}"
+        sizes="100vw"
+        srcset="
+          {{ section.settings.image | image_url: width: 800  }} 800w,
+          {{ section.settings.image | image_url: width: 1200 }} 1200w,
+          {{ section.settings.image | image_url: width: 1600 }} 1600w,
+          {{ section.settings.image | image_url: width: 2000 }} 2000w
+        "
+      >
+    </div>
+  {%- elsif section.settings.video != blank -%}
+    {%- liquid
+      assign hero_video  = section.settings.video
+      assign hero_poster = section.settings.video_poster | default: hero_video.preview_image
+    -%}
+    <div class="hero__media" aria-hidden="true">
+      <video
+        class="hero__img"
+        autoplay
+        muted
+        loop
+        playsinline
+        preload="metadata"
+        {% if hero_poster != blank %}poster="{{ hero_poster | image_url: width: 1600 }}"{% endif %}
+      >
+        {%- for source in hero_video.sources -%}
+          {%- if source.format == 'mp4' -%}
+            <source src="{{ source.url }}" type="{{ source.mime_type }}">
+          {%- endif -%}
+        {%- endfor -%}
+      </video>
+    </div>
+  {%- else -%}
+    <div class="hero__media hero__media--placeholder" aria-hidden="true"></div>
+  {%- endif -%}
+
+  {%- if section.settings.image != blank or section.settings.video != blank -%}
+    <div class="hero__overlay" aria-hidden="true"></div>
+  {%- endif -%}
+
+  <div class="hero__content container">
+    <div class="hero__inner hero__inner--{{ section.settings.content_alignment }}">
+
+      {%- if section.settings.eyebrow != blank -%}
+        <span class="hero__eyebrow reveal">{{ section.settings.eyebrow }}</span>
+      {%- endif -%}
+
+      {%- if section.settings.heading != blank -%}
+        <h1 class="hero__heading reveal">{{ section.settings.heading }}</h1>
+      {%- endif -%}
+
+      {%- if section.settings.subheading != blank -%}
+        <p class="hero__sub reveal">{{ section.settings.subheading }}</p>
+      {%- endif -%}
+
+      {%- if section.settings.button_label != blank or section.settings.button_label_2 != blank -%}
+        <div class="hero__buttons reveal">
+          {%- if section.settings.button_label != blank -%}
+            <a
+              href="{{ section.settings.button_link | default: '#' }}"
+              class="btn btn--{{ section.settings.button_style }} btn--lg"
+            >
+              {{ section.settings.button_label }}
+            </a>
+          {%- endif -%}
+          {%- if section.settings.button_label_2 != blank -%}
+            <a
+              href="{{ section.settings.button_link_2 | default: '#' }}"
+              class="btn btn--{{ section.settings.button_style_2 }} btn--lg"
+            >
+              {{ section.settings.button_label_2 }}
+            </a>
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+
+      {%- if section.settings.trust_bar != blank -%}
+        <p class="hero__trust reveal">{{ section.settings.trust_bar }}</p>
+      {%- endif -%}
+
+    </div>
+  </div>
+
+</section>
+
+
+{% schema %}
+{
+  "name": "Hero banner",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Media"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Background image"
+    },
+    {
+      "type": "video",
+      "id": "video",
+      "label": "Background video",
+      "info": "Hosted on Shopify. Overridden by image if both are set."
+    },
+    {
+      "type": "image_picker",
+      "id": "video_poster",
+      "label": "Video poster image",
+      "info": "Optional. Falls back to the video's own preview frame."
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Fallback background colour",
+      "default": "#0a0a0a"
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "label": "Image overlay opacity",
+      "min": 0,
+      "max": 80,
+      "step": 5,
+      "default": 40,
+      "unit": "%"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "min_height",
+      "label": "Minimum height",
+      "min": 300,
+      "max": 900,
+      "step": 50,
+      "default": 600,
+      "unit": "px"
+    },
+    {
+      "type": "checkbox",
+      "id": "full_height",
+      "label": "Full viewport height",
+      "default": false
+    },
+    {
+      "type": "select",
+      "id": "content_alignment",
+      "label": "Content alignment",
+      "options": [
+        { "value": "left",   "label": "Left" },
+        { "value": "center", "label": "Centre" },
+        { "value": "right",  "label": "Right" }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow text",
+      "default": "New formula"
+    },
+    {
+      "type": "textarea",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Built for people who actually train."
+    },
+    {
+      "type": "textarea",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "Science-backed supplements formulated for real results — not marketing claims."
+    },
+    {
+      "type": "text",
+      "id": "trust_bar",
+      "label": "Trust line (below buttons)",
+      "default": "★★★★★  4.9/5 from 2,400+ reviews"
+    },
+    {
+      "type": "header",
+      "content": "Button 1"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "default": "Shop now"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link"
+    },
+    {
+      "type": "select",
+      "id": "button_style",
+      "label": "Button style",
+      "options": [
+        { "value": "primary",   "label": "Primary (dark)" },
+        { "value": "secondary", "label": "Secondary (outline)" },
+        { "value": "accent",    "label": "Accent (lime)" }
+      ],
+      "default": "accent"
+    },
+    {
+      "type": "header",
+      "content": "Button 2 (optional)"
+    },
+    {
+      "type": "text",
+      "id": "button_label_2",
+      "label": "Button label"
+    },
+    {
+      "type": "url",
+      "id": "button_link_2",
+      "label": "Button link"
+    },
+    {
+      "type": "select",
+      "id": "button_style_2",
+      "label": "Button style",
+      "options": [
+        { "value": "primary",   "label": "Primary (dark)" },
+        { "value": "secondary", "label": "Secondary (outline)" },
+        { "value": "accent",    "label": "Accent (lime)" }
+      ],
+      "default": "secondary"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Hero banner"
+    }
+  ]
+}
+{% endschema %}

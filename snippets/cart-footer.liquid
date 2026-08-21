@@ -1,0 +1,22 @@
+{%- comment -%}
+  Shared cart footer — the inner content of #CartFooterInner.
+
+  Rendered by BOTH:
+    - snippets/cart-drawer.liquid  (initial paint, in theme.liquid)
+    - sections/cart-items.liquid   (Section Rendering API refresh)
+
+  Both callers own the #CartFooterInner wrapper themselves, because the JS in
+  theme.liquid swaps innerHTML between them. Keep this snippet wrapper-free.
+{%- endcomment -%}
+
+{%- if cart.item_count > 0 -%}
+  {%- if settings.show_vat_note -%}
+    <p class="cart-drawer__tax-note">{{ 'cart.taxes_and_shipping_policy_at_checkout_html' | t }}</p>
+  {%- endif -%}
+  <div class="cart-drawer__subtotal">
+    <span>{{ 'cart.subtotal' | t }}</span>
+    <span>{{ cart.total_price | money }}</span>
+  </div>
+  <a href="{{ routes.checkout_url }}" class="btn btn--primary btn--full btn--lg">{{ 'cart.checkout' | t }}</a>
+  <a href="{{ routes.cart_url }}" class="btn btn--secondary btn--full mt-4" style="display:flex;">{{ 'cart.view_cart' | t }}</a>
+{%- endif -%}
