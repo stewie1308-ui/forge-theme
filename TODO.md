@@ -389,7 +389,12 @@ is authoritative and was already the only thing feeding `updateCartCount()`.
 
 Findings only — nothing deleted, because some of it is deliberate surface for merchants.
 
-### S1. 23 locale keys nothing references
+### S1. 23 locale keys nothing references — 9 now wired
+**Update 2026-08-22:** the blog comment form was built, taking the count from 23 to 14.
+`blog.article_metadata_html` is the one blog key still unreferenced — see the note at the end
+of this item.
+
+### S1 (original finding). 23 locale keys nothing references
 Out of 248 leaf keys. Verified by substring search of every `.liquid`/`.js`/`.json` outside
 `locales/`, then spot-checked with grep.
 
@@ -409,6 +414,15 @@ Out of 248 leaf keys. Verified by substring search of every `.liquid`/`.js`/`.js
 `general.search.view_all` and `products.product.unavailable` are worth a look before deleting:
 they suggest a predictive-search "view all results" affordance and a sold-out variant state
 that may be genuinely missing rather than merely undeclared.
+
+**`blog.article_metadata_html` ("By {{ author }} on {{ date }}") does not fit the markup.**
+`sections/main-article.liquid` renders the author and date as separate elements with a real
+`<time datetime="...">`, which is better for SEO and assistive tech than one interpolated
+sentence. Using the string would mean giving that up. The catch is that the header's "By " is
+currently hardcoded English, so there *is* a translation gap — it just is not the gap this
+string fixes. Either delete the key and add a `blog.article_author` label, or restructure the
+meta line and accept losing `<time>`. Left as a decision rather than quietly degrading the
+markup.
 
 ### S2. Schema settings — clean
 All 6 initial hits were false positives. `sections/footer.liquid` reads `footer_title_1..3`
@@ -444,6 +458,20 @@ those, **18 are genuinely unreferenced**, in two groups:
 ### Suggested order
 Wire up the blog comment form (the strings are done), decide on `.spinner` when the filter
 loading state gets built, then delete or document the rest in one pass.
+
+Blog comment form (was a nice-to-have, and S1's largest cluster): `sections/main-article.liquid`
+now renders published comments and a posting form, gated on `blog.comments_enabled?` rather
+than a new theme setting, so Shopify's own switch stays authoritative. The comment list is
+paginated at 10 through the existing `pagination` snippet, each comment carries a real
+`<time datetime>`, and the form follows the same conventions as the account forms —
+`.form-group`/`.form-label`/`.form-input`, `form.errors | default_errors` kept inside the
+`{% form %}` tag where `form.errors` is actually defined, and a success notice that switches
+between `blog.comment_success` and `blog.comment_moderated` on `blog.moderated?`. Added the
+matching CSS, which did not exist. Nine of the ten written-but-unused `blog.*` strings are now
+referenced.
+
+Not yet verified on the storefront: the dev store's blog has no articles, so the template has
+never rendered. Needs a post, and comments enabled on that blog, before it can be exercised.
 
 ---
 

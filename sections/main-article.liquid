@@ -74,6 +74,99 @@
       </div>
     {%- endif -%}
 
+    {%- comment -%}
+      Shopify owns the on/off switch for comments (Admin → Blog posts → Manage blogs),
+      so this follows blog.comments_enabled? rather than adding a theme setting that
+      could disagree with it. article.comments only ever contains published comments.
+    {%- endcomment -%}
+    {%- if blog.comments_enabled? -%}
+      <section class="article-comments reveal" id="comments" aria-label="{{ 'blog.article_comments' | t }}">
+
+        {%- if article.comments_count > 0 -%}
+          <h2 class="article-comments__title">
+            {{ 'blog.comments_with_count' | t: count: article.comments_count }}
+          </h2>
+
+          {%- paginate article.comments by 10 -%}
+            <ol class="article-comments__list">
+              {%- for comment in article.comments -%}
+                <li class="comment" id="comment-{{ comment.id }}">
+                  <div class="comment__body rte">{{ comment.content }}</div>
+                  <p class="comment__meta">
+                    <span class="comment__author">{{ comment.author }}</span>
+                    <span aria-hidden="true">·</span>
+                    <time datetime="{{ comment.created_at | date: '%Y-%m-%d' }}">
+                      {{ comment.created_at | date: '%d %B %Y' }}
+                    </time>
+                  </p>
+                </li>
+              {%- endfor -%}
+            </ol>
+
+            {%- render 'pagination', paginate: paginate -%}
+          {%- endpaginate -%}
+        {%- endif -%}
+
+        <h2 class="article-comments__title">{{ 'blog.comment_form_title' | t }}</h2>
+
+        {%- form 'new_comment', article -%}
+          {%- comment -%} Kept inside the form tag: form.errors is only defined here. {%- endcomment -%}
+          {%- if form.errors -%}
+            <div class="account-form__errors" role="alert">{{ form.errors | default_errors }}</div>
+          {%- endif -%}
+
+          {%- if form.posted_successfully? -%}
+            <div class="article-comments__notice" role="status">
+              {%- if blog.moderated? -%}
+                {{ 'blog.comment_moderated' | t }}
+              {%- else -%}
+                {{ 'blog.comment_success' | t }}
+              {%- endif -%}
+            </div>
+          {%- endif -%}
+
+          <div class="form-group">
+            <label class="form-label" for="CommentAuthor">{{ 'blog.comment_form_name' | t }}</label>
+            <input
+              id="CommentAuthor"
+              type="text"
+              name="comment[author]"
+              class="form-input"
+              autocomplete="name"
+              value="{{ form.author }}"
+              required
+            >
+          </div>
+
+          <div class="form-group mt-4">
+            <label class="form-label" for="CommentEmail">{{ 'blog.comment_form_email' | t }}</label>
+            <input
+              id="CommentEmail"
+              type="email"
+              name="comment[email]"
+              class="form-input"
+              autocomplete="email"
+              value="{{ form.email }}"
+              required
+            >
+          </div>
+
+          <div class="form-group mt-4">
+            <label class="form-label" for="CommentBody">{{ 'blog.comment_form_body' | t }}</label>
+            <textarea
+              id="CommentBody"
+              name="comment[body]"
+              class="form-input article-comments__textarea"
+              rows="5"
+              required
+            >{{ form.body }}</textarea>
+          </div>
+
+          <button type="submit" class="btn btn--primary mt-6">{{ 'blog.comment_form_submit' | t }}</button>
+        {%- endform -%}
+      </section>
+    {%- endif -%}
+
     <!-- Back to blog -->
     <div class="article-footer reveal">
       <a href="{{ blog.url }}" class="btn btn--secondary">
