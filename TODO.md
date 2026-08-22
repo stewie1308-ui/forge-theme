@@ -91,8 +91,8 @@ drawers, and the supplement panel in both FDA and EU NRV modes.
 
 ## 🔴 Found in the storefront visual pass (2026-08-22)
 
-**V1–V4 fixed, pushed to the Forge draft theme and re-verified live on 2026-08-22.**
-V5 and V6 remain open decisions. Verification evidence:
+**V1–V5 fixed, pushed to the Forge draft theme and re-verified live on 2026-08-22.**
+V6 remains an open decision. Verification evidence:
 - V1 — focus set on "Increase quantity", clicked: focus is still on "Increase quantity" and
   inside the drawer afterwards, quantity updated. Same result for "Decrease quantity".
 - V2 — opening the search drawer now lands focus on `#SearchDrawerInput` inside the dialog;
@@ -151,11 +151,22 @@ plural, so a single-ingredient product read "1 active ingredients". Fixed by mak
 `products.product.active_ingredients` a `one`/`other` object, matching the pluralised form
 already used by `product_count`, `reviews_with_count` and `comments_with_count`.
 
-### V5. The demo homepage still ships invented review figures
+### V5. The demo homepage still ships invented review figures — FIXED
 `★★★★★ 4.9/5 from 2,400+ reviews` renders live in the hero trust bar. The section
 *defaults* were blanked earlier, but `templates/index.json` pins the original values, so the
 demo storefront still asserts fabricated social proof. Same family as the rich-text claims
-item below. Decide whether the shipped demo homepage should carry these.
+item below.
+
+Blanked on 2026-08-22: `hero.trust_bar`, `testimonials.aggregate_rating` and
+`testimonials.review_count` are now empty strings in `templates/index.json`, matching the
+section defaults that were blanked earlier. `show_aggregate` stays `true` — the section
+already gates on a non-blank rating, so it simply waits for the merchant's own numbers.
+Verified on the storefront: the hero ends at its button with no empty trust row, and the
+testimonials section renders its heading and three cards with no gap where the aggregate was.
+
+Still fabricated, and left alone because it is a different call: the three testimonial
+blocks themselves ship as defaults in `templates/index.json` — invented quotes attributed to
+"James T.", "Sarah M." and "Dr. R. Patel", each with five stars and a "Verified" badge.
 
 ### V6. `®` renders oversized in display headings
 In the serif display face used for `h1` and product card titles, `®` draws at full size —
