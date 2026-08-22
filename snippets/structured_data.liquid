@@ -40,15 +40,21 @@
         {%- unless forloop.last -%},{%- endunless -%}
       {%- endfor -%}
     ]
-    {%- if product.metafields.reviews.rating.value != blank -%}
-      {%- liquid
-        assign rating_raw = product.metafields.reviews.rating.value
-        assign rating_num = rating_raw.rating | default: rating_raw
-      -%}
+    {%- liquid
+      assign rating_raw   = product.metafields.reviews.rating.value
+      assign rating_count = product.metafields.reviews.rating_count.value | default: 0
+    -%}
+    {%- comment -%}
+      Both halves are required. Emitting aggregateRating with an invented reviewCount
+      asserts review data to Google that does not exist, which is a rich-results
+      penalty risk, so a rating with no count is not published at all.
+    {%- endcomment -%}
+    {%- if rating_raw != blank and rating_count > 0 -%}
+      {%- assign rating_num = rating_raw.rating | default: rating_raw -%}
       ,"aggregateRating": {
         "@type": "AggregateRating",
         "ratingValue": {{ rating_num | json }},
-        "reviewCount": {{ product.metafields.reviews.rating_count.value | default: 1 | json }}
+        "reviewCount": {{ rating_count | json }}
       }
     {%- endif -%}
   }
