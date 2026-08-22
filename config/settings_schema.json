@@ -8,135 +8,135 @@
     "theme_support_email": "stewart@brunelweb.co.uk"
   },
   {
-    "name": "Colours",
+    "name": "t:settings_schema.colours.name",
     "settings": [
       {
         "type": "header",
-        "content": "Background"
+        "content": "t:settings_schema.colours.settings.header__1.content"
       },
       {
         "type": "color",
         "id": "color_background",
-        "label": "Page background",
+        "label": "t:settings_schema.colours.settings.color_background.label",
         "default": "#ffffff"
       },
       {
         "type": "color",
         "id": "color_background_secondary",
-        "label": "Secondary background",
+        "label": "t:settings_schema.colours.settings.color_background_secondary.label",
         "default": "#f5f5f3"
       },
       {
         "type": "header",
-        "content": "Text"
+        "content": "t:settings_schema.colours.settings.header__2.content"
       },
       {
         "type": "color",
         "id": "color_foreground",
-        "label": "Body text",
+        "label": "t:settings_schema.colours.settings.color_foreground.label",
         "default": "#0a0a0a"
       },
       {
         "type": "color",
         "id": "color_foreground_muted",
-        "label": "Muted text",
+        "label": "t:settings_schema.colours.settings.color_foreground_muted.label",
         "default": "#6b6b6b"
       },
       {
         "type": "header",
-        "content": "Accent"
+        "content": "t:settings_schema.colours.settings.header__3.content"
       },
       {
         "type": "color",
         "id": "color_accent",
-        "label": "Accent colour",
+        "label": "t:settings_schema.colours.settings.color_accent.label",
         "default": "#1b4332"
       },
       {
         "type": "color",
         "id": "color_accent_light",
-        "label": "Accent light (tint)",
+        "label": "t:settings_schema.colours.settings.color_accent_light.label",
         "default": "#d8f3dc"
       },
       {
         "type": "color",
         "id": "color_accent_highlight",
-        "label": "Accent highlight",
-        "info": "Used for sale badges and CTA highlights",
+        "label": "t:settings_schema.colours.settings.color_accent_highlight.label",
+        "info": "t:settings_schema.colours.settings.color_accent_highlight.info",
         "default": "#c8f24b"
       },
       {
         "type": "header",
-        "content": "Buttons"
+        "content": "t:settings_schema.colours.settings.header__4.content"
       },
       {
         "type": "color",
         "id": "color_button",
-        "label": "Primary button background",
+        "label": "t:settings_schema.colours.settings.color_button.label",
         "default": "#0a0a0a"
       },
       {
         "type": "color",
         "id": "color_button_text",
-        "label": "Primary button text",
+        "label": "t:settings_schema.colours.settings.color_button_text.label",
         "default": "#ffffff"
       },
       {
         "type": "color",
         "id": "color_button_hover",
-        "label": "Primary button hover",
+        "label": "t:settings_schema.colours.settings.color_button_hover.label",
         "default": "#1b4332"
       },
       {
         "type": "color",
         "id": "color_button_secondary_text",
-        "label": "Secondary button text",
+        "label": "t:settings_schema.colours.settings.color_button_secondary_text.label",
         "default": "#0a0a0a"
       },
       {
         "type": "color",
         "id": "color_button_secondary_border",
-        "label": "Secondary button border",
+        "label": "t:settings_schema.colours.settings.color_button_secondary_border.label",
         "default": "#0a0a0a"
       }
     ]
   },
   {
-    "name": "Typography",
+    "name": "t:settings_schema.typography.name",
     "settings": [
       {
         "type": "header",
-        "content": "Headings"
+        "content": "t:settings_schema.typography.settings.header__1.content"
       },
       {
         "type": "font_picker",
         "id": "type_header_font",
-        "label": "Heading font",
+        "label": "t:settings_schema.typography.settings.type_header_font.label",
         "default": "playfair_display_n4"
       },
       {
         "type": "header",
-        "content": "Body"
+        "content": "t:settings_schema.typography.settings.header__2.content"
       },
       {
         "type": "font_picker",
         "id": "type_body_font",
-        "label": "Body font",
+        "label": "t:settings_schema.typography.settings.type_body_font.label",
         "default": "inter_n4"
       }
     ]
   },
   {
-    "name": "Layout & Spacing",
+    "name": "t:settings_schema.layout_spacing.name",
     "settings": [
       {
         "type": "header",
-        "content": "Border radius"
+        "content": "t:settings_schema.layout_spacing.settings.header__1.content"
       },
       {
         "type": "range",
         "id": "border_radius_small",
-        "label": "Small radius (buttons, inputs)",
+        "label": "t:settings_schema.layout_spacing.settings.border_radius_small.label",
         "min": 0,
         "max": 12,
         "step": 1,
@@ -146,7 +146,7 @@
       {
         "type": "range",
         "id": "border_radius_medium",
-        "label": "Medium radius (cards)",
+        "label": "t:settings_schema.layout_spacing.settings.border_radius_medium.label",
         "min": 0,
         "max": 24,
         "step": 2,
@@ -156,7 +156,7 @@
       {
         "type": "range",
         "id": "border_radius_large",
-        "label": "Large radius (sections)",
+        "label": "t:settings_schema.layout_spacing.settings.border_radius_large.label",
         "min": 0,
         "max": 40,
         "step": 4,
@@ -166,37 +166,37 @@
     ]
   },
   {
-    "name": "Product cards",
+    "name": "t:settings_schema.product_cards.name",
     "settings": [
       {
         "type": "checkbox",
         "id": "show_vendor",
-        "label": "Show product vendor",
+        "label": "t:settings_schema.product_cards.settings.show_vendor.label",
         "default": true
       },
       {
         "type": "checkbox",
         "id": "show_rating",
-        "label": "Show product ratings",
-        "info": "Requires a reviews app that writes to product.metafields.reviews.rating",
+        "label": "t:settings_schema.product_cards.settings.show_rating.label",
+        "info": "t:settings_schema.product_cards.settings.show_rating.info",
         "default": true
       },
       {
         "type": "select",
         "id": "card_image_ratio",
-        "label": "Image ratio",
+        "label": "t:settings_schema.product_cards.settings.card_image_ratio.label",
         "options": [
           {
             "value": "square",
-            "label": "Square (1:1)"
+            "label": "t:settings_schema.product_cards.settings.card_image_ratio.options__1.label"
           },
           {
             "value": "portrait",
-            "label": "Portrait (3:4)"
+            "label": "t:settings_schema.product_cards.settings.card_image_ratio.options__2.label"
           },
           {
             "value": "landscape",
-            "label": "Landscape (4:3)"
+            "label": "t:settings_schema.product_cards.settings.card_image_ratio.options__3.label"
           }
         ],
         "default": "square"
@@ -204,20 +204,20 @@
     ]
   },
   {
-    "name": "Cart",
+    "name": "t:settings_schema.cart.name",
     "settings": [
       {
         "type": "select",
         "id": "cart_type",
-        "label": "Cart behaviour",
+        "label": "t:settings_schema.cart.settings.cart_type.label",
         "options": [
           {
             "value": "drawer",
-            "label": "Slide-out drawer"
+            "label": "t:settings_schema.cart.settings.cart_type.options__1.label"
           },
           {
             "value": "page",
-            "label": "Go to cart page"
+            "label": "t:settings_schema.cart.settings.cart_type.options__2.label"
           }
         ],
         "default": "drawer"
@@ -225,146 +225,146 @@
       {
         "type": "checkbox",
         "id": "cart_enable_upsell",
-        "label": "Show upsell products in cart",
+        "label": "t:settings_schema.cart.settings.cart_enable_upsell.label",
         "default": true
       },
       {
         "type": "text",
         "id": "cart_upsell_heading",
-        "label": "Upsell heading",
+        "label": "t:settings_schema.cart.settings.cart_upsell_heading.label",
         "default": "Complete your routine"
       },
       {
         "type": "collection",
         "id": "cart_upsell_collection",
-        "label": "Upsell products source"
+        "label": "t:settings_schema.cart.settings.cart_upsell_collection.label"
       }
     ]
   },
   {
-    "name": "UK & EU Compliance",
+    "name": "t:settings_schema.uk_eu_compliance.name",
     "settings": [
       {
         "type": "header",
-        "content": "Supplement panel"
+        "content": "t:settings_schema.uk_eu_compliance.settings.header__1.content"
       },
       {
         "type": "select",
         "id": "supplement_panel_format",
-        "label": "Panel format",
-        "info": "UK & EU brands must declare Nutrient Reference Values (NRV). Choose the US format only if you sell into the United States, where the FDA requires Supplement Facts with % Daily Value.",
+        "label": "t:settings_schema.uk_eu_compliance.settings.supplement_panel_format.label",
+        "info": "t:settings_schema.uk_eu_compliance.settings.supplement_panel_format.info",
         "options": [
           {
             "value": "eu_nrv",
-            "label": "UK & EU — Nutrition Information (%NRV)"
+            "label": "t:settings_schema.uk_eu_compliance.settings.supplement_panel_format.options__1.label"
           },
           {
             "value": "fda",
-            "label": "US — Supplement Facts (% Daily Value)"
+            "label": "t:settings_schema.uk_eu_compliance.settings.supplement_panel_format.options__2.label"
           }
         ],
         "default": "eu_nrv"
       },
       {
         "type": "header",
-        "content": "VAT"
+        "content": "t:settings_schema.uk_eu_compliance.settings.header__2.content"
       },
       {
         "type": "checkbox",
         "id": "show_vat_note",
-        "label": "Show VAT note on product pages",
+        "label": "t:settings_schema.uk_eu_compliance.settings.show_vat_note.label",
         "default": true
       },
       {
         "type": "text",
         "id": "vat_note_text",
-        "label": "VAT note text",
+        "label": "t:settings_schema.uk_eu_compliance.settings.vat_note_text.label",
         "default": "Price includes VAT"
       },
       {
         "type": "header",
-        "content": "BNPL messaging"
+        "content": "t:settings_schema.uk_eu_compliance.settings.header__3.content"
       },
       {
         "type": "checkbox",
         "id": "show_bnpl",
-        "label": "Show Buy Now Pay Later messaging",
+        "label": "t:settings_schema.uk_eu_compliance.settings.show_bnpl.label",
         "default": false
       },
       {
         "type": "text",
         "id": "bnpl_text",
-        "label": "BNPL message",
+        "label": "t:settings_schema.uk_eu_compliance.settings.bnpl_text.label",
         "default": "Pay in 3 interest-free instalments"
       },
       {
         "type": "header",
-        "content": "Disclaimer"
+        "content": "t:settings_schema.uk_eu_compliance.settings.header__4.content"
       },
       {
         "type": "checkbox",
         "id": "show_supplement_disclaimer",
-        "label": "Show supplement disclaimer sitewide",
+        "label": "t:settings_schema.uk_eu_compliance.settings.show_supplement_disclaimer.label",
         "default": true
       },
       {
         "type": "textarea",
         "id": "supplement_disclaimer",
-        "label": "Disclaimer text",
+        "label": "t:settings_schema.uk_eu_compliance.settings.supplement_disclaimer.label",
         "default": "Food supplements should not be used as a substitute for a varied diet. Do not exceed the recommended daily intake."
       }
     ]
   },
   {
-    "name": "Social media",
+    "name": "t:settings_schema.social_media.name",
     "settings": [
       {
         "type": "text",
         "id": "twitter_handle",
-        "label": "Twitter / X handle",
-        "info": "Without the @ symbol"
+        "label": "t:settings_schema.social_media.settings.twitter_handle.label",
+        "info": "t:settings_schema.social_media.settings.twitter_handle.info"
       },
       {
         "type": "url",
         "id": "social_instagram_link",
-        "label": "Instagram URL"
+        "label": "t:settings_schema.social_media.settings.social_instagram_link.label"
       },
       {
         "type": "url",
         "id": "social_tiktok_link",
-        "label": "TikTok URL"
+        "label": "t:settings_schema.social_media.settings.social_tiktok_link.label"
       },
       {
         "type": "url",
         "id": "social_facebook_link",
-        "label": "Facebook URL"
+        "label": "t:settings_schema.social_media.settings.social_facebook_link.label"
       },
       {
         "type": "url",
         "id": "social_youtube_link",
-        "label": "YouTube URL"
+        "label": "t:settings_schema.social_media.settings.social_youtube_link.label"
       }
     ]
   },
   {
-    "name": "Favicon",
+    "name": "t:settings_schema.favicon.name",
     "settings": [
       {
         "type": "image_picker",
         "id": "favicon",
-        "label": "Favicon image",
-        "info": "Recommended: 32×32px PNG"
+        "label": "t:settings_schema.favicon.settings.favicon.label",
+        "info": "t:settings_schema.favicon.settings.favicon.info"
       }
     ]
   },
   {
-    "name": "Share image",
+    "name": "t:settings_schema.share_image.name",
     "settings": [
       {
         "type": "image_picker",
         "id": "share_image",
-        "label": "Default share image",
-        "info": "Used as fallback for Open Graph and Twitter cards. Recommended: 1200×630px."
+        "label": "t:settings_schema.share_image.settings.share_image.label",
+        "info": "t:settings_schema.share_image.settings.share_image.info"
       }
     ]
   }

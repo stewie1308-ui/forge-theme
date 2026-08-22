@@ -40,107 +40,134 @@
 
 {% schema %}
 {
-  "name": "Rich text",
+  "name": "t:sections.rich-text.name",
   "settings": [
     {
       "type": "text",
       "id": "eyebrow",
-      "label": "Eyebrow"
+      "label": "t:sections.rich-text.settings.eyebrow.label"
     },
     {
       "type": "text",
       "id": "heading",
-      "label": "Heading",
+      "label": "t:sections.rich-text.settings.heading.label",
       "default": "Our promise to you"
     },
     {
       "type": "richtext",
       "id": "text",
-      "label": "Text",
-      "info": "Your own words. Health, testing and research claims are regulated — do not ship copy you cannot evidence.",
+      "label": "t:sections.rich-text.settings.text.label",
+      "info": "t:sections.rich-text.settings.text.info",
       "default": "<p>Tell customers what your brand stands for.</p>"
     },
     {
       "type": "select",
       "id": "width",
-      "label": "Content width",
+      "label": "t:sections.rich-text.settings.width.label",
       "options": [
-        { "value": "narrow", "label": "Narrow (centred)" },
-        { "value": "medium", "label": "Medium" },
-        { "value": "full",   "label": "Full" }
+        {
+          "value": "narrow",
+          "label": "t:sections.rich-text.settings.width.options__1.label"
+        },
+        {
+          "value": "medium",
+          "label": "t:sections.rich-text.settings.width.options__2.label"
+        },
+        {
+          "value": "full",
+          "label": "t:sections.rich-text.settings.width.options__3.label"
+        }
       ],
       "default": "narrow"
     },
     {
       "type": "header",
-      "content": "Button 1"
+      "content": "t:sections.rich-text.settings.header__1.content"
     },
     {
       "type": "text",
       "id": "button_label",
-      "label": "Label"
+      "label": "t:sections.rich-text.settings.button_label.label"
     },
     {
       "type": "url",
       "id": "button_link",
-      "label": "Link"
+      "label": "t:sections.rich-text.settings.button_link.label"
     },
     {
       "type": "select",
       "id": "button_style",
-      "label": "Style",
+      "label": "t:sections.rich-text.settings.button_style.label",
       "options": [
-        { "value": "primary",   "label": "Primary" },
-        { "value": "secondary", "label": "Secondary" },
-        { "value": "accent",    "label": "Accent" }
+        {
+          "value": "primary",
+          "label": "t:sections.rich-text.settings.button_style.options__1.label"
+        },
+        {
+          "value": "secondary",
+          "label": "t:sections.rich-text.settings.button_style.options__2.label"
+        },
+        {
+          "value": "accent",
+          "label": "t:sections.rich-text.settings.button_style.options__3.label"
+        }
       ],
       "default": "primary"
     },
     {
       "type": "header",
-      "content": "Button 2"
+      "content": "t:sections.rich-text.settings.header__2.content"
     },
     {
       "type": "text",
       "id": "button_label_2",
-      "label": "Label"
+      "label": "t:sections.rich-text.settings.button_label_2.label"
     },
     {
       "type": "url",
       "id": "button_link_2",
-      "label": "Link"
+      "label": "t:sections.rich-text.settings.button_link_2.label"
     },
     {
       "type": "select",
       "id": "button_style_2",
-      "label": "Style",
+      "label": "t:sections.rich-text.settings.button_style_2.label",
       "options": [
-        { "value": "primary",   "label": "Primary" },
-        { "value": "secondary", "label": "Secondary" },
-        { "value": "accent",    "label": "Accent" }
+        {
+          "value": "primary",
+          "label": "t:sections.rich-text.settings.button_style_2.options__1.label"
+        },
+        {
+          "value": "secondary",
+          "label": "t:sections.rich-text.settings.button_style_2.options__2.label"
+        },
+        {
+          "value": "accent",
+          "label": "t:sections.rich-text.settings.button_style_2.options__3.label"
+        }
       ],
       "default": "secondary"
     },
     {
       "type": "header",
-      "content": "Background"
+      "content": "t:sections.rich-text.settings.header__3.content"
     },
     {
       "type": "checkbox",
       "id": "bg_secondary",
-      "label": "Secondary background",
+      "label": "t:sections.rich-text.settings.bg_secondary.label",
       "default": false
     },
     {
       "type": "checkbox",
       "id": "bg_dark",
-      "label": "Dark background",
+      "label": "t:sections.rich-text.settings.bg_dark.label",
       "default": false
     }
   ],
   "presets": [
     {
-      "name": "Rich text"
+      "name": "t:sections.rich-text.presets.name"
     }
   ]
 }

@@ -317,16 +317,16 @@
 
 {% schema %}
 {
-  "name": "Collection page",
+  "name": "t:sections.main-collection.name",
   "settings": [
     {
       "type": "header",
-      "content": "Products"
+      "content": "t:sections.main-collection.settings.header__1.content"
     },
     {
       "type": "range",
       "id": "products_per_page",
-      "label": "Products per page",
+      "label": "t:sections.main-collection.settings.products_per_page.label",
       "min": 8,
       "max": 48,
       "step": 4,
@@ -335,7 +335,7 @@
     {
       "type": "range",
       "id": "columns_desktop",
-      "label": "Columns (desktop)",
+      "label": "t:sections.main-collection.settings.columns_desktop.label",
       "min": 2,
       "max": 4,
       "step": 1,
@@ -344,36 +344,36 @@
     {
       "type": "checkbox",
       "id": "show_quick_add",
-      "label": "Show quick add button",
+      "label": "t:sections.main-collection.settings.show_quick_add.label",
       "default": true
     },
     {
       "type": "checkbox",
       "id": "show_product_count",
-      "label": "Show product count",
+      "label": "t:sections.main-collection.settings.show_product_count.label",
       "default": true
     },
     {
       "type": "header",
-      "content": "Filtering & sorting"
+      "content": "t:sections.main-collection.settings.header__2.content"
     },
     {
       "type": "checkbox",
       "id": "enable_filtering",
-      "label": "Enable filtering",
-      "info": "Requires filters set up in Shopify admin — Search & Discovery app",
+      "label": "t:sections.main-collection.settings.enable_filtering.label",
+      "info": "t:sections.main-collection.settings.enable_filtering.info",
       "default": true
     },
     {
       "type": "checkbox",
       "id": "enable_sorting",
-      "label": "Enable sorting",
+      "label": "t:sections.main-collection.settings.enable_sorting.label",
       "default": true
     },
     {
       "type": "checkbox",
       "id": "show_grid_toggle",
-      "label": "Show grid view toggle",
+      "label": "t:sections.main-collection.settings.show_grid_toggle.label",
       "default": true
     }
   ],

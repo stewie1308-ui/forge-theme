@@ -1,0 +1,907 @@
+{
+  "sections": {
+    "benefits": {
+      "name": "Benefits",
+      "settings": {
+        "header__1": {
+          "content": "Heading"
+        },
+        "eyebrow": {
+          "label": "Eyebrow"
+        },
+        "heading": {
+          "label": "Heading"
+        },
+        "subheading": {
+          "label": "Subheading"
+        },
+        "header__2": {
+          "content": "Layout"
+        },
+        "style": {
+          "label": "Card style",
+          "options__1": {
+            "label": "Icon cards"
+          },
+          "options__2": {
+            "label": "Numbered list"
+          },
+          "options__3": {
+            "label": "Inline (no card)"
+          },
+          "options__4": {
+            "label": "Image cards"
+          }
+        },
+        "columns": {
+          "label": "Columns (desktop)"
+        },
+        "header__3": {
+          "content": "Background"
+        },
+        "bg_secondary": {
+          "label": "Secondary background"
+        },
+        "bg_dark": {
+          "label": "Dark background"
+        }
+      },
+      "blocks": {
+        "item": {
+          "name": "Benefit",
+          "settings": {
+            "icon": {
+              "label": "Icon (emoji or SVG)",
+              "info": "Paste an emoji e.g. 🧪 or leave blank for default tick"
+            },
+            "image": {
+              "label": "Image (image style only)"
+            },
+            "heading": {
+              "label": "Heading",
+              "info": "Describe something you can stand behind. Health and testing claims are regulated.",
+              "placeholder": "e.g. Fully disclosed doses"
+            },
+            "text": {
+              "label": "Text",
+              "placeholder": "One or two lines about this benefit"
+            },
+            "link_label": {
+              "label": "Link label"
+            },
+            "link_url": {
+              "label": "Link URL"
+            }
+          }
+        }
+      },
+      "presets": {
+        "name": "Benefits"
+      }
+    },
+    "cart-items": {
+      "name": "Cart items"
+    },
+    "featured-products": {
+      "name": "Featured products",
+      "settings": {
+        "header__1": {
+          "content": "Heading"
+        },
+        "eyebrow": {
+          "label": "Eyebrow"
+        },
+        "heading": {
+          "label": "Heading"
+        },
+        "subheading": {
+          "label": "Subheading"
+        },
+        "heading_align": {
+          "label": "Heading alignment",
+          "options__1": {
+            "label": "Left"
+          },
+          "options__2": {
+            "label": "Centre"
+          }
+        },
+        "header__2": {
+          "content": "Products"
+        },
+        "products_source": {
+          "label": "Products source",
+          "options__1": {
+            "label": "From a collection"
+          },
+          "options__2": {
+            "label": "Manual selection"
+          }
+        },
+        "collection": {
+          "label": "Collection"
+        },
+        "products_limit": {
+          "label": "Number of products"
+        },
+        "columns": {
+          "label": "Columns (desktop)"
+        },
+        "show_quick_add": {
+          "label": "Show quick add button"
+        },
+        "header__3": {
+          "content": "Style"
+        },
+        "bg_secondary": {
+          "label": "Use secondary background"
+        },
+        "header__4": {
+          "content": "CTA button"
+        },
+        "cta_label": {
+          "label": "Button label"
+        },
+        "cta_link": {
+          "label": "Button link"
+        }
+      },
+      "blocks": {
+        "product": {
+          "name": "Product",
+          "settings": {
+            "product": {
+              "label": "Product"
+            }
+          }
+        }
+      },
+      "presets": {
+        "name": "Featured products"
+      }
+    },
+    "footer": {
+      "name": "Footer",
+      "settings": {
+        "logo": {
+          "label": "Footer logo"
+        },
+        "brand_description": {
+          "label": "Brand description"
+        },
+        "header__1": {
+          "content": "Column 1"
+        },
+        "footer_title_1": {
+          "label": "Column 1 heading"
+        },
+        "footer_menu_1": {
+          "label": "Column 1 menu"
+        },
+        "header__2": {
+          "content": "Column 2"
+        },
+        "footer_title_2": {
+          "label": "Column 2 heading"
+        },
+        "footer_menu_2": {
+          "label": "Column 2 menu"
+        },
+        "header__3": {
+          "content": "Column 3"
+        },
+        "footer_title_3": {
+          "label": "Column 3 heading"
+        },
+        "footer_menu_3": {
+          "label": "Column 3 menu"
+        },
+        "header__4": {
+          "content": "Bottom bar"
+        },
+        "copyright_text": {
+          "label": "Copyright text"
+        },
+        "show_payment_icons": {
+          "label": "Show payment icons"
+        }
+      }
+    },
+    "header": {
+      "name": "Header",
+      "settings": {
+        "header__1": {
+          "content": "Logo"
+        },
+        "logo": {
+          "label": "Logo image"
+        },
+        "logo_max_width": {
+          "label": "Logo width"
+        },
+        "header__2": {
+          "content": "Navigation"
+        },
+        "menu": {
+          "label": "Main menu"
+        },
+        "show_search": {
+          "label": "Show search icon"
+        },
+        "header__3": {
+          "content": "Announcement bar"
+        },
+        "show_announcement": {
+          "label": "Show announcement bar"
+        },
+        "announcement_text": {
+          "label": "Announcement text"
+        },
+        "announcement_link": {
+          "label": "Announcement link"
+        },
+        "announcement_dismissible": {
+          "label": "Allow visitors to dismiss"
+        }
+      }
+    },
+    "hero-banner": {
+      "name": "Hero banner",
+      "settings": {
+        "header__1": {
+          "content": "Media"
+        },
+        "image": {
+          "label": "Background image"
+        },
+        "video": {
+          "label": "Background video",
+          "info": "Hosted on Shopify. Overridden by image if both are set."
+        },
+        "video_poster": {
+          "label": "Video poster image",
+          "info": "Optional. Falls back to the video's own preview frame."
+        },
+        "use_bundled_image": {
+          "label": "Use the theme's bundled hero image",
+          "info": "Shown only when no image or video is selected above. Untick for a plain background colour."
+        },
+        "background_color": {
+          "label": "Fallback background colour"
+        },
+        "overlay_opacity": {
+          "label": "Image overlay opacity"
+        },
+        "header__2": {
+          "content": "Layout"
+        },
+        "min_height": {
+          "label": "Minimum height"
+        },
+        "full_height": {
+          "label": "Full viewport height"
+        },
+        "content_alignment": {
+          "label": "Content alignment",
+          "options__1": {
+            "label": "Left"
+          },
+          "options__2": {
+            "label": "Centre"
+          },
+          "options__3": {
+            "label": "Right"
+          }
+        },
+        "header__3": {
+          "content": "Content"
+        },
+        "eyebrow": {
+          "label": "Eyebrow text"
+        },
+        "heading": {
+          "label": "Heading"
+        },
+        "subheading": {
+          "label": "Subheading"
+        },
+        "trust_bar": {
+          "label": "Trust line (below buttons)",
+          "info": "Your own figures only — left blank so nothing is claimed until you fill it in.",
+          "placeholder": "★★★★★  4.9/5 from 2,400+ reviews"
+        },
+        "header__4": {
+          "content": "Button 1"
+        },
+        "button_label": {
+          "label": "Button label"
+        },
+        "button_link": {
+          "label": "Button link"
+        },
+        "button_style": {
+          "label": "Button style",
+          "options__1": {
+            "label": "Primary (dark)"
+          },
+          "options__2": {
+            "label": "Secondary (outline)"
+          },
+          "options__3": {
+            "label": "Accent (lime)"
+          }
+        },
+        "header__5": {
+          "content": "Button 2 (optional)"
+        },
+        "button_label_2": {
+          "label": "Button label"
+        },
+        "button_link_2": {
+          "label": "Button link"
+        },
+        "button_style_2": {
+          "label": "Button style",
+          "options__1": {
+            "label": "Primary (dark)"
+          },
+          "options__2": {
+            "label": "Secondary (outline)"
+          },
+          "options__3": {
+            "label": "Accent (lime)"
+          }
+        }
+      },
+      "presets": {
+        "name": "Hero banner"
+      }
+    },
+    "main-404": {
+      "name": "404 page"
+    },
+    "main-account": {
+      "name": "Account"
+    },
+    "main-activate-account": {
+      "name": "Activate account"
+    },
+    "main-addresses": {
+      "name": "Addresses"
+    },
+    "main-article": {
+      "name": "Article",
+      "settings": {
+        "show_read_time": {
+          "label": "Show estimated read time"
+        },
+        "show_share": {
+          "label": "Show share buttons"
+        }
+      }
+    },
+    "main-blog": {
+      "name": "Blog",
+      "settings": {
+        "articles_per_page": {
+          "label": "Articles per page"
+        }
+      }
+    },
+    "main-cart": {
+      "name": "Cart page",
+      "settings": {
+        "show_note": {
+          "label": "Show order note field"
+        },
+        "show_payment_icons": {
+          "label": "Show accepted payment icons"
+        }
+      }
+    },
+    "main-collection": {
+      "name": "Collection page",
+      "settings": {
+        "header__1": {
+          "content": "Products"
+        },
+        "products_per_page": {
+          "label": "Products per page"
+        },
+        "columns_desktop": {
+          "label": "Columns (desktop)"
+        },
+        "show_quick_add": {
+          "label": "Show quick add button"
+        },
+        "show_product_count": {
+          "label": "Show product count"
+        },
+        "header__2": {
+          "content": "Filtering & sorting"
+        },
+        "enable_filtering": {
+          "label": "Enable filtering",
+          "info": "Requires filters set up in Shopify admin — Search & Discovery app"
+        },
+        "enable_sorting": {
+          "label": "Enable sorting"
+        },
+        "show_grid_toggle": {
+          "label": "Show grid view toggle"
+        }
+      }
+    },
+    "main-list-collections": {
+      "name": "Collections list"
+    },
+    "main-login": {
+      "name": "Login"
+    },
+    "main-order": {
+      "name": "Order"
+    },
+    "main-page": {
+      "name": "Page"
+    },
+    "main-password": {
+      "name": "Password page",
+      "settings": {
+        "logo": {
+          "label": "Logo"
+        },
+        "logo_max_width": {
+          "label": "Logo width"
+        },
+        "heading": {
+          "label": "Heading"
+        },
+        "subheading": {
+          "label": "Subheading"
+        }
+      }
+    },
+    "main-product": {
+      "name": "Product page",
+      "settings": {
+        "header__1": {
+          "content": "Supplement data"
+        },
+        "show_supplement_facts": {
+          "label": "Show supplement panel",
+          "info": "Pulls from product metafields — see README for setup. Panel format (UK/EU NRV or US FDA) is set in Theme settings › UK & EU Compliance."
+        },
+        "show_ingredients_panel": {
+          "label": "Show Ingredients panel"
+        },
+        "header__2": {
+          "content": "Layout"
+        },
+        "show_trust_signals": {
+          "label": "Show trust signals"
+        },
+        "show_sticky_atc": {
+          "label": "Show sticky add-to-cart bar"
+        }
+      },
+      "blocks": {
+        "trust_item": {
+          "name": "Trust item",
+          "settings": {
+            "text": {
+              "label": "Text",
+              "info": "Only promises you actually keep — this renders as a guarantee to the customer.",
+              "placeholder": "e.g. Free delivery over £40"
+            }
+          }
+        }
+      }
+    },
+    "main-register": {
+      "name": "Register"
+    },
+    "main-reset-password": {
+      "name": "Reset password"
+    },
+    "main-search": {
+      "name": "Search page",
+      "settings": {
+        "results_per_page": {
+          "label": "Results per page"
+        },
+        "search_type": {
+          "label": "Search type",
+          "options__1": {
+            "label": "Products, articles & pages"
+          },
+          "options__2": {
+            "label": "Products only"
+          },
+          "options__3": {
+            "label": "Products & articles"
+          }
+        }
+      }
+    },
+    "rich-text": {
+      "name": "Rich text",
+      "settings": {
+        "eyebrow": {
+          "label": "Eyebrow"
+        },
+        "heading": {
+          "label": "Heading"
+        },
+        "text": {
+          "label": "Text",
+          "info": "Your own words. Health, testing and research claims are regulated — do not ship copy you cannot evidence."
+        },
+        "width": {
+          "label": "Content width",
+          "options__1": {
+            "label": "Narrow (centred)"
+          },
+          "options__2": {
+            "label": "Medium"
+          },
+          "options__3": {
+            "label": "Full"
+          }
+        },
+        "header__1": {
+          "content": "Button 1"
+        },
+        "button_label": {
+          "label": "Label"
+        },
+        "button_link": {
+          "label": "Link"
+        },
+        "button_style": {
+          "label": "Style",
+          "options__1": {
+            "label": "Primary"
+          },
+          "options__2": {
+            "label": "Secondary"
+          },
+          "options__3": {
+            "label": "Accent"
+          }
+        },
+        "header__2": {
+          "content": "Button 2"
+        },
+        "button_label_2": {
+          "label": "Label"
+        },
+        "button_link_2": {
+          "label": "Link"
+        },
+        "button_style_2": {
+          "label": "Style",
+          "options__1": {
+            "label": "Primary"
+          },
+          "options__2": {
+            "label": "Secondary"
+          },
+          "options__3": {
+            "label": "Accent"
+          }
+        },
+        "header__3": {
+          "content": "Background"
+        },
+        "bg_secondary": {
+          "label": "Secondary background"
+        },
+        "bg_dark": {
+          "label": "Dark background"
+        }
+      },
+      "presets": {
+        "name": "Rich text"
+      }
+    },
+    "testimonials": {
+      "name": "Testimonials",
+      "settings": {
+        "header__1": {
+          "content": "Heading"
+        },
+        "eyebrow": {
+          "label": "Eyebrow"
+        },
+        "heading": {
+          "label": "Heading"
+        },
+        "subheading": {
+          "label": "Subheading"
+        },
+        "header__2": {
+          "content": "Aggregate rating"
+        },
+        "show_aggregate": {
+          "label": "Show aggregate rating"
+        },
+        "aggregate_rating": {
+          "label": "Rating",
+          "info": "Your own verified figure. Blank hides the whole aggregate block.",
+          "placeholder": "4.9"
+        },
+        "review_count": {
+          "label": "Review count",
+          "info": "Your own verified figure.",
+          "placeholder": "2,400+"
+        },
+        "header__3": {
+          "content": "Background"
+        },
+        "bg_secondary": {
+          "label": "Secondary background"
+        },
+        "bg_dark": {
+          "label": "Dark background"
+        }
+      },
+      "blocks": {
+        "review": {
+          "name": "Review",
+          "settings": {
+            "rating": {
+              "label": "Star rating"
+            },
+            "quote": {
+              "label": "Review text",
+              "info": "A real review from one of your customers. Blank hides this card.",
+              "placeholder": "What the customer said"
+            },
+            "avatar": {
+              "label": "Customer photo (optional)"
+            },
+            "name": {
+              "label": "Customer name",
+              "placeholder": "e.g. James T."
+            },
+            "meta": {
+              "label": "Subtitle (e.g. sport, job)",
+              "placeholder": "e.g. Competitive runner"
+            },
+            "verified": {
+              "label": "Show verified badge",
+              "info": "Only tick this for a review you have actually verified."
+            },
+            "product": {
+              "label": "Product reviewed (optional)"
+            }
+          }
+        }
+      },
+      "presets": {
+        "name": "Testimonials"
+      }
+    }
+  },
+  "settings_schema": {
+    "colours": {
+      "name": "Colours",
+      "settings": {
+        "header__1": {
+          "content": "Background"
+        },
+        "color_background": {
+          "label": "Page background"
+        },
+        "color_background_secondary": {
+          "label": "Secondary background"
+        },
+        "header__2": {
+          "content": "Text"
+        },
+        "color_foreground": {
+          "label": "Body text"
+        },
+        "color_foreground_muted": {
+          "label": "Muted text"
+        },
+        "header__3": {
+          "content": "Accent"
+        },
+        "color_accent": {
+          "label": "Accent colour"
+        },
+        "color_accent_light": {
+          "label": "Accent light (tint)"
+        },
+        "color_accent_highlight": {
+          "label": "Accent highlight",
+          "info": "Used for sale badges and CTA highlights"
+        },
+        "header__4": {
+          "content": "Buttons"
+        },
+        "color_button": {
+          "label": "Primary button background"
+        },
+        "color_button_text": {
+          "label": "Primary button text"
+        },
+        "color_button_hover": {
+          "label": "Primary button hover"
+        },
+        "color_button_secondary_text": {
+          "label": "Secondary button text"
+        },
+        "color_button_secondary_border": {
+          "label": "Secondary button border"
+        }
+      }
+    },
+    "typography": {
+      "name": "Typography",
+      "settings": {
+        "header__1": {
+          "content": "Headings"
+        },
+        "type_header_font": {
+          "label": "Heading font"
+        },
+        "header__2": {
+          "content": "Body"
+        },
+        "type_body_font": {
+          "label": "Body font"
+        }
+      }
+    },
+    "layout_spacing": {
+      "name": "Layout & Spacing",
+      "settings": {
+        "header__1": {
+          "content": "Border radius"
+        },
+        "border_radius_small": {
+          "label": "Small radius (buttons, inputs)"
+        },
+        "border_radius_medium": {
+          "label": "Medium radius (cards)"
+        },
+        "border_radius_large": {
+          "label": "Large radius (sections)"
+        }
+      }
+    },
+    "product_cards": {
+      "name": "Product cards",
+      "settings": {
+        "show_vendor": {
+          "label": "Show product vendor"
+        },
+        "show_rating": {
+          "label": "Show product ratings",
+          "info": "Requires a reviews app that writes to product.metafields.reviews.rating"
+        },
+        "card_image_ratio": {
+          "label": "Image ratio",
+          "options__1": {
+            "label": "Square (1:1)"
+          },
+          "options__2": {
+            "label": "Portrait (3:4)"
+          },
+          "options__3": {
+            "label": "Landscape (4:3)"
+          }
+        }
+      }
+    },
+    "cart": {
+      "name": "Cart",
+      "settings": {
+        "cart_type": {
+          "label": "Cart behaviour",
+          "options__1": {
+            "label": "Slide-out drawer"
+          },
+          "options__2": {
+            "label": "Go to cart page"
+          }
+        },
+        "cart_enable_upsell": {
+          "label": "Show upsell products in cart"
+        },
+        "cart_upsell_heading": {
+          "label": "Upsell heading"
+        },
+        "cart_upsell_collection": {
+          "label": "Upsell products source"
+        }
+      }
+    },
+    "uk_eu_compliance": {
+      "name": "UK & EU Compliance",
+      "settings": {
+        "header__1": {
+          "content": "Supplement panel"
+        },
+        "supplement_panel_format": {
+          "label": "Panel format",
+          "info": "UK & EU brands must declare Nutrient Reference Values (NRV). Choose the US format only if you sell into the United States, where the FDA requires Supplement Facts with % Daily Value.",
+          "options__1": {
+            "label": "UK & EU — Nutrition Information (%NRV)"
+          },
+          "options__2": {
+            "label": "US — Supplement Facts (% Daily Value)"
+          }
+        },
+        "header__2": {
+          "content": "VAT"
+        },
+        "show_vat_note": {
+          "label": "Show VAT note on product pages"
+        },
+        "vat_note_text": {
+          "label": "VAT note text"
+        },
+        "header__3": {
+          "content": "BNPL messaging"
+        },
+        "show_bnpl": {
+          "label": "Show Buy Now Pay Later messaging"
+        },
+        "bnpl_text": {
+          "label": "BNPL message"
+        },
+        "header__4": {
+          "content": "Disclaimer"
+        },
+        "show_supplement_disclaimer": {
+          "label": "Show supplement disclaimer sitewide"
+        },
+        "supplement_disclaimer": {
+          "label": "Disclaimer text"
+        }
+      }
+    },
+    "social_media": {
+      "name": "Social media",
+      "settings": {
+        "twitter_handle": {
+          "label": "Twitter / X handle",
+          "info": "Without the @ symbol"
+        },
+        "social_instagram_link": {
+          "label": "Instagram URL"
+        },
+        "social_tiktok_link": {
+          "label": "TikTok URL"
+        },
+        "social_facebook_link": {
+          "label": "Facebook URL"
+        },
+        "social_youtube_link": {
+          "label": "YouTube URL"
+        }
+      }
+    },
+    "favicon": {
+      "name": "Favicon",
+      "settings": {
+        "favicon": {
+          "label": "Favicon image",
+          "info": "Recommended: 32×32px PNG"
+        }
+      }
+    },
+    "share_image": {
+      "name": "Share image",
+      "settings": {
+        "share_image": {
+          "label": "Default share image",
+          "info": "Used as fallback for Open Graph and Twitter cards. Recommended: 1200×630px."
+        }
+      }
+    }
+  }
+}
