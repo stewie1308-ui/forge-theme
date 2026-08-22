@@ -33,8 +33,8 @@
     -%}
     <div class="hero__media" aria-hidden="true">
       <video
+        id="HeroVideo-{{ section.id }}"
         class="hero__img"
-        autoplay
         muted
         loop
         playsinline
@@ -48,6 +48,19 @@
         {%- endfor -%}
       </video>
     </div>
+    <script>
+      (function () {
+        /* No autoplay attribute: it cannot be undone from CSS, so the
+           prefers-reduced-motion rule in theme.css can stop the animations but not
+           the video. Start playback here instead, and leave the poster in place for
+           anyone who has asked for reduced motion. */
+        var video = document.getElementById('HeroVideo-{{ section.id }}');
+        if (!video) return;
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+        var playing = video.play();
+        if (playing) playing.catch(function () {});
+      })();
+    </script>
   {%- elsif section.settings.use_bundled_image -%}
     {%- comment -%}
       An image_picker can only read the store's Files, so a theme cannot ship a

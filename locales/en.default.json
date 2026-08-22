@@ -138,7 +138,10 @@
       "lab_tested_note": "This product has been independently tested by a certified third-party laboratory.",
       "view_certificate": "View certificate of analysis",
       "whats_inside": "What's inside",
-      "active_ingredients": "{{ count }} active ingredients",
+      "active_ingredients": {
+        "one": "{{ count }} active ingredient",
+        "other": "{{ count }} active ingredients"
+      },
       "daily_value_footnote": "*Percent Daily Values are based on a 2,000 calorie diet.",
       "daily_value_not_established": "†Daily Value not established.",
       "calories": "Calories",

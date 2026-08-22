@@ -1821,6 +1821,11 @@ h1, h2, h3, h4, h5, h6 {
 
 .hero__eyebrow {
   display: inline-block;
+  /* .hero__inner is a column flex container with no align-items, so it defaults
+     to stretch and blockifies inline-block — the pill background spanned the full
+     680px column with the text at the far left. An explicit width makes it hug in
+     all three alignments; the --center/--right modifiers still place it. */
+  width: fit-content;
   font-size: var(--text-xs);
   font-weight: var(--font-weight-bold);
   text-transform: uppercase;
