@@ -102,6 +102,32 @@
 
 
   /* ----------------------------------------------------------
+     PRODUCT CARD HOVER IMAGE
+     ---------------------------------------------------------- */
+  /* The second product image is rendered without a src, because loading="lazy"
+     still fetches every card in or near the viewport — on a collection page that
+     doubles image requests for an effect a touch device can never trigger. Fill
+     it in on first hover, once per image, and never where hover is unavailable.
+     Delegated from the document so it survives markup being re-rendered. */
+  function initCardHoverImages() {
+    if (!window.matchMedia || !window.matchMedia('(hover: hover)').matches) return;
+
+    function load(e) {
+      var card = e.target.closest && e.target.closest('.product-card');
+      if (!card) return;
+      var img = card.querySelector('.product-card__img--hover[data-hover-src]');
+      if (!img) return;
+      img.src = img.dataset.hoverSrc;
+      img.removeAttribute('data-hover-src');
+    }
+
+    /* pointerover fires for mouse and pen but not touch taps, and bubbles, so one
+       listener covers every card including ones added later. */
+    document.addEventListener('pointerover', load);
+    document.addEventListener('focusin', load);   /* keyboard users reach it via the card link */
+  }
+
+  /* ----------------------------------------------------------
      SCROLL REVEAL
      ---------------------------------------------------------- */
   function initReveal() {
@@ -243,6 +269,7 @@
      ---------------------------------------------------------- */
   function init() {
     initReveal();
+    initCardHoverImages();
     initQtySelectors();
     initAnnouncementBar();
     initLocalization();
