@@ -26,16 +26,16 @@
           "type": "item",
           "settings": {
             "icon": "🧪",
-            "heading": "Clinically dosed",
-            "text": "Every ingredient at the dose used in peer-reviewed research. No fairy dusting."
+            "heading": "Fully disclosed",
+            "text": "Every active ingredient and its dose is printed on the label. No proprietary blends."
           }
         },
         "b2": {
           "type": "item",
           "settings": {
             "icon": "🔬",
-            "heading": "Third-party tested",
-            "text": "Every batch tested by an independent ISO-accredited laboratory for purity and potency."
+            "heading": "Lab reports you can read",
+            "text": "Each product links its batch certificate of analysis, so you can check the numbers yourself."
           }
         },
         "b3": {
@@ -120,7 +120,7 @@
       "type": "rich-text",
       "settings": {
         "heading": "Our promise to you",
-        "text": "<p>We believe supplements should do what they say on the label. That's why every Forge product is formulated to clinically relevant doses, verified by independent laboratories, and built on peer-reviewed science.</p>",
+        "text": "<p>We believe a label should tell you everything. Every Forge formula prints its full active doses on the pack, and links the batch certificate of analysis on the product page.</p>",
         "width": "narrow",
         "button_label": "Our story",
         "button_link": "/pages/about",
