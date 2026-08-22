@@ -20,6 +20,10 @@
     assign body_bold    = body_font | font_modify: 'weight', 'bold'
   -%}
 
+
+
+  {{ 'theme.css' | asset_url | stylesheet_tag }}
+
   {%- style -%}
     {{ body_font    | font_face: font_display: 'swap' }}
     {{ heading_font | font_face: font_display: 'swap' }}
@@ -27,9 +31,13 @@
 
     :root {
       /* Typography */
-      --font-body-family:    {{ body_font.family | json }}, {{ body_font.fallback_families }};
+      --font-body-family:    {{ body_font.family | replace: '"', '' | json }}, {{ body_font.fallback_families }};
       --font-body-weight:    {{ body_font.weight }};
-      --font-heading-family: {{ heading_font.family | json }}, {{ heading_font.fallback_families }};
+      /* "ForgeMark" covers only ® ™ ℗ (see theme.css); everything else falls through. */
+      /* strip_quotes first: a multi-word family already arrives quoted, and piping
+         that straight through json emitted ""Playfair Display"" — invalid CSS, so
+         the declaration was dropped and headings silently fell back. */
+      --font-heading-family: "ForgeMark", {{ heading_font.family | replace: '"', '' | json }}, {{ heading_font.fallback_families }};
       --font-heading-weight: {{ heading_font.weight }};
       --font-heading-style:  {{ heading_font.style }};
 
@@ -55,8 +63,6 @@
       --radius-lg: {{ settings.border_radius_large }}px;
     }
   {%- endstyle -%}
-
-  {{ 'theme.css' | asset_url | stylesheet_tag }}
 
   <script>
     window.Forge = {

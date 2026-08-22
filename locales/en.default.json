@@ -74,7 +74,10 @@
       "close": "Close search",
       "submit": "Search",
       "no_results_html": "No results for &ldquo;{{ terms }}&rdquo;",
-      "results_for_html": "{{ count }} results for &ldquo;{{ terms }}&rdquo;",
+      "results_for_html": {
+        "one": "{{ count }} result for &ldquo;{{ terms }}&rdquo;",
+        "other": "{{ count }} results for &ldquo;{{ terms }}&rdquo;"
+      },
       "view_all": "View all results",
       "results": "Search results",
       "results_with_count": {

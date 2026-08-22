@@ -6,6 +6,20 @@
 /* -------------------------------------------------------------
    1. DESIGN TOKENS
    ------------------------------------------------------------- */
+/* Georgia — and several other serif faces a merchant can pick — draw ® at close
+   to full cap height. At 40px Georgia's ® measures 37.7px wide against 28.1px for a
+   capital R, so "Ashwagandha KSM-66®" reads as though the mark were a typo. This
+   face serves those three codepoints only, size-adjusted down; every other
+   character falls through to the merchant's chosen heading font. Browsers without
+   size-adjust, or platforms where no local() source resolves, simply fall through
+   too and render as before. */
+@font-face {
+  font-family: "ForgeMark";
+  src: local("Georgia"), local("Times New Roman"), local("Times");
+  unicode-range: U+00AE, U+2122, U+2117;
+  size-adjust: 60%;
+}
+
 :root {
   /* Colours — set via settings_schema.json / theme.liquid */
   --color-background:           #ffffff;
@@ -33,7 +47,7 @@
   /* Typography */
   --font-body-family:    system-ui, -apple-system, sans-serif;
   --font-body-weight:    400;
-  --font-heading-family: Georgia, serif;
+  --font-heading-family: "ForgeMark", Georgia, serif;
   --font-heading-weight: 700;
   --font-heading-style:  normal;
   --font-weight-medium:  500;

@@ -180,10 +180,76 @@ review you have actually verified, and the name/quote/subtitle defaults became p
 Verified on the storefront: the section disappears entirely, products flow straight into
 "Our promise to you", and no empty heading, grid or card remains.
 
-### V6. `®` renders oversized in display headings
+### V6. `®` renders oversized in display headings — FIXED
 In the serif display face used for `h1` and product card titles, `®` draws at full size —
 "Ashwagandha KSM-66® 600mg" reads as though the mark is a typo. Renders correctly in body
 copy. Cosmetic, but it is on every heading of every trademarked product.
+
+Measured: at 40px, Georgia draws `®` 37.7px wide against 28.1px for a capital R. Fixed with a
+`@font-face` named `ForgeMark` that serves only `U+00AE`, `U+2122` and `U+2117` from a local
+serif at `size-adjust: 60%`, placed first in the heading stack so every other character falls
+through to the merchant's chosen font. Browsers without `size-adjust`, or platforms where no
+`local()` source resolves, fall through too and render as before. After the fix the mark
+measures 0.81× a capital R instead of 1.34×.
+
+### V7. "1 results for ..." on the search page — FIXED
+`sections/main-search.liquid:53` uses `general.search.results_for_html`, whose value is the
+hardcoded `"{{ count }} results for …"`. Line 55, the branch with no search terms, already
+uses the correctly pluralised `results_with_count`. So the pluralised string exists and is
+used on one branch but not the other — the same shape as V4, and as the ten written-but-unused
+`blog.comment_*` keys. Searching "ashwagandha" renders "1 results for “ashwagandha”" while
+Shopify's own page title on the same request reads "1 result found". Fixed by making
+`results_for_html` a `one`/`other` object; the page now reads "1 result for “ashwagandha”".
+
+### V8. The font picker never applied — FIXED
+Found while fixing V6, and the largest problem of the pass: **no store using this theme has
+ever rendered in the fonts it selects.** Two independent causes, either of which was enough
+on its own.
+
+1. `theme.css` re-declares `--font-body-family`, `--font-heading-family` and
+   `--font-heading-weight` in `:root`, and `layout/theme.liquid` linked it *after* the
+   `{% style %}` block that writes the settings. Same specificity, later sheet wins — walking
+   the CSSOM confirmed the winning rule came from `theme.css`. Fixed by loading `theme.css`
+   before the settings block, which is the conventional order and protects every other token
+   too, not just the three that happened to collide.
+2. A multi-word family already arrives quoted, so `{{ heading_font.family | json }}` emitted
+   `""Playfair Display""` — invalid CSS, dropped by the parser. Fixed by stripping quotes
+   before `json`.
+
+The theme's own presets specify Playfair Display and Inter; both were being fetched and left
+`unloaded`. After the fix `document.fonts` reports Playfair Display 400, Inter 400 and Inter
+700 as `loaded`, and the heading stack computes to `"ForgeMark", "Playfair Display", serif`.
+
+**This visibly changes the site.** Headings are now Playfair Display at the configured weight
+400 rather than Georgia bold, and body copy is Inter rather than system-ui. That is the
+intended design, but it is worth a look before you decide it is right.
+
+### Mobile pass (2026-08-22)
+Run at a 500px viewport — Chrome's minimum window width, so wider than a real phone but below
+the mobile breakpoint, and enough to exercise the mobile layout. Real-device testing is still
+outstanding.
+
+Healthy: no horizontal scroll on the product or collection pages (`scrollWidth` equals
+`clientWidth`; the only off-viewport elements are the off-canvas mobile nav parked at
+`left: -360px`, which is intentional). Product page stacks in the right order — gallery,
+title, subtitle, price, add to cart, tabs. The Supplement Facts panel holds its full table
+width with no overflow and stays readable. The collection page hides the filter sidebar and
+drops to a two-column grid, which is what the "FILTER" button is for.
+
+Worth noting: that button is *also* shown on desktop alongside the always-open sidebar, so the
+redundancy is a desktop-only issue.
+
+### Reviewed and healthy
+Collection page (breadcrumb, product count, sort, filter sidebar, grid/list toggle — the
+2-column toggle works), cart page (line table, order note, order summary, VAT and shipping
+notes, update/continue actions), search results, and the 404 page (accent numeral, both CTAs
+and a search box). No console errors on a full product page load.
+
+### Not testable in this setup
+The browser window would not resize below its maximized size — `window.innerWidth` stayed at
+1920 after a resize to 400px — so no mobile viewport was exercised. Real-device testing is
+still outstanding, as the accessibility item below already says. The account pages could not
+be screenshotted either; the extension blocks captures on login screens.
 
 ### Verified working
 Supplement Facts panel in EU NRV mode — "Nutrition Information" title, serving size,
