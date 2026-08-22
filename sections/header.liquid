@@ -373,7 +373,7 @@
   });
 
   // Search drawer
-  document.addEventListener('DOMContentLoaded', function () {
+  function initSearchDrawer() {
     var searchDrawer  = document.getElementById('SearchDrawer');
     var searchInput   = document.getElementById('SearchDrawerInput');
     var searchBtns    = document.querySelectorAll('[data-search-open]');
@@ -419,10 +419,30 @@
     });
     searchClose   && searchClose.addEventListener('click', closeSearch);
     searchOverlay && searchOverlay.addEventListener('click', closeSearch);
-    document.addEventListener('keydown', function (e) {
-      if (e.key === 'Escape') closeSearch();
-    });
-  });
+
+    /* Document-level, so it survives the elements above being replaced. Bound once
+       per page rather than once per init, or a section re-render in the theme editor
+       stacks up a new Escape listener every time. It calls through the reference
+       below instead of closing over closeSearch directly, because after a re-render
+       the captured one would still point at the previous, detached drawer. */
+    window.__forgeCloseSearch = closeSearch;
+    if (!window.__forgeSearchEscapeBound) {
+      window.__forgeSearchEscapeBound = true;
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && window.__forgeCloseSearch) window.__forgeCloseSearch();
+      });
+    }
+  }
+
+  /* Not DOMContentLoaded: in the theme editor a Section Rendering re-render
+     re-runs this script long after that event has fired, so the new markup would
+     never get its handlers and search would silently stop working. Mirrors the
+     readyState check theme.js already uses. */
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initSearchDrawer);
+  } else {
+    initSearchDrawer();
+  }
 
 })();
 </script>

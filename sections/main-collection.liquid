@@ -254,7 +254,15 @@
   var filterPanel  = document.getElementById('CollectionFilters');
 
   if (filterToggle && filterPanel) {
+    /* The overlay lives on <body>, outside this section, so a Section Rendering
+       re-render in the theme editor does not remove it — this script just appended
+       another one each time and they stacked up. Drop any previous overlay first,
+       which also guarantees the listeners below are bound to exactly one node. */
+    var staleOverlay = document.getElementById('CollectionFilterOverlay');
+    if (staleOverlay) staleOverlay.remove();
+
     var filterOverlay = document.createElement('div');
+    filterOverlay.id = 'CollectionFilterOverlay';
     filterOverlay.className = 'mobile-nav-overlay';
     filterOverlay.setAttribute('aria-hidden', 'true');
     document.body.appendChild(filterOverlay);
