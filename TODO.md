@@ -164,9 +164,21 @@ already gates on a non-blank rating, so it simply waits for the merchant's own n
 Verified on the storefront: the hero ends at its button with no empty trust row, and the
 testimonials section renders its heading and three cards with no gap where the aggregate was.
 
-Still fabricated, and left alone because it is a different call: the three testimonial
-blocks themselves ship as defaults in `templates/index.json` — invented quotes attributed to
-"James T.", "Sarah M." and "Dr. R. Patel", each with five stars and a "Verified" badge.
+The three testimonial blocks were blanked too, on the same day. They were worse than the
+figures: invented quotes attributed to "James T.", "Sarah M." and "Dr. R. Patel", each with
+five stars and a **"Verified" badge** — and they shipped in `sections/testimonials.liquid`
+as *both* the block setting defaults and the section preset, so any merchant adding the
+section, or even a single block, got fabricated verified reviews on their storefront. Only
+the `templates/index.json` copy was visible on the demo homepage.
+
+Blanking alone would have left three empty cards, because the loop drew an `<article>` per
+block regardless and the author footer and initials avatar render even with no text. So
+`sections/testimonials.liquid` now skips any block whose quote is blank, and hides the whole
+section when neither a review nor an aggregate survives — the convention the aggregate block
+already used. `verified` now defaults to `false` with an info hint that it is only for a
+review you have actually verified, and the name/quote/subtitle defaults became placeholders.
+Verified on the storefront: the section disappears entirely, products flow straight into
+"Our promise to you", and no empty heading, grid or card remains.
 
 ### V6. `®` renders oversized in display headings
 In the serif display face used for `h1` and product card titles, `®` draws at full size —
