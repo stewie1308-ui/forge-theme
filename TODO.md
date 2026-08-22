@@ -385,6 +385,68 @@ is authoritative and was already the only thing feeding `updateCartCount()`.
 
 ---
 
+## 🧹 Unused-declaration sweep (2026-08-22)
+
+Findings only — nothing deleted, because some of it is deliberate surface for merchants.
+
+### S1. 23 locale keys nothing references
+Out of 248 leaf keys. Verified by substring search of every `.liquid`/`.js`/`.json` outside
+`locales/`, then spot-checked with grep.
+
+- **The blog comment form — 10 keys.** `blog.comment_form_title`, `_name`, `_email`, `_body`,
+  `_submit`, `blog.comment_success`, `blog.comment_moderated`, `blog.comments_with_count`,
+  `blog.article_comments`, `blog.article_metadata_html`. Already tracked as its own item: the
+  strings are written and translated, the form was never wired up.
+- **Guest checkout login:** `customer.login.guest_title`, `customer.login.sign_in_guest`.
+- **Order history:** `customer.orders.order_number_link`, `customer.orders.discount`,
+  `customer.account.details`.
+- **Loose ends:** `accessibility.loading`, `collections.all_title`, `general.search.view_all`,
+  `general.password_page.powered_by_shopify_html`, `products.product.image`,
+  `products.product.unavailable`, `sections.footer.copyright`.
+- **`products.product.certifications`** — pairs with the `forge.certifications` metafield that
+  the README documents and nothing reads. Both halves of a feature exist except the feature.
+
+`general.search.view_all` and `products.product.unavailable` are worth a look before deleting:
+they suggest a predictive-search "view all results" affordance and a sold-out variant state
+that may be genuinely missing rather than merely undeclared.
+
+### S2. Schema settings — clean
+All 6 initial hits were false positives. `sections/footer.liquid` reads `footer_title_1..3`
+and `footer_menu_1..3` through a constructed key (`section.settings[col_menu]`), so a literal
+search misses them. **No section or block setting goes unread.**
+
+### S3. 14 CSS custom properties declared and never referenced
+`--accent`, `--icon`, `--color-warning`, `--header-height-mobile`, `--radius-xl`,
+`--shadow-sm`, `--sp-1`, `--sp-16`, `--sp-20`, `--text-5xl`, `--trans-base`, `--trans-slow`,
+`--z-modal`, `--z-overlay`. Note `--accent` and `--icon` sit alongside the real
+`--color-accent` and look like abandoned earlier names; `--z-modal`/`--z-overlay` are gaps in
+an otherwise-used z-index scale.
+
+### S4. CSS classes with no consumer
+482 class selectors in `theme.css`; 46 never appear literally in markup, but most are built
+dynamically (`hero__inner--{{ alignment }}`, `benefits-grid--{{ n }}`,
+`product-card__media--{{ ratio }}`, and `toast--` + type in `theme.js:137`). After filtering
+those, **18 are genuinely unreferenced**, in two groups:
+
+- **Components with nothing to style:** `.spinner` (theme.css:603), `.form-error` (:410),
+  `.form-help` (:411). `.spinner` is the interesting one — the collection filter item below
+  notes there is no loading state anywhere, and here is the spinner that was styled for it.
+- **A utility layer nobody calls:** `.lead`, `.text-accent`, `.text-center`, `.w-full`,
+  `.mb-4`, `.mb-6`, `.mt-8`, `.pt-0`, `.pb-0`, `.border-top`, `.border-bottom`,
+  `.desktop-only`, `.mobile-only`, `.section--sm`, `.section--lg`. These are defensible —
+  utilities exist so merchants can use them in rich-text and custom Liquid — but they are
+  undocumented, so nobody knows they are there. Either document them in the README or drop
+  them.
+
+### S5. README metafield table — one mismatch, already tracked
+14 documented keys, 13 read by templates. Only `certifications` is undocumented-in-reverse.
+
+### Suggested order
+Wire up the blog comment form (the strings are done), decide on `.spinner` when the filter
+loading state gets built, then delete or document the rest in one pass.
+
+---
+
 ## Reference — already done
 
 Blockers (all 9): missing templates ×7, doubled canonical/`og:url`, malformed `////` image
