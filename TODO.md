@@ -335,10 +335,12 @@ blank them, or reword to something obviously illustrative.
 and supplement brands lean hard on email. The password page already has a working
 `{% form 'customer' %}` to copy.
 
-### 9. No blog comment form
-0 occurrences of `form 'new_comment'` in `sections/main-article.liquid`, but
-`locales/en.default.json` already carries all 10 `blog.comment_*` keys — they're written
-and unused. Cheap to wire up.
+### 9. No blog comment form — DONE 2026-08-22
+Built and rendering on the dev store; see the Reference section. Comments were enabled on the
+**News** blog as "Allowed, pending moderation" and a temporary post
+(`test-post-comment-form-verification`) created to exercise it — both still in place, and both
+safe to remove. Still unverified: the `form.posted_successfully?` notice and the paginated
+comment list, which only run after a comment is actually posted.
 
 ### 10. Theme editor re-render quirks
 - `sections/main-collection.liquid` appends a new filter overlay `<div>` to `<body>` every
