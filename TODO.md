@@ -361,11 +361,26 @@ Built and rendering on the dev store; see the Reference section. Comments were e
 safe to remove. Still unverified: the `form.posted_successfully?` notice and the paginated
 comment list, which only run after a comment is actually posted.
 
-### 10. Theme editor re-render quirks
-- `sections/main-collection.liquid` appends a new filter overlay `<div>` to `<body>` every
-  time the section re-renders — duplicates stack up while editing.
-- `sections/header.liquid` binds the search drawer inside `DOMContentLoaded`, which never
-  fires again after a Section Rendering re-render, so search breaks in the editor.
+### 10. Theme editor re-render quirks — DONE 2026-08-22
+Promoted to a blocker before fixing, because reviewers work inside the editor.
+
+- `sections/main-collection.liquid` appended a filter overlay `<div>` to `<body>` on every
+  re-render. The overlay lives outside the section, so a re-render never removed it and they
+  stacked up. It now carries a stable `#CollectionFilterOverlay` id and any previous one is
+  removed first, which also guarantees the click handlers are bound to exactly one node.
+- `sections/header.liquid` bound the search drawer inside `DOMContentLoaded`, which never
+  fires again after a Section Rendering re-render, so **search silently stopped working in
+  the editor**. Now uses the same `document.readyState` check `theme.js` already had. The
+  document-level Escape listener is bound once per page rather than once per init, and calls
+  through `window.__forgeCloseSearch` instead of closing over `closeSearch` directly — the
+  captured reference would otherwise still point at the previous, detached drawer.
+
+Verified by simulating what the editor does: fetching each section through the Section
+Rendering API, swapping the markup in and re-executing its inline scripts. The filter overlay
+count stayed at exactly one, and on the re-rendered header the search button still opened the
+drawer, focus still landed on `#SearchDrawerInput`, and Escape still closed it and cleared
+`no-scroll` — which is the specific thing the stale-reference correction was for. No theme JS
+errors in the console.
 
 ### 11. Odd coupling: tax note gated behind the VAT toggle
 `cart.taxes_and_shipping_policy_at_checkout_html` renders only when
