@@ -1,7 +1,7 @@
 # Forge Theme — outstanding work
 
 Everything left after the blocker and high-severity passes.
-Verified against the codebase on 2026-08-21 — every item below still exists.
+Verified against the codebase on 2026-08-21; items 2, 4, 5 and 14 fixed on 2026-08-22.
 
 **No submission blockers remain as of 2026-08-21.**
 
@@ -15,29 +15,70 @@ and on a Shopify-hosted video CDN URL).
 
 ## 🧪 Dev store setup — blocks visual verification
 
-### 1. Create metafield definitions, then re-import the demo CSV
+### 1. Re-import the demo CSV — 13 of 15 definitions now exist
 Store: `forge-e8mvi2rk.myshopify.com` · theme pushed unpublished as **Forge** (#190581342517)
 
 The demo products imported on 2026-08-21, but **all 15 metafield columns were silently
 dropped** — Shopify's product importer only accepts metafield columns that already have a
-definition, and reports success regardless. Confirmed in the admin: Product metafields
-showed only Shopify's own "Snowboard binding mount" / "Snowboard length".
+definition, and reports success regardless.
 
-Until this is done the Supplement Facts panel, ingredients panel, allergen badges and
-star ratings all stay hidden, so none of them can be verified.
+**Created in the admin on 2026-08-22** (all with Storefront API access on):
 
-Steps:
-1. https://forge-e8mvi2rk.myshopify.com/admin/settings/custom_data/product
-   Create the definitions listed in the README metafield tables. Namespace and key must
-   match exactly — the theme reads them literally and renders nothing if they differ.
-   Do the four `supplement_facts.*` ones first and re-import to confirm the panel appears
-   before doing the other eleven.
-   For `reviews.rating` and `reviews.rating_count` use Shopify's **standard** definitions
-   ("Product rating" / "Product rating count") — `reviews` is reserved for review apps.
-2. Re-import `demo/products-with-metafields.csv` at
-   https://forge-e8mvi2rk.myshopify.com/admin/products with **"Overwrite any current
-   products that have the same handle"** ticked. This also applies the untracked-inventory
-   fix, without which every product renders sold out.
+| Namespace | Keys | Type |
+|---|---|---|
+| `supplement_facts` | `serving_size`, `servings_per` | Single line text |
+| `supplement_facts` | `calories` | Integer |
+| `supplement_facts` | `rows` | JSON |
+| `forge` | `subtitle`, `other_ingredients` | Single line text |
+| `forge` | `directions`, `ingredients`, `warnings` | Rich text |
+| `forge` | `ingredient_list` | JSON |
+| `forge` | `lab_report_url` | URL |
+| `forge` | `ingredient_count` | Integer |
+| `forge` | `allergen_flags` | List of single line text |
+
+**Still missing: `reviews.rating` and `reviews.rating_count`.** Shopify refuses them —
+saving returns "This namespace and key combination is reserved for standard definitions",
+and no matching standard is offered in this store's suggestion picker (searching "Product
+rating" returns nothing; "Star rating" is `shopify.star-rating`, a list scoped to freezer
+categories). The `reviews` namespace is writable only by review apps. So star ratings, and
+the `aggregateRating` in `snippets/structured_data.liquid`, stay unverifiable until either
+a review app is installed (Judge.me and similar create both definitions on install) or
+they are created through the Admin API by an app holding the right scope.
+
+Two unrelated bugs in `demo/products-with-metafields.csv` were fixed on 2026-08-22: tags were
+pipe-separated (`multivitamin|daily|essentials|vegan`), so every product had arrived carrying
+one long single tag instead of four; and the variant continuation rows repeated the
+product-level fields (Title, Tags, Body, SEO, Status) while leaving the metafield columns
+blank, which would have blanked the metafields on the three multi-variant products.
+
+Note: `forge.certifications` is documented in the README metafield table but **nothing in
+the theme reads it**, and it is not a demo CSV column — deliberately not created. See the
+nice-to-have item below.
+
+**The CSV importer will not carry these metafields — proven by experiment on 2026-08-22.**
+A minimal one-row file (`Handle`, `Title`, `Option1 Name`, `Option1 Value`, `Variant SKU`,
+`Variant Price`, `Metafield: forge.subtitle [single_line_text_field]`) was imported against
+`ashwagandha-ksm66` with "Overwrite products with matching handles" ticked. Shopify reported
+"Products imported" and **applied the Title from that same row**, but `forge.subtitle` stayed
+empty — with the definition present and the type matching exactly. So the columns are being
+silently ignored, not lost to a formatting or matching problem.
+
+Note: the importer also rejects a metafield-only file outright — "Product options input is
+required when updating variants" — so any test file must carry the variant option columns.
+
+Populate the metafields another way: by hand in the admin, or via the Admin API
+(`metafieldsSet`) from an app with `write_products`. Doing one product by hand is enough to
+unblock the visual pass, which only needs a single product page to render.
+
+Remaining steps:
+1. ~~Populate the metafields on at least one product.~~ **Done 2026-08-22** — all 13 were
+   entered by hand on `ashwagandha-ksm66` in the admin and verified after a reload. The
+   rich text fields (`directions`, `ingredients`, `warnings`) were entered as plain
+   sentences, since the admin gives a rich-text editor rather than the rich-text JSON the
+   CSV stores. The two JSON fields were set through the DOM rather than typed, because the
+   editor auto-closes brackets. The other nine products are still empty.
+2. Then check the Supplement Facts panel, ingredients panel and allergen badges render on
+   the storefront. This is now unblocked — the product page has everything it needs.
 3. Optional: upload `demo/images/*.png` to Content → Files and run
    `python demo/set-image-urls.py --sample-url "<any uploaded URL>"` to swap the Unsplash
    images for the supplied ones, then import `demo/products-with-images.csv` instead.
@@ -48,15 +89,109 @@ drawers, and the supplement panel in both FDA and EU NRV modes.
 
 ---
 
+## 🔴 Found in the storefront visual pass (2026-08-22)
+
+**V1–V4 fixed, pushed to the Forge draft theme and re-verified live on 2026-08-22.**
+V5 and V6 remain open decisions. Verification evidence:
+- V1 — focus set on "Increase quantity", clicked: focus is still on "Increase quantity" and
+  inside the drawer afterwards, quantity updated. Same result for "Decrease quantity".
+- V2 — opening the search drawer now lands focus on `#SearchDrawerInput` inside the dialog;
+  Escape still returns it to the header Search button.
+- V3 — `.hero__eyebrow` measures 136px inside its 680px column, instead of 680px.
+- V4 — the panel header reads "1 active ingredient".
+- No regressions: cart drawer still focuses Close on open, the Supplement Facts panel and
+  ingredients panel render unchanged, and all JSON-LD still parses.
+
+The same push also carried the four earlier fixes. `og:image:height` is now emitted on the
+product page as 1800 against a width of 1200 — a portrait source image, which confirms the
+multiply-before-divide actually works rather than truncating to 0.
+
+Run against the **Forge** draft theme as pushed on 2026-08-21, via the admin theme preview
+(the store is password protected, so the preview session is the only way in). The four code
+fixes made on 2026-08-22 are local only and were **not** exercised by this pass.
+
+### V1. Cart drawer loses focus on every quantity change — FIXED
+Confirmed: focus set on "Increase quantity", clicked, and after the refresh
+`document.activeElement` is `<body>` — outside the still-open dialog. A keyboard user
+adjusting quantity is ejected from the drawer on every press and has to tab back in from
+the top of the document.
+
+`refreshDrawer()` in `layout/theme.liquid` swaps `innerHTML` and destroys the focused
+button. Fixed by giving it the same focus capture/restore `refreshCartPage()` already had:
+the line number and `data-action` are read synchronously before the first `await`, and focus
+is only restored when it was genuinely inside the drawer, so the two cannot fight each other
+when both run from `mutateCart()`.
+
+### V2. Search drawer never moves focus into the dialog — FIXED
+Confirmed by sampling `document.activeElement` at 0.3s, 0.8s, 1.5s, 2.5s and 4s after
+opening: focus stays on the header "Search" button every time, while
+`#SearchDrawerInput` sits unfocused inside an open `role="dialog"`. Escape and focus
+restore both work, and the cart drawer does move focus (to its Close button) — so the two
+drawers are inconsistent, and a search drawer in particular should focus its input.
+
+Root cause was in `Forge.trapFocus` (`assets/theme.js`), not in the search drawer at all: its
+focusable selector matched `input:not([disabled])`, and the first such element in the drawer
+is `<input type="hidden" name="type" value="product">`. `first.focus()` on a hidden input is a
+silent no-op, so focus stayed on the button behind the dialog — and the shift+Tab wrap
+targeted an unfocusable element too. Fixed by excluding `[type="hidden"]` and filtering to
+elements that actually render (`getClientRects().length > 0`). This hardens the cart drawer
+against the same trap, which only worked by luck because its first focusable is a button.
+
+### V3. `.hero__eyebrow` stretches the full column width — FIXED
+It is a `<span>` with `display: block`, so its `rgba(255,255,255,0.1)` / `999px` pill
+background renders as a 680px bar with "New formula" at the far left, instead of hugging
+the text. The rule already said `inline-block` — the cause was `.hero__inner`, a column flex
+container with no `align-items`, so it defaults to `stretch` and CSS blockifies the
+`inline-block` flex item. Fixed with an explicit `width: fit-content`, which hugs in all
+three alignments and leaves the `--center`/`--right` modifiers to place it.
+
+### V4. "1 active ingredients" — FIXED
+The ingredients panel header printed the raw `forge.ingredient_count` against a hardcoded
+plural, so a single-ingredient product read "1 active ingredients". Fixed by making
+`products.product.active_ingredients` a `one`/`other` object, matching the pluralised form
+already used by `product_count`, `reviews_with_count` and `comments_with_count`.
+
+### V5. The demo homepage still ships invented review figures
+`★★★★★ 4.9/5 from 2,400+ reviews` renders live in the hero trust bar. The section
+*defaults* were blanked earlier, but `templates/index.json` pins the original values, so the
+demo storefront still asserts fabricated social proof. Same family as the rich-text claims
+item below. Decide whether the shipped demo homepage should carry these.
+
+### V6. `®` renders oversized in display headings
+In the serif display face used for `h1` and product card titles, `®` draws at full size —
+"Ashwagandha KSM-66® 600mg" reads as though the mark is a typo. Renders correctly in body
+copy. Cosmetic, but it is on every heading of every trademarked product.
+
+### Verified working
+Supplement Facts panel in EU NRV mode — "Nutrition Information" title, serving size,
+servings per container, "Energy — 2 kcal", `%NRV*` column, bold parent row, indented
+`sub: true` row, both `†` footnotes and the other-ingredients line, all driven by the JSON
+metafield. Ingredients panel with icon, dose badge and benefit. Allergen badges, subtitle,
+all five product tabs, compare-at price with "Save 23%", VAT note, quantity stepper.
+Cart drawer: opens on add, correct ARIA labels, AJAX quantity update with subtotal and
+header count, Escape closes and restores focus to the Add to cart button, reopening focuses
+Close, `role="dialog"` with `aria-hidden` and `no-scroll` managed correctly.
+Homepage: bundled WebP hero, benefits grid, product cards with no skeleton placeholders,
+footer with supplement disclaimer and the localization selector.
+
+### Not covered
+- **FDA mode of the supplement panel** — needs `supplement_panel_format` flipped in theme
+  settings; only `eu_nrv` was seen.
+- **Star ratings** — impossible until `reviews.*` exists (see item 1).
+- Only `ashwagandha-ksm66` has metafields, so every other product page renders without the
+  panels.
+
+### Store config, not theme defects
+- Prices render in USD ($32.99) while the theme copy says "Free UK delivery on orders over
+  £40" and "Price includes VAT" — the dev store's default market is United States.
+- Shopify's default **Gift Card** (vendor "Snowboard Vendor", "Sold out") appears in "Our
+  bestsellers", because the section falls back to `collections['all']`.
+
+---
+
 ## 🟡 Accessibility
 
-### 2. Hero autoplay video ignores `prefers-reduced-motion`
-`sections/hero-banner.liquid` has 0 occurrences of `prefers-reduced-motion`. The CSS
-media query in `theme.css` disables animations but can't stop a video with `autoplay`.
-
-Fix: gate autoplay behind a JS `matchMedia` check, or render the poster only.
-
-### 3. Formal accessibility verification
+### 2. Formal accessibility verification
 Never done, and the README now says so explicitly rather than claiming otherwise:
 - [ ] WCAG 2.1 AA contrast audit across all three presets
 - [ ] Touch-target sizes measured (claim was 24×24px minimum)
@@ -66,18 +201,7 @@ Never done, and the README now says so explicitly rather than claiming otherwise
 
 ## 🟢 SEO / structured data polish
 
-### 4. `aggregateRating` invents a review count
-`snippets/structured_data.liquid:47` — `rating_count.value | default: 1`. If a rating exists
-with no count, this asserts "1 review" to Google. Fabricated review data is a rich-results
-penalty risk.
-
-Fix: only emit `aggregateRating` when `rating_count.value > 0`.
-
-### 5. `og:image` has width but no height
-`snippets/og-tags.liquid` emits `og:image:width` (0 occurrences of `og:image:height`).
-Some scrapers need both to render a large card.
-
-### 6. Organization logo uses the social share image
+### 3. Organization logo uses the social share image
 `snippets/structured_data.liquid:81` uses `settings.share_image` (1200×630 landscape) as the
 schema.org `logo`. Google wants an actual logo. Consider a dedicated setting.
 
@@ -85,19 +209,19 @@ schema.org `logo`. Google wants an actual logo. Consider a dedicated setting.
 
 ## 🔵 Performance
 
-### 7. Collection filtering does a full page reload
+### 4. Collection filtering does a full page reload
 `sections/main-collection.liquid:301` — `filtersForm.submit()` on every checkbox change.
 The cart already uses the Section Rendering API; filters could too, with no loading state
 currently shown either way.
 
-### 8. Product cards always load a second image
+### 5. Product cards always load a second image
 `snippets/product-card.liquid` renders `product-card__img--hover` whenever a product has
 >1 image, doubling image requests on collection pages for a hover effect most mobile users
 never see.
 
 Fix: skip it under `@media (hover: none)`, or load it lazily on first hover.
 
-### 9. Variant switch swaps in a full-resolution image
+### 6. Variant switch swaps in a full-resolution image
 `sections/main-product.liquid` — `mainImg.src = variant.featured_image.src` uses the raw
 CDN URL with no width parameter.
 
@@ -107,7 +231,7 @@ Fix: build a sized `image_url` server-side into the variant JSON, or append `&wi
 
 ## ⚪ Nice to have
 
-### 10. Default copy in rich-text and benefits makes claims
+### 7. Default copy in rich-text and benefits makes claims
 `sections/rich-text.liquid` ships default body copy asserting "verified by independent
 laboratories" and "peer-reviewed science", naming Forge products directly;
 `sections/benefits.liquid` defaults a block heading to "Clinically dosed". Both auto-apply
@@ -117,31 +241,58 @@ Softer than the review figures (now blanked) because they read as sample prose r
 data, and a merchant is more likely to rewrite body copy than a number. Left as your call:
 blank them, or reword to something obviously illustrative.
 
-
-### 11. No newsletter signup in the footer
+### 8. No newsletter signup in the footer
 0 occurrences of `form 'customer'` in `sections/footer.liquid`. Standard for the category,
 and supplement brands lean hard on email. The password page already has a working
 `{% form 'customer' %}` to copy.
 
-### 12. No blog comment form
+### 9. No blog comment form
 0 occurrences of `form 'new_comment'` in `sections/main-article.liquid`, but
 `locales/en.default.json` already carries all 10 `blog.comment_*` keys — they're written
 and unused. Cheap to wire up.
 
-### 13. Theme editor re-render quirks
+### 10. Theme editor re-render quirks
 - `sections/main-collection.liquid` appends a new filter overlay `<div>` to `<body>` every
   time the section re-renders — duplicates stack up while editing.
 - `sections/header.liquid` binds the search drawer inside `DOMContentLoaded`, which never
   fires again after a Section Rendering re-render, so search breaks in the editor.
 
-### 14. Dead code
-`layout/theme.liquid:193` — `var count = 0;` in `refreshDrawer()` is computed from the
-parsed response and then thrown away; the function refetches `/cart.js` instead.
-Either use it or delete it and the parse above it.
-
-### 15. Odd coupling: tax note gated behind the VAT toggle
+### 11. Odd coupling: tax note gated behind the VAT toggle
 `cart.taxes_and_shipping_policy_at_checkout_html` renders only when
 `settings.show_vat_note` is on. Two unrelated concerns sharing one switch.
+
+### 12. `forge.certifications` is documented but never read
+`README.md` lists `certifications` (List of text, "Certification badges") in the `forge`
+metafield table, and `locales/en.default.json:123` carries a `certifications` string — but
+0 occurrences in `sections/`, `snippets/`, `layout/` or `templates/`, and it is not a
+column in `demo/products-with-metafields.csv`. A merchant following the README creates a
+definition, fills it in, and gets nothing on the page.
+
+Fix: either drop the README row and the orphaned locale string, or wire the badges up next
+to the allergen flags on the product page, which already has the pattern to copy.
+
+Reduced-motion hero (was #2): `sections/hero-banner.liquid` no longer sets `autoplay` on the
+background video. An `autoplay` attribute cannot be undone from CSS, so the
+`prefers-reduced-motion` block in `theme.css` could stop the animations but not the video.
+Playback now starts from a small inline script that bails out when
+`matchMedia('(prefers-reduced-motion: reduce)')` matches, leaving the poster frame in place.
+The `<video>` gained a section-scoped id so multiple hero sections cannot collide.
+
+aggregateRating review count (was #4): `snippets/structured_data.liquid` no longer falls back
+to `default: 1` for `reviews.rating_count`. Both a rating and a count greater than zero are
+now required before `aggregateRating` is emitted at all, so a rating with no count stops
+asserting a review that does not exist to Google.
+
+og:image height (was #5): `snippets/og-tags.liquid` now derives `og:image:height` from the
+source image instead of shipping only a hardcoded width. The four possible sources (product,
+article, collection, `settings.share_image`) have different aspect ratios, so each branch now
+assigns the image object and the height is computed once from it. Multiplied before dividing —
+Liquid divides integers, so `height | divided_by: width` truncates to 0 for any landscape
+image, the same trap that had broken the header logo.
+
+Dead code in refreshDrawer (was #14): removed the `[data-cart-count-drawer]` parse in
+`layout/theme.liquid` whose result was computed and thrown away. The `/cart.js` fetch below it
+is authoritative and was already the only thing feeding `updateCartCount()`.
 
 ---
 
