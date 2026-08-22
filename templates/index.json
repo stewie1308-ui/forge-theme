@@ -79,30 +79,30 @@
           "type": "review",
           "settings": {
             "rating": 5,
-            "quote": "I've tried dozens of supplements. This is the first one where I actually noticed a real difference within two weeks.",
-            "name": "James T.",
-            "meta": "Competitive runner",
-            "verified": true
+            "quote": "",
+            "name": "",
+            "meta": "",
+            "verified": false
           }
         },
         "r2": {
           "type": "review",
           "settings": {
             "rating": 5,
-            "quote": "Clean label, no fillers, and you can actually read the ingredient list. Exactly what I've been looking for.",
-            "name": "Sarah M.",
-            "meta": "Personal trainer",
-            "verified": true
+            "quote": "",
+            "name": "",
+            "meta": "",
+            "verified": false
           }
         },
         "r3": {
           "type": "review",
           "settings": {
             "rating": 5,
-            "quote": "The lab reports are a nice touch. Rarely see brands this transparent about what's in their products.",
-            "name": "Dr. R. Patel",
-            "meta": "Sports nutritionist",
-            "verified": true
+            "quote": "",
+            "name": "",
+            "meta": "",
+            "verified": false
           }
         }
       },

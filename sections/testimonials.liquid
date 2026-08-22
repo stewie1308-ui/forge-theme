@@ -1,3 +1,24 @@
+{%- liquid
+  # A block with no review text still draws a card: the author footer and the
+  # initials avatar render regardless, so a blank block leaves an empty box.
+  # Skip those, and hide the section when nothing is left — the same convention
+  # the aggregate already uses, where blanking the figures removes the block
+  # rather than leaving a gap.
+  assign has_reviews = false
+  for block in section.blocks
+    if block.settings.quote != blank
+      assign has_reviews = true
+      break
+    endif
+  endfor
+
+  assign has_aggregate = false
+  if section.settings.show_aggregate and section.settings.aggregate_rating != blank
+    assign has_aggregate = true
+  endif
+-%}
+
+{%- if has_reviews or has_aggregate -%}
 <section class="section{% if section.settings.bg_secondary %} bg-secondary{% elsif section.settings.bg_dark %} bg-dark{% endif %}">
   <div class="container">
 
@@ -32,6 +53,7 @@
 
     <div class="testimonials-grid stagger">
       {%- for block in section.blocks -%}
+        {%- if block.settings.quote == blank -%}{%- continue -%}{%- endif -%}
         <article class="testimonial-card" {{ block.shopify_attributes }}>
 
           {%- if block.settings.rating > 0 -%}
@@ -93,6 +115,7 @@
 
   </div>
 </section>
+{%- endif -%}
 
 
 {% schema %}
@@ -179,7 +202,8 @@
           "type": "textarea",
           "id": "quote",
           "label": "Review text",
-          "default": "I've tried dozens of supplements. This is the first one where I actually noticed a real difference within two weeks."
+          "info": "A real review from one of your customers. Blank hides this card.",
+          "placeholder": "What the customer said"
         },
         {
           "type": "image_picker",
@@ -190,19 +214,20 @@
           "type": "text",
           "id": "name",
           "label": "Customer name",
-          "default": "James T."
+          "placeholder": "e.g. James T."
         },
         {
           "type": "text",
           "id": "meta",
           "label": "Subtitle (e.g. sport, job)",
-          "default": "Competitive runner"
+          "placeholder": "e.g. Competitive runner"
         },
         {
           "type": "checkbox",
           "id": "verified",
           "label": "Show verified badge",
-          "default": true
+          "info": "Only tick this for a review you have actually verified.",
+          "default": false
         },
         {
           "type": "product",
@@ -220,30 +245,30 @@
           "type": "review",
           "settings": {
             "rating": 5,
-            "quote": "I've tried dozens of supplements. This is the first one where I actually noticed a real difference within two weeks.",
-            "name": "James T.",
-            "meta": "Competitive runner",
-            "verified": true
+            "quote": "",
+            "name": "",
+            "meta": "",
+            "verified": false
           }
         },
         {
           "type": "review",
           "settings": {
             "rating": 5,
-            "quote": "Clean label, no fillers, and you can actually read the ingredient list. Exactly what I've been looking for.",
-            "name": "Sarah M.",
-            "meta": "Personal trainer",
-            "verified": true
+            "quote": "",
+            "name": "",
+            "meta": "",
+            "verified": false
           }
         },
         {
           "type": "review",
           "settings": {
             "rating": 5,
-            "quote": "The lab reports are a nice touch. Rarely see brands this transparent about what's in their products.",
-            "name": "Dr. R. Patel",
-            "meta": "Sports nutritionist",
-            "verified": true
+            "quote": "",
+            "name": "",
+            "meta": "",
+            "verified": false
           }
         }
       ]
