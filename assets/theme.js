@@ -67,9 +67,17 @@
 
     /** Trap keyboard focus inside an element. Returns cleanup function. */
     trapFocus(el) {
-      const focusable = el.querySelectorAll(
-        'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
+      const candidates = el.querySelectorAll(
+        'a[href], button:not([disabled]), input:not([disabled]):not([type="hidden"]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
       );
+      /* Only elements that actually render can take focus. getClientRects() is
+         empty for display:none and visibility:hidden. Without this the search
+         drawer's first "focusable" was its hidden type=product input, so
+         first.focus() below did nothing at all and focus never entered the
+         dialog — it stayed on the button behind it. */
+      const focusable = Array.prototype.filter.call(candidates, function (n) {
+        return n.getClientRects().length > 0;
+      });
       const first = focusable[0];
       const last  = focusable[focusable.length - 1];
 

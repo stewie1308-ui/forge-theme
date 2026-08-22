@@ -174,6 +174,19 @@
 
     async function refreshDrawer() {
       try {
+        /* Remember where focus was before the innerHTML swap below destroys it.
+           Without this a keyboard user is dropped to <body> — outside the still
+           open dialog — on every stepper click. Captured synchronously, before
+           the first await, and only restored when focus was actually inside the
+           drawer, so this cannot fight refreshCartPage() doing the same thing. */
+        var active      = document.activeElement;
+        var itemsHost   = document.getElementById('CartItemsInner');
+        var hadFocus    = !!(itemsHost && active && itemsHost.contains(active));
+        var qtyWrap     = active && active.closest ? active.closest('.qty') : null;
+        var lineInput   = qtyWrap && qtyWrap.querySelector('[data-cart-line]');
+        var focusLine   = lineInput ? lineInput.dataset.cartLine : null;
+        var focusAction = active && active.dataset ? active.dataset.action : null;
+
         var res  = await fetch(Forge.routes.root + '?sections=cart-items');
         var data = await res.json();
         var html = data['cart-items'];
@@ -192,14 +205,18 @@
         var oldFooter = document.getElementById('CartFooterInner');
         if (newFooter && oldFooter) oldFooter.innerHTML = newFooter.innerHTML;
 
-        /* update count badge */
-        var countEls = doc.querySelectorAll('[data-cart-count-drawer]');
-        var count = 0;
-        if (countEls.length) {
-          var match = countEls[0].textContent.match(/\d+/);
-          if (match) count = parseInt(match[0], 10);
+        /* Put focus back on the same control of the same line. It will be gone
+           when that line was just removed, in which case leave focus alone. */
+        if (hadFocus && focusLine && oldItems) {
+          var freshInput = oldItems.querySelector('[data-cart-line="' + focusLine + '"]');
+          var freshWrap  = freshInput && freshInput.closest('.qty');
+          var target     = focusAction && freshWrap
+            ? freshWrap.querySelector('[data-action="' + focusAction + '"]')
+            : freshInput;
+          if (target) target.focus();
         }
-        /* fallback: fetch count from cart.js */
+
+        /* update count badge from cart.js, which is authoritative */
         var cartRes  = await fetch(Forge.routes.cart + '.js');
         var cartData = await cartRes.json();
         updateCartCount(cartData.item_count);
