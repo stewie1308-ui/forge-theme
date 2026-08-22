@@ -320,15 +320,34 @@ Fix: build a sized `image_url` server-side into the variant JSON, or append `&wi
 
 ## ⚪ Nice to have
 
-### 7. Default copy in rich-text and benefits makes claims
+### 7. Default copy in rich-text and benefits makes claims — DONE 2026-08-22
 `sections/rich-text.liquid` ships default body copy asserting "verified by independent
 laboratories" and "peer-reviewed science", naming Forge products directly;
 `sections/benefits.liquid` defaults a block heading to "Clinically dosed". Both auto-apply
 when a merchant adds the section, so the claims land on their store unedited.
 
 Softer than the review figures (now blanked) because they read as sample prose rather than
-data, and a merchant is more likely to rewrite body copy than a number. Left as your call:
-blank them, or reword to something obviously illustrative.
+data, and a merchant is more likely to rewrite body copy than a number.
+
+Two things this item had missed. The benefits **preset** carried three claims, not one —
+"Clinically dosed", "Third-party tested … independent ISO-accredited laboratory", "Clean
+label" — and `sections/main-product.liquid` defaulted a trust badge to "Free UK delivery over
+£40", a commercial promise that would land on any merchant's product page unedited.
+
+Fixed by separating the two audiences. **Schema defaults and presets no longer assert
+anything**: the benefits heading/text and the product trust badge became placeholders with
+info hints noting that health, testing and research claims are regulated, and the three preset
+blocks ship blank. The rich-text default is now "Tell customers what your brand stands for."
+Because blanking would otherwise have left a row of icon-only cards, `sections/benefits.liquid`
+gained the same blank-safe guard as the testimonials section — blocks with no heading and no
+text are skipped, and the section hides itself when none survive.
+
+**The demo templates keep finished-looking copy** but no longer assert third-party
+verification or peer-reviewed research. They now describe what the theme actually does:
+"Fully disclosed", "Lab reports you can read — each product links its batch certificate of
+analysis", and on the product page "Batch certificate of analysis on every product". Grep for
+"peer-reviewed", "independent laborator", "ISO-accredited" and "Clinically dosed" across
+`sections/` and `templates/` now returns zero.
 
 ### 8. No newsletter signup in the footer
 0 occurrences of `form 'customer'` in `sections/footer.liquid`. Standard for the category,
