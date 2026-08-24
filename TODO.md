@@ -280,11 +280,53 @@ footer with supplement disclaimer and the localization selector.
 
 ## 🟡 Accessibility
 
-### 2. Formal accessibility verification
-Never done, and the README now says so explicitly rather than claiming otherwise:
-- [ ] WCAG 2.1 AA contrast audit across all three presets
-- [ ] Touch-target sizes measured (claim was 24×24px minimum)
-- [ ] Real-device testing on iOS Safari and Chrome for Android
+### 2. Formal accessibility verification — 2 of 3 done 2026-08-22
+- [x] **WCAG 2.1 AA contrast audit across all three presets** — done, 3 failures found and fixed
+- [x] **Touch-target sizes measured** — done, 4 failures found and fixed
+- [ ] **Real-device testing on iOS Safari and Chrome for Android** — still outstanding, and
+      cannot be done from here. Needs actual hardware: touch, pinch-zoom, VoiceOver/TalkBack,
+      iOS Safari's viewport and sticky-element quirks.
+
+#### Contrast
+
+42 checks: 14 colour pairings × 3 presets, computed from `config/settings_data.json` with the
+WCAG relative-luminance formula. Pairings were taken from the CSS, not guessed — e.g.
+`.section-heading__eyebrow` is `--color-accent` and the benefits/testimonials sections carry
+`bg-secondary`, so accent-on-secondary is a real pairing, at `--text-xs`, so it needs 4.5:1
+rather than the large-text 3.0:1.
+
+**Evidence and Practitioner passed everything. Lifestyle failed three**, all marginal but real:
+
+| Pairing | Was | Needed |
+|---|---|---|
+| muted text on secondary bg (`.comment__meta` etc.) | 4.40:1 | 4.5 |
+| accent eyebrow on secondary bg | 4.27:1 | 4.5 |
+| accent on accent-light (`.order-badge--paid`) | 3.91:1 | 4.5 |
+
+Fixed in the Lifestyle preset: `color_foreground_muted` `#71717a` → `#63636b`, and
+`color_accent` (plus `color_button_hover`, which matched it) `#e11d48` → `#be123c` — rose-700,
+a real design-system step rather than an arbitrary hex, chosen for headroom instead of
+scraping past 4.5. All 42 checks now pass; the tightest is 4.85:1.
+
+#### Touch targets
+
+237 interactive elements measured at a 485px viewport across the homepage, collection, cart,
+search and product templates, plus both drawers open. Threshold 24×24 (WCAG 2.2 Target Size
+(Minimum), which is what the README claims). `.sr-only` elements excluded — they are
+screen-reader affordances, not targets.
+
+Four failures, all fixed in `assets/theme.css`:
+
+| Element | Was | Now |
+|---|---|---|
+| `.cart-item__remove` (drawer) | 45×14 | 56×24 |
+| `.cart-table__remove` (cart page) | 46×19 | ≥24 tall |
+| `.cart-item__title` (drawer) | 288×20 | 288×24 |
+| breadcrumb links (every template) | 39×22 | ≥24 tall |
+
+The two remove buttons were the ones that mattered — a 14px-tall control that destroys a cart
+line. Both grew via padding with a compensating negative inline margin, so the hit area
+increased without the text moving; verified visually that the drawer layout is unchanged.
 
 ---
 
@@ -354,12 +396,24 @@ analysis", and on the product page "Batch certificate of analysis on every produ
 and supplement brands lean hard on email. The password page already has a working
 `{% form 'customer' %}` to copy.
 
-### 9. No blog comment form — DONE 2026-08-22
-Built and rendering on the dev store; see the Reference section. Comments were enabled on the
-**News** blog as "Allowed, pending moderation" and a temporary post
-(`test-post-comment-form-verification`) created to exercise it — both still in place, and both
-safe to remove. Still unverified: the `form.posted_successfully?` notice and the paginated
-comment list, which only run after a comment is actually posted.
+### 9. No blog comment form — DONE and fully verified 2026-08-22
+Built and exercised end to end on the dev store. A comment was posted through the storefront
+form, which rendered the moderated notice — "Your comment has been submitted and will be
+published once approved", i.e. the `blog.moderated?` branch — reset the fields, and landed in
+the admin queue as Not approved. After approving it, the article rendered the comment list
+with the heading **"1 comment"**, singular, confirming `blog.comments_with_count` pluralises,
+along with the comment body, author and a real `<time>` date.
+
+Cleaned up afterwards: the **News** blog is back to comments **Disabled**, and the test post
+`test-post-comment-form-verification` is set to **Hidden**. Verified on the storefront — the
+article URL returns 404 and the blog index lists no articles.
+
+**Two artefacts were deliberately not deleted:** the hidden post and the approved test comment
+(from "Test Commenter" / `test@example.com`) still exist in the admin. Neither is reachable
+from the storefront. Deleting Shopify blog content is permanent with no undo, so it was left
+for a human to do:
+- Post: https://admin.shopify.com/store/forge-e8mvi2rk/content/articles/641285652789
+- Comment: https://admin.shopify.com/store/forge-e8mvi2rk/content/comments
 
 ### 10. Theme editor re-render quirks — DONE 2026-08-22
 Promoted to a blocker before fixing, because reviewers work inside the editor.

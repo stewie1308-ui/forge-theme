@@ -482,6 +482,8 @@ h1, h2, h3, h4, h5, h6 {
   list-style: none;
 }
 .breadcrumbs li { display: flex; align-items: center; gap: var(--sp-2); color: var(--color-foreground-muted); }
+/* Measured 39x22 — two pixels short of the 24x24 minimum on every template. */
+.breadcrumbs li a { display: inline-flex; align-items: center; min-height: 24px; }
 .breadcrumbs li a:hover { color: var(--color-accent); text-decoration: underline; }
 .breadcrumbs li:last-child { color: var(--color-foreground); font-weight: var(--font-weight-medium); }
 .breadcrumbs__sep { color: var(--color-foreground-subtle); }
@@ -1575,7 +1577,9 @@ h1, h2, h3, h4, h5, h6 {
 .cart-item__img { width: 100%; height: 100%; object-fit: cover; }
 
 .cart-item__title {
-  display: block;
+  display: flex;
+  align-items: center;
+  min-height: 24px;            /* was 20px tall — see the remove button above */
   font-weight: var(--font-weight-bold);
   font-size: var(--text-sm);
   color: var(--color-foreground);
@@ -1612,7 +1616,14 @@ h1, h2, h3, h4, h5, h6 {
   cursor: pointer;
   text-decoration: underline;
   text-underline-offset: 2px;
-  padding: 0;
+  /* WCAG 2.2 Target Size (Minimum) is 24x24. This measured 45x14 — small for
+     any control, and this one destroys a cart line. The negative inline margin
+     keeps the text optically aligned while the padding grows the hit area. */
+  display: inline-flex;
+  align-items: center;
+  min-height: 24px;
+  padding: 0 0.35rem;
+  margin-left: -0.35rem;
   transition: color 0.15s ease;
 }
 .cart-item__remove:hover { color: var(--color-error, #c0392b); }
@@ -3308,6 +3319,12 @@ details[open] .filter-group__chevron { transform: rotate(180deg); }
   text-decoration: underline;
   text-underline-offset: 2px;
   cursor: pointer;
+  /* Measured 46x19 — same 24x24 minimum as the drawer's remove button. */
+  display: inline-flex;
+  align-items: center;
+  min-height: 24px;
+  padding: 0 0.35rem;
+  margin-left: -0.35rem;
 }
 .cart-table__remove:hover { color: var(--color-error, #c0392b); }
 
