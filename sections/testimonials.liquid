@@ -120,79 +120,79 @@
 
 {% schema %}
 {
-  "name": "Testimonials",
+  "name": "t:sections.testimonials.name",
   "settings": [
     {
       "type": "header",
-      "content": "Heading"
+      "content": "t:sections.testimonials.settings.header__1.content"
     },
     {
       "type": "text",
       "id": "eyebrow",
-      "label": "Eyebrow",
+      "label": "t:sections.testimonials.settings.eyebrow.label",
       "default": "Real results"
     },
     {
       "type": "text",
       "id": "heading",
-      "label": "Heading",
+      "label": "t:sections.testimonials.settings.heading.label",
       "default": "What our customers say"
     },
     {
       "type": "text",
       "id": "subheading",
-      "label": "Subheading"
+      "label": "t:sections.testimonials.settings.subheading.label"
     },
     {
       "type": "header",
-      "content": "Aggregate rating"
+      "content": "t:sections.testimonials.settings.header__2.content"
     },
     {
       "type": "checkbox",
       "id": "show_aggregate",
-      "label": "Show aggregate rating",
+      "label": "t:sections.testimonials.settings.show_aggregate.label",
       "default": true
     },
     {
       "type": "text",
       "id": "aggregate_rating",
-      "label": "Rating",
-      "info": "Your own verified figure. Blank hides the whole aggregate block.",
-      "placeholder": "4.9"
+      "label": "t:sections.testimonials.settings.aggregate_rating.label",
+      "info": "t:sections.testimonials.settings.aggregate_rating.info",
+      "placeholder": "t:sections.testimonials.settings.aggregate_rating.placeholder"
     },
     {
       "type": "text",
       "id": "review_count",
-      "label": "Review count",
-      "info": "Your own verified figure.",
-      "placeholder": "2,400+"
+      "label": "t:sections.testimonials.settings.review_count.label",
+      "info": "t:sections.testimonials.settings.review_count.info",
+      "placeholder": "t:sections.testimonials.settings.review_count.placeholder"
     },
     {
       "type": "header",
-      "content": "Background"
+      "content": "t:sections.testimonials.settings.header__3.content"
     },
     {
       "type": "checkbox",
       "id": "bg_secondary",
-      "label": "Secondary background",
+      "label": "t:sections.testimonials.settings.bg_secondary.label",
       "default": true
     },
     {
       "type": "checkbox",
       "id": "bg_dark",
-      "label": "Dark background",
+      "label": "t:sections.testimonials.settings.bg_dark.label",
       "default": false
     }
   ],
   "blocks": [
     {
       "type": "review",
-      "name": "Review",
+      "name": "t:sections.testimonials.blocks.review.name",
       "settings": [
         {
           "type": "range",
           "id": "rating",
-          "label": "Star rating",
+          "label": "t:sections.testimonials.blocks.review.settings.rating.label",
           "min": 1,
           "max": 5,
           "step": 1,
@@ -201,45 +201,45 @@
         {
           "type": "textarea",
           "id": "quote",
-          "label": "Review text",
-          "info": "A real review from one of your customers. Blank hides this card.",
-          "placeholder": "What the customer said"
+          "label": "t:sections.testimonials.blocks.review.settings.quote.label",
+          "info": "t:sections.testimonials.blocks.review.settings.quote.info",
+          "placeholder": "t:sections.testimonials.blocks.review.settings.quote.placeholder"
         },
         {
           "type": "image_picker",
           "id": "avatar",
-          "label": "Customer photo (optional)"
+          "label": "t:sections.testimonials.blocks.review.settings.avatar.label"
         },
         {
           "type": "text",
           "id": "name",
-          "label": "Customer name",
-          "placeholder": "e.g. James T."
+          "label": "t:sections.testimonials.blocks.review.settings.name.label",
+          "placeholder": "t:sections.testimonials.blocks.review.settings.name.placeholder"
         },
         {
           "type": "text",
           "id": "meta",
-          "label": "Subtitle (e.g. sport, job)",
-          "placeholder": "e.g. Competitive runner"
+          "label": "t:sections.testimonials.blocks.review.settings.meta.label",
+          "placeholder": "t:sections.testimonials.blocks.review.settings.meta.placeholder"
         },
         {
           "type": "checkbox",
           "id": "verified",
-          "label": "Show verified badge",
-          "info": "Only tick this for a review you have actually verified.",
+          "label": "t:sections.testimonials.blocks.review.settings.verified.label",
+          "info": "t:sections.testimonials.blocks.review.settings.verified.info",
           "default": false
         },
         {
           "type": "product",
           "id": "product",
-          "label": "Product reviewed (optional)"
+          "label": "t:sections.testimonials.blocks.review.settings.product.label"
         }
       ]
     }
   ],
   "presets": [
     {
-      "name": "Testimonials",
+      "name": "t:sections.testimonials.presets.name",
       "blocks": [
         {
           "type": "review",

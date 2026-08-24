@@ -488,22 +488,22 @@
 
 {% schema %}
 {
-  "name": "Header",
+  "name": "t:sections.header.name",
   "class": "forge-header-section",
   "settings": [
     {
       "type": "header",
-      "content": "Logo"
+      "content": "t:sections.header.settings.header__1.content"
     },
     {
       "type": "image_picker",
       "id": "logo",
-      "label": "Logo image"
+      "label": "t:sections.header.settings.logo.label"
     },
     {
       "type": "range",
       "id": "logo_max_width",
-      "label": "Logo width",
+      "label": "t:sections.header.settings.logo_max_width.label",
       "min": 60,
       "max": 300,
       "step": 10,
@@ -512,45 +512,45 @@
     },
     {
       "type": "header",
-      "content": "Navigation"
+      "content": "t:sections.header.settings.header__2.content"
     },
     {
       "type": "link_list",
       "id": "menu",
-      "label": "Main menu",
+      "label": "t:sections.header.settings.menu.label",
       "default": "main-menu"
     },
     {
       "type": "checkbox",
       "id": "show_search",
-      "label": "Show search icon",
+      "label": "t:sections.header.settings.show_search.label",
       "default": true
     },
     {
       "type": "header",
-      "content": "Announcement bar"
+      "content": "t:sections.header.settings.header__3.content"
     },
     {
       "type": "checkbox",
       "id": "show_announcement",
-      "label": "Show announcement bar",
+      "label": "t:sections.header.settings.show_announcement.label",
       "default": false
     },
     {
       "type": "text",
       "id": "announcement_text",
-      "label": "Announcement text",
+      "label": "t:sections.header.settings.announcement_text.label",
       "default": "Free UK delivery on orders over £40"
     },
     {
       "type": "url",
       "id": "announcement_link",
-      "label": "Announcement link"
+      "label": "t:sections.header.settings.announcement_link.label"
     },
     {
       "type": "checkbox",
       "id": "announcement_dismissible",
-      "label": "Allow visitors to dismiss",
+      "label": "t:sections.header.settings.announcement_dismissible.label",
       "default": true
     }
   ]

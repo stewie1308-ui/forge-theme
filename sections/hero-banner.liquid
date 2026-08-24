@@ -132,46 +132,46 @@
 
 {% schema %}
 {
-  "name": "Hero banner",
+  "name": "t:sections.hero-banner.name",
   "settings": [
     {
       "type": "header",
-      "content": "Media"
+      "content": "t:sections.hero-banner.settings.header__1.content"
     },
     {
       "type": "image_picker",
       "id": "image",
-      "label": "Background image"
+      "label": "t:sections.hero-banner.settings.image.label"
     },
     {
       "type": "video",
       "id": "video",
-      "label": "Background video",
-      "info": "Hosted on Shopify. Overridden by image if both are set."
+      "label": "t:sections.hero-banner.settings.video.label",
+      "info": "t:sections.hero-banner.settings.video.info"
     },
     {
       "type": "image_picker",
       "id": "video_poster",
-      "label": "Video poster image",
-      "info": "Optional. Falls back to the video's own preview frame."
+      "label": "t:sections.hero-banner.settings.video_poster.label",
+      "info": "t:sections.hero-banner.settings.video_poster.info"
     },
     {
       "type": "checkbox",
       "id": "use_bundled_image",
-      "label": "Use the theme's bundled hero image",
-      "info": "Shown only when no image or video is selected above. Untick for a plain background colour.",
+      "label": "t:sections.hero-banner.settings.use_bundled_image.label",
+      "info": "t:sections.hero-banner.settings.use_bundled_image.info",
       "default": true
     },
     {
       "type": "color",
       "id": "background_color",
-      "label": "Fallback background colour",
+      "label": "t:sections.hero-banner.settings.background_color.label",
       "default": "#0a0a0a"
     },
     {
       "type": "range",
       "id": "overlay_opacity",
-      "label": "Image overlay opacity",
+      "label": "t:sections.hero-banner.settings.overlay_opacity.label",
       "min": 0,
       "max": 80,
       "step": 5,
@@ -180,12 +180,12 @@
     },
     {
       "type": "header",
-      "content": "Layout"
+      "content": "t:sections.hero-banner.settings.header__2.content"
     },
     {
       "type": "range",
       "id": "min_height",
-      "label": "Minimum height",
+      "label": "t:sections.hero-banner.settings.min_height.label",
       "min": 300,
       "max": 900,
       "step": 50,
@@ -195,123 +195,123 @@
     {
       "type": "checkbox",
       "id": "full_height",
-      "label": "Full viewport height",
+      "label": "t:sections.hero-banner.settings.full_height.label",
       "default": false
     },
     {
       "type": "select",
       "id": "content_alignment",
-      "label": "Content alignment",
+      "label": "t:sections.hero-banner.settings.content_alignment.label",
       "options": [
         {
           "value": "left",
-          "label": "Left"
+          "label": "t:sections.hero-banner.settings.content_alignment.options__1.label"
         },
         {
           "value": "center",
-          "label": "Centre"
+          "label": "t:sections.hero-banner.settings.content_alignment.options__2.label"
         },
         {
           "value": "right",
-          "label": "Right"
+          "label": "t:sections.hero-banner.settings.content_alignment.options__3.label"
         }
       ],
       "default": "left"
     },
     {
       "type": "header",
-      "content": "Content"
+      "content": "t:sections.hero-banner.settings.header__3.content"
     },
     {
       "type": "text",
       "id": "eyebrow",
-      "label": "Eyebrow text",
+      "label": "t:sections.hero-banner.settings.eyebrow.label",
       "default": "New formula"
     },
     {
       "type": "textarea",
       "id": "heading",
-      "label": "Heading",
+      "label": "t:sections.hero-banner.settings.heading.label",
       "default": "Built for people who actually train."
     },
     {
       "type": "textarea",
       "id": "subheading",
-      "label": "Subheading",
+      "label": "t:sections.hero-banner.settings.subheading.label",
       "default": "Science-backed supplements formulated for real results — not marketing claims."
     },
     {
       "type": "text",
       "id": "trust_bar",
-      "label": "Trust line (below buttons)",
-      "info": "Your own figures only — left blank so nothing is claimed until you fill it in.",
-      "placeholder": "★★★★★  4.9/5 from 2,400+ reviews"
+      "label": "t:sections.hero-banner.settings.trust_bar.label",
+      "info": "t:sections.hero-banner.settings.trust_bar.info",
+      "placeholder": "t:sections.hero-banner.settings.trust_bar.placeholder"
     },
     {
       "type": "header",
-      "content": "Button 1"
+      "content": "t:sections.hero-banner.settings.header__4.content"
     },
     {
       "type": "text",
       "id": "button_label",
-      "label": "Button label",
+      "label": "t:sections.hero-banner.settings.button_label.label",
       "default": "Shop now"
     },
     {
       "type": "url",
       "id": "button_link",
-      "label": "Button link"
+      "label": "t:sections.hero-banner.settings.button_link.label"
     },
     {
       "type": "select",
       "id": "button_style",
-      "label": "Button style",
+      "label": "t:sections.hero-banner.settings.button_style.label",
       "options": [
         {
           "value": "primary",
-          "label": "Primary (dark)"
+          "label": "t:sections.hero-banner.settings.button_style.options__1.label"
         },
         {
           "value": "secondary",
-          "label": "Secondary (outline)"
+          "label": "t:sections.hero-banner.settings.button_style.options__2.label"
         },
         {
           "value": "accent",
-          "label": "Accent (lime)"
+          "label": "t:sections.hero-banner.settings.button_style.options__3.label"
         }
       ],
       "default": "accent"
     },
     {
       "type": "header",
-      "content": "Button 2 (optional)"
+      "content": "t:sections.hero-banner.settings.header__5.content"
     },
     {
       "type": "text",
       "id": "button_label_2",
-      "label": "Button label"
+      "label": "t:sections.hero-banner.settings.button_label_2.label"
     },
     {
       "type": "url",
       "id": "button_link_2",
-      "label": "Button link"
+      "label": "t:sections.hero-banner.settings.button_link_2.label"
     },
     {
       "type": "select",
       "id": "button_style_2",
-      "label": "Button style",
+      "label": "t:sections.hero-banner.settings.button_style_2.label",
       "options": [
         {
           "value": "primary",
-          "label": "Primary (dark)"
+          "label": "t:sections.hero-banner.settings.button_style_2.options__1.label"
         },
         {
           "value": "secondary",
-          "label": "Secondary (outline)"
+          "label": "t:sections.hero-banner.settings.button_style_2.options__2.label"
         },
         {
           "value": "accent",
-          "label": "Accent (lime)"
+          "label": "t:sections.hero-banner.settings.button_style_2.options__3.label"
         }
       ],
       "default": "secondary"
@@ -319,7 +319,7 @@
   ],
   "presets": [
     {
-      "name": "Hero banner"
+      "name": "t:sections.hero-banner.presets.name"
     }
   ]
 }

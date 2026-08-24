@@ -326,6 +326,7 @@
 
         <!-- Allergen flags -->
         {%- render 'allergen-flags', product: product -%}
+        {%- render 'certifications', product: product -%}
 
         <!-- Product tabs -->
         <div class="product-tabs">
@@ -671,59 +672,65 @@
 
 {% schema %}
 {
-  "name": "Product page",
+  "name": "t:sections.main-product.name",
   "settings": [
     {
       "type": "header",
-      "content": "Supplement data"
+      "content": "t:sections.main-product.settings.header__1.content"
     },
     {
       "type": "checkbox",
       "id": "show_supplement_facts",
-      "label": "Show supplement panel",
-      "info": "Pulls from product metafields — see README for setup. Panel format (UK/EU NRV or US FDA) is set in Theme settings › UK & EU Compliance.",
+      "label": "t:sections.main-product.settings.show_supplement_facts.label",
+      "info": "t:sections.main-product.settings.show_supplement_facts.info",
       "default": true
     },
     {
       "type": "checkbox",
       "id": "show_ingredients_panel",
-      "label": "Show Ingredients panel",
+      "label": "t:sections.main-product.settings.show_ingredients_panel.label",
       "default": true
     },
     {
       "type": "header",
-      "content": "Layout"
+      "content": "t:sections.main-product.settings.header__2.content"
     },
     {
       "type": "checkbox",
       "id": "show_trust_signals",
-      "label": "Show trust signals",
+      "label": "t:sections.main-product.settings.show_trust_signals.label",
       "default": true
     },
     {
       "type": "checkbox",
       "id": "show_sticky_atc",
-      "label": "Show sticky add-to-cart bar",
+      "label": "t:sections.main-product.settings.show_sticky_atc.label",
       "default": true
     }
   ],
   "blocks": [
     {
       "type": "trust_item",
-      "name": "Trust item",
+      "name": "t:sections.main-product.blocks.trust_item.name",
       "limit": 6,
       "settings": [
         {
           "type": "text",
           "id": "text",
-          "label": "Text",
-          "info": "Only promises you actually keep — this renders as a guarantee to the customer.",
-          "placeholder": "e.g. Free delivery over £40"
+          "label": "t:sections.main-product.blocks.trust_item.settings.text.label",
+          "info": "t:sections.main-product.blocks.trust_item.settings.text.info",
+          "placeholder": "t:sections.main-product.blocks.trust_item.settings.text.placeholder"
         }
       ]
     },
-    { "type": "@app" }
+    {
+      "type": "@app"
+    }
   ],
-  "enabled_on": { "templates": ["product"] }
+  "enabled_on": {
+    "templates": [
+      "product"
+    ]
+  }
 }
 {% endschema %}

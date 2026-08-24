@@ -1,15 +1,61 @@
 # Forge Theme — outstanding work
 
-Everything left after the blocker and high-severity passes.
-Verified against the codebase on 2026-08-21; items 2, 4, 5 and 14 fixed on 2026-08-22.
+Verified against the codebase on 2026-08-21; a large pass on 2026-08-22.
 
-**No submission blockers remain as of 2026-08-21.**
+**Not ready to submit.** The theme-check number below has been green throughout and is not a
+readiness signal — 2026-08-22 found a font picker that had never worked, fabricated "Verified"
+reviews shipping in section presets, two keyboard-focus bugs, search silently broken in the
+theme editor, seven accessibility failures and a whole missing category (editor translations).
+The rate of finding serious problems had not dropped by the end of the day. Treat one more full
+pass coming back nearly empty as the actual readiness signal.
 
 Current state: `shopify theme check` passes with **0 errors, 4 warnings**
 (all four are false positives — `RemoteAsset` firing on `<link rel="canonical/prev/next">`
 and on a Shopify-hosted video CDN URL).
 
 ---
+
+## ▶️ Next session — start here (2026-08-23)
+
+### 0. Merge the open PRs first, in order
+Three stacked PRs; later ones are branched on earlier ones, so out-of-order merges will
+conflict. All three are already pushed live to the Forge draft theme.
+
+1. **PR #2** `fix/accessibility-audit` — contrast + touch targets
+2. **PR #3** `perf/image-loading` — based on #2, and now also carries the schema
+   translations commit (`89835da`). Consider splitting that out; it is the largest single
+   change and deserves its own review.
+
+### 1. Things only a human can do — these are the real blockers
+- **Real-device testing.** iOS Safari and Chrome for Android: touch, pinch-zoom, VoiceOver,
+  TalkBack, and iOS Safari's viewport and sticky-element behaviour. The last outstanding third
+  of the accessibility verification; the other two thirds are done and passing.
+- **Run Lighthouse.** It has never been run. Two image-loading fixes were made on 2026-08-22
+  aimed at it *without a baseline* — get the number before and after.
+- **Populate the demo store.** Currently 1 of 10 products has metafields, every product has a
+  single image, no variant images, no collections configured, empty footer menus. Reviewers
+  judge the demo. It also means **both performance fixes are unexercised**: no product has 2+
+  images or a variant image, so neither code path has ever rendered.
+
+### 2. Code work not yet started
+- **Item 3** — schema.org `logo` still uses `settings.share_image` (1200×630 landscape). Needs
+  a dedicated brand-logo setting; omit `logo` entirely when unset rather than substituting the
+  social image. Remember any new schema string now needs a `t:` key *and* an entry in
+  `locales/en.default.schema.json`.
+- **Item 8** — footer newsletter. `{% form 'customer' %}`; the password page has a working one
+  to copy.
+- **Item 4** — collection filtering does a full page reload. The biggest remaining rework, and
+  where the orphaned `.spinner` from the sweep finally gets a purpose.
+
+### 3. Decisions and tidying
+- Additional storefront locales — only `en.default.json` exists.
+- Sweep leftovers: 14 unreferenced locale keys, 14 unused CSS custom properties, 18 unused
+  classes. Note `general.search.view_all` and `products.product.unavailable` may point at
+  genuinely missing features rather than stray strings.
+- `blog.article_metadata_html` — decide: delete it, or restructure the article meta line and
+  accept losing the real `<time datetime>`.
+- The hidden test post and approved test comment are still in the admin. Both invisible to the
+  storefront; deleting them is permanent, so it was left to a human.
 
 ---
 

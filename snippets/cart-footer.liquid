@@ -10,9 +10,15 @@
 {%- endcomment -%}
 
 {%- if cart.item_count > 0 -%}
+  {%- comment -%}
+    Two unrelated facts. Shipping being calculated at checkout is always true, so it
+    is not gated; only the VAT line follows the merchant's VAT toggle. They used to
+    share one string and one switch, so turning VAT off also hid the shipping note.
+  {%- endcomment -%}
   {%- if settings.show_vat_note -%}
-    <p class="cart-drawer__tax-note">{{ 'cart.taxes_and_shipping_policy_at_checkout_html' | t }}</p>
+    <p class="cart-drawer__tax-note">{{ settings.vat_note_text }}</p>
   {%- endif -%}
+  <p class="cart-drawer__tax-note">{{ 'cart.shipping_at_checkout' | t }}</p>
   <div class="cart-drawer__subtotal">
     <span>{{ 'cart.subtotal' | t }}</span>
     <span>{{ cart.total_price | money }}</span>

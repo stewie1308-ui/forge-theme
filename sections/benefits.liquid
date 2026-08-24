@@ -86,48 +86,60 @@
 
 {% schema %}
 {
-  "name": "Benefits",
+  "name": "t:sections.benefits.name",
   "settings": [
     {
       "type": "header",
-      "content": "Heading"
+      "content": "t:sections.benefits.settings.header__1.content"
     },
     {
       "type": "text",
       "id": "eyebrow",
-      "label": "Eyebrow"
+      "label": "t:sections.benefits.settings.eyebrow.label"
     },
     {
       "type": "text",
       "id": "heading",
-      "label": "Heading",
+      "label": "t:sections.benefits.settings.heading.label",
       "default": "Why Forge?"
     },
     {
       "type": "text",
       "id": "subheading",
-      "label": "Subheading"
+      "label": "t:sections.benefits.settings.subheading.label"
     },
     {
       "type": "header",
-      "content": "Layout"
+      "content": "t:sections.benefits.settings.header__2.content"
     },
     {
       "type": "select",
       "id": "style",
-      "label": "Card style",
+      "label": "t:sections.benefits.settings.style.label",
       "options": [
-        { "value": "icon",   "label": "Icon cards" },
-        { "value": "number", "label": "Numbered list" },
-        { "value": "inline", "label": "Inline (no card)" },
-        { "value": "image",  "label": "Image cards" }
+        {
+          "value": "icon",
+          "label": "t:sections.benefits.settings.style.options__1.label"
+        },
+        {
+          "value": "number",
+          "label": "t:sections.benefits.settings.style.options__2.label"
+        },
+        {
+          "value": "inline",
+          "label": "t:sections.benefits.settings.style.options__3.label"
+        },
+        {
+          "value": "image",
+          "label": "t:sections.benefits.settings.style.options__4.label"
+        }
       ],
       "default": "icon"
     },
     {
       "type": "range",
       "id": "columns",
-      "label": "Columns (desktop)",
+      "label": "t:sections.benefits.settings.columns.label",
       "min": 2,
       "max": 4,
       "step": 1,
@@ -135,66 +147,66 @@
     },
     {
       "type": "header",
-      "content": "Background"
+      "content": "t:sections.benefits.settings.header__3.content"
     },
     {
       "type": "checkbox",
       "id": "bg_secondary",
-      "label": "Secondary background",
+      "label": "t:sections.benefits.settings.bg_secondary.label",
       "default": false
     },
     {
       "type": "checkbox",
       "id": "bg_dark",
-      "label": "Dark background",
+      "label": "t:sections.benefits.settings.bg_dark.label",
       "default": false
     }
   ],
   "blocks": [
     {
       "type": "item",
-      "name": "Benefit",
+      "name": "t:sections.benefits.blocks.item.name",
       "settings": [
         {
           "type": "text",
           "id": "icon",
-          "label": "Icon (emoji or SVG)",
-          "info": "Paste an emoji e.g. 🧪 or leave blank for default tick"
+          "label": "t:sections.benefits.blocks.item.settings.icon.label",
+          "info": "t:sections.benefits.blocks.item.settings.icon.info"
         },
         {
           "type": "image_picker",
           "id": "image",
-          "label": "Image (image style only)"
+          "label": "t:sections.benefits.blocks.item.settings.image.label"
         },
         {
           "type": "text",
           "id": "heading",
-          "label": "Heading",
-          "info": "Describe something you can stand behind. Health and testing claims are regulated.",
-          "placeholder": "e.g. Fully disclosed doses"
+          "label": "t:sections.benefits.blocks.item.settings.heading.label",
+          "info": "t:sections.benefits.blocks.item.settings.heading.info",
+          "placeholder": "t:sections.benefits.blocks.item.settings.heading.placeholder"
         },
         {
           "type": "textarea",
           "id": "text",
-          "label": "Text",
-          "placeholder": "One or two lines about this benefit"
+          "label": "t:sections.benefits.blocks.item.settings.text.label",
+          "placeholder": "t:sections.benefits.blocks.item.settings.text.placeholder"
         },
         {
           "type": "text",
           "id": "link_label",
-          "label": "Link label"
+          "label": "t:sections.benefits.blocks.item.settings.link_label.label"
         },
         {
           "type": "url",
           "id": "link_url",
-          "label": "Link URL"
+          "label": "t:sections.benefits.blocks.item.settings.link_url.label"
         }
       ]
     }
   ],
   "presets": [
     {
-      "name": "Benefits",
+      "name": "t:sections.benefits.presets.name",
       "blocks": [
         {
           "type": "item",

@@ -119,12 +119,12 @@
 
 {% schema %}
 {
-  "name": "Search page",
+  "name": "t:sections.main-search.name",
   "settings": [
     {
       "type": "range",
       "id": "results_per_page",
-      "label": "Results per page",
+      "label": "t:sections.main-search.settings.results_per_page.label",
       "min": 8,
       "max": 48,
       "step": 4,
@@ -133,11 +133,20 @@
     {
       "type": "select",
       "id": "search_type",
-      "label": "Search type",
+      "label": "t:sections.main-search.settings.search_type.label",
       "options": [
-        { "value": "product,article,page", "label": "Products, articles & pages" },
-        { "value": "product",              "label": "Products only" },
-        { "value": "product,article",      "label": "Products & articles" }
+        {
+          "value": "product,article,page",
+          "label": "t:sections.main-search.settings.search_type.options__1.label"
+        },
+        {
+          "value": "product",
+          "label": "t:sections.main-search.settings.search_type.options__2.label"
+        },
+        {
+          "value": "product,article",
+          "label": "t:sections.main-search.settings.search_type.options__3.label"
+        }
       ],
       "default": "product,article,page"
     }
