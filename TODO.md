@@ -30,8 +30,18 @@ conflict. All three are already pushed live to the Forge draft theme.
 - **Real-device testing.** iOS Safari and Chrome for Android: touch, pinch-zoom, VoiceOver,
   TalkBack, and iOS Safari's viewport and sticky-element behaviour. The last outstanding third
   of the accessibility verification; the other two thirds are done and passing.
-- **Run Lighthouse.** It has never been run. Two image-loading fixes were made on 2026-08-22
-  aimed at it *without a baseline* — get the number before and after.
+- **Lighthouse — first run 2026-08-24.** Desktop, simulated throttling, Lighthouse 13.4.0,
+  `benchmarkIndex` 3598. Performance **99** (FCP 0.6s, LCP 0.9s, TBT 0ms, CLS 0.022, SI 0.7s,
+  server response 30ms), accessibility **93**, best practices **77**, SEO **83**. Report JSON
+  saved in the user's Downloads as `forge-e8mvi2rk.myshopify.com-20260824T140938.json`.
+  Best practices 77 is noise: both failures, and the `frame-title` accessibility failure,
+  come from the Shopify preview-bar iframe rather than the theme. Ignore that score until
+  the store is public. SEO 83 is a missing meta description — store config, not the theme,
+  since neither the homepage nor `shop.description` is set and `snippets/seo.liquid` emits
+  it correctly — plus one vague link, "LEARN MORE" to `/pages/about`, a theme default worth
+  rewording. Accessibility 93 was three real footer contrast failures; see below.
+  Still outstanding: a mobile run, and any run from off this machine, which needs the
+  storefront password removed.
 - **Populate the demo store.** Currently 1 of 10 products has metafields, every product has a
   single image, no variant images, no collections configured, empty footer menus. Reviewers
   judge the demo. It also means **both performance fixes are unexercised**: no product has 2+
@@ -323,6 +333,27 @@ footer with supplement disclaimer and the localization selector.
 ---
 
 ## 🟡 Accessibility
+
+### 13. Footer text failed contrast — FIXED 2026-08-24
+Found by the first Lighthouse run, not by the 2026-08-22 accessibility audit, which never
+looked at the footer. Three 12px elements on the near-black `#0a0a0a` footer:
+
+| Element | Was | Ratio |
+|---|---|---|
+| `.site-footer__disclaimer` | `rgba(255,255,255,0.35)` = `#606060` | 3.15:1 |
+| `.site-footer__col-title` | `rgba(255,255,255,0.40)` = `#6c6c6c` | 3.77:1 |
+| `.site-footer__legal` | `rgba(255,255,255,0.35)` = `#606060` | 3.15:1 |
+
+All three need 4.5:1 — 12px, and the bold one still does not qualify as large text. Raised
+to `0.55`, which computes to `#919191` and **6.28:1**. That is the value
+`.site-footer__brand-text` was already using two rules above, in the same footer, passing.
+
+0.45 was the arithmetic threshold at 4.48:1 — just short — so 0.55 both clears it and keeps
+the palette consistent. Ratios computed from the sRGB formula and cross-checked against the
+values Lighthouse reported (3.14/3.77 measured vs 3.15/3.77 computed).
+
+Worth re-running Lighthouse after this merges to confirm accessibility moves off 93; the
+only remaining failure in that category should be `frame-title`, which is the preview bar.
 
 ### 2. Formal accessibility verification — 2 of 3 done 2026-08-22
 - [x] **WCAG 2.1 AA contrast audit across all three presets** — done, 3 failures found and fixed
