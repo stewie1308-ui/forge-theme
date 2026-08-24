@@ -1713,7 +1713,7 @@ h1, h2, h3, h4, h5, h6 {
 .site-footer__disclaimer {
   font-size: var(--text-xs);
   line-height: 1.6;
-  color: rgba(255,255,255,0.35);
+  color: rgba(255,255,255,0.55);
   margin-top: 0.75rem;
   padding-top: 0.75rem;
   border-top: 1px solid rgba(255,255,255,0.08);
@@ -1748,7 +1748,7 @@ h1, h2, h3, h4, h5, h6 {
   font-weight: var(--font-weight-bold);
   text-transform: uppercase;
   letter-spacing: 0.12em;
-  color: rgba(255,255,255,0.40);
+  color: rgba(255,255,255,0.55);
   margin-bottom: 1rem;
 }
 
@@ -1772,7 +1772,7 @@ h1, h2, h3, h4, h5, h6 {
 
 .site-footer__legal {
   font-size: var(--text-xs);
-  color: rgba(255,255,255,0.35);
+  color: rgba(255,255,255,0.55);
 }
 
 .site-footer__payments {
