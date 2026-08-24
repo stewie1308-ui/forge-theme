@@ -15,16 +15,17 @@ and on a Shopify-hosted video CDN URL).
 
 ---
 
-## ▶️ Next session — start here (2026-08-23)
+## ▶️ Next session — start here (2026-08-24)
 
-### 0. Merge the open PRs first, in order
-Three stacked PRs; later ones are branched on earlier ones, so out-of-order merges will
-conflict. All three are already pushed live to the Forge draft theme.
+### 0. PRs — all merged
+The stack that sat here is gone. On 2026-08-24 PR #3 was split into three so each PR carried
+one concern, and all four merged bottom-up into `main`: #2 accessibility, #3 image loading,
+#4 schema translations, #5 the Organization logo. Nothing is open.
 
-1. **PR #2** `fix/accessibility-audit` — contrast + touch targets
-2. **PR #3** `perf/image-loading` — based on #2, and now also carries the schema
-   translations commit (`89835da`). Consider splitting that out; it is the largest single
-   change and deserves its own review.
+Note for the next stack: GitHub only auto-retargets a stacked PR when the base branch is
+deleted on merge, and this repo has `delete_branch_on_merge` off — so each base had to be
+repointed to `main` by hand before merging. The five merged branches still exist on the
+remote.
 
 ### 1. Things only a human can do — these are the real blockers
 - **Real-device testing.** iOS Safari and Chrome for Android: touch, pinch-zoom, VoiceOver,
@@ -38,8 +39,6 @@ conflict. All three are already pushed live to the Forge draft theme.
   images or a variant image, so neither code path has ever rendered.
 
 ### 2. Code work not yet started
-- **Item 8** — footer newsletter. `{% form 'customer' %}`; the password page has a working one
-  to copy.
 - **Item 4** — collection filtering does a full page reload. The biggest remaining rework, and
   where the orphaned `.spinner` from the sweep finally gets a purpose.
 
@@ -452,10 +451,36 @@ analysis", and on the product page "Batch certificate of analysis on every produ
 "peer-reviewed", "independent laborator", "ISO-accredited" and "Clinically dosed" across
 `sections/` and `templates/` now returns zero.
 
-### 8. No newsletter signup in the footer
-0 occurrences of `form 'customer'` in `sections/footer.liquid`. Standard for the category,
-and supplement brands lean hard on email. The password page already has a working
-`{% form 'customer' %}` to copy.
+### 8. No newsletter signup in the footer — DONE 2026-08-24
+`sections/footer.liquid` now carries a `{% form 'customer' %}` block between the link columns
+and the localization form, gated behind a `show_newsletter` checkbox with `newsletter_heading`
+and `newsletter_text` alongside it. Subscribers are tagged `newsletter` through a hidden
+`contact[tags]` input, mirroring the `prerelease` tag the password page uses.
+
+Reuses rather than reinvents: the success and error states use the existing
+`.account-form__success` and `.account-form__errors` classes that the password page and the
+account templates already share, so no new state styling was added.
+
+The submit button is `.btn--accent`, not `.btn--primary`. `--color-button` is near-black in
+both presets and the footer background is `--color-foreground`, also near-black, so a primary
+button would have been invisible down there. The accent highlight is the lime already used
+for the hero CTA.
+
+Verified 2026-08-24 on development theme #190576787765: the form posts to
+`/contact#FooterNewsletter`, the hidden tag is `newsletter`, the email input is `type=email`
+and `required` behind an `sr-only` label, and a real click produces the 3px focus ring
+(`#d8f3dc` on a dark-green border) — a programmatic `.focus()` does not, since `:focus` only
+matches while the document itself has focus. Input and button are both 48px tall, clear of
+the 44px touch-target floor the accessibility audit set. No horizontal overflow at 500px,
+744px or 1400px.
+
+Stacking breakpoint is 1024px rather than the footer's usual 640px: at ~744px the copy column
+squeezed to 229px against the form's full 420px, which read as broken.
+
+**Not verified: an actual submission.** Posting the form creates a real customer record on
+the store, so the success state, the error state and the `default_errors` output have never
+rendered. Worth one throwaway submission when someone is willing to delete the customer
+afterwards.
 
 ### 9. No blog comment form — DONE and fully verified 2026-08-22
 Built and exercised end to end on the dev store. A comment was posted through the storefront

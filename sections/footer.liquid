@@ -110,6 +110,54 @@
 
     </div>
 
+    {{- '<!-- Newsletter -->' -}}
+    {%- if section.settings.show_newsletter -%}
+      <div class="site-footer__newsletter">
+        <div class="site-footer__newsletter-intro">
+          {%- if section.settings.newsletter_heading != blank -%}
+            <p class="site-footer__newsletter-heading">{{ section.settings.newsletter_heading }}</p>
+          {%- endif -%}
+          {%- if section.settings.newsletter_text != blank -%}
+            <p class="site-footer__newsletter-text">{{ section.settings.newsletter_text }}</p>
+          {%- endif -%}
+        </div>
+
+        {%- form 'customer', id: 'FooterNewsletter', class: 'site-footer__newsletter-form' -%}
+          {%- if form.posted_successfully? -%}
+            <p class="account-form__success" role="status">
+              {{ 'sections.footer.newsletter_success' | t }}
+            </p>
+          {%- else -%}
+            {%- if form.errors -%}
+              <div class="account-form__errors" role="alert">
+                {{ form.errors | default_errors }}
+              </div>
+            {%- endif -%}
+            <input type="hidden" name="contact[tags]" value="newsletter">
+            <div class="site-footer__newsletter-fields">
+              <label class="sr-only" for="FooterNewsletterEmail">
+                {{ 'sections.footer.newsletter_email_label' | t }}
+              </label>
+              <input
+                id="FooterNewsletterEmail"
+                type="email"
+                name="contact[email]"
+                class="form-input"
+                placeholder="{{ 'sections.footer.newsletter_email_label' | t }}"
+                autocomplete="email"
+                autocorrect="off"
+                autocapitalize="off"
+                required
+              >
+              <button type="submit" class="btn btn--accent">
+                {{ 'sections.footer.newsletter_submit' | t }}
+              </button>
+            </div>
+          {%- endif -%}
+        {%- endform -%}
+      </div>
+    {%- endif -%}
+
     {%- render 'localization-form' -%}
 
     <div class="site-footer__bottom">
@@ -145,6 +193,29 @@
       "id": "brand_description",
       "label": "t:sections.footer.settings.brand_description.label",
       "default": "Science-backed supplements formulated for real results."
+    },
+    {
+      "type": "header",
+      "content": "t:sections.footer.settings.header__newsletter.content"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_newsletter",
+      "label": "t:sections.footer.settings.show_newsletter.label",
+      "info": "t:sections.footer.settings.show_newsletter.info",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "newsletter_heading",
+      "label": "t:sections.footer.settings.newsletter_heading.label",
+      "default": "Join the newsletter"
+    },
+    {
+      "type": "textarea",
+      "id": "newsletter_text",
+      "label": "t:sections.footer.settings.newsletter_text.label",
+      "default": "New formulas, restocks and the occasional training note. Unsubscribe any time."
     },
     {
       "type": "header",

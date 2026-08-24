@@ -314,7 +314,10 @@
     "footer": {
       "copyright": "© {{ year }} {{ shop_name }}",
       "social_links": "Social media links",
-      "payment_methods": "Accepted payment methods"
+      "payment_methods": "Accepted payment methods",
+      "newsletter_email_label": "Email address",
+      "newsletter_submit": "Subscribe",
+      "newsletter_success": "Thanks — you are on the list."
     },
     "testimonials": {
       "rating_html": "<strong>{{ rating }}</strong> out of 5",
