@@ -53,10 +53,16 @@
           "
         >
         {%- if product.images.size > 1 -%}
+          {%- comment -%}
+            No src: loading="lazy" still fetches this for every card in or near the
+            viewport, doubling image requests on a collection page for an effect
+            touch devices can never trigger. theme.js fills src in on first hover,
+            and only where (hover: hover) matches.
+          {%- endcomment -%}
           <img
             class="product-card__img product-card__img--hover"
-            src="{{ product.images[1] | image_url: width: 600 }}"
-            alt="{{ product.images[1].alt | default: product.title | escape }}"
+            data-hover-src="{{ product.images[1] | image_url: width: 600 }}"
+            alt=""
             loading="lazy"
             width="{{ product.images[1].width }}"
             height="{{ product.images[1].height }}"

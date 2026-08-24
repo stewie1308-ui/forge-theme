@@ -2232,6 +2232,11 @@ h1, h2, h3, h4, h5, h6 {
   inset: 0;
   opacity: 0;
 }
+/* Nothing can hover here, so the second image is pure weight — keep it out of
+   layout entirely as well as unfetched (see data-hover-src in product-card). */
+@media (hover: none) {
+  .product-card__img--hover { display: none; }
+}
 .product-card:hover .product-card__img:not(.product-card__img--hover) {
   transform: scale(1.04);
 }

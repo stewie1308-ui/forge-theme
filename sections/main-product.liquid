@@ -148,6 +148,34 @@
           </div>
         {%- endif -%}
 
+        {%- comment -%}
+          variant.featured_image.src in the variant JSON is the raw CDN original —
+          often 2000px+ — and assigning it to .src also leaves the srcset and alt
+          describing the previous image. Build sized URLs here instead, so the swap
+          costs the same as the initial render.
+        {%- endcomment -%}
+        {%- capture variant_images_json -%}
+          {
+          {%- assign first_entry = true -%}
+          {%- for v in product.variants -%}
+            {%- if v.featured_image -%}
+              {%- unless first_entry %},{% endunless -%}
+              {%- assign first_entry = false -%}
+              {%- capture v_srcset -%}
+                {{ v.featured_image | image_url: width: 600 }} 600w, {{ v.featured_image | image_url: width: 900 }} 900w, {{ v.featured_image | image_url: width: 1200 }} 1200w
+              {%- endcapture -%}
+              {{ v.id | json }}: {
+                "src": {{ v.featured_image | image_url: width: 1200 | json }},
+                "srcset": {{ v_srcset | strip | json }},
+                "w": {{ v.featured_image.width }},
+                "h": {{ v.featured_image.height }},
+                "alt": {{ v.featured_image.alt | default: product.title | json }}
+              }
+            {%- endif -%}
+          {%- endfor -%}
+          }
+        {%- endcapture -%}
+
         <!-- Product Form -->
         <form
           id="{{ product_form_id }}"
@@ -156,6 +184,7 @@
           data-atc-form
           data-product-id="{{ product.id }}"
           data-variants="{{ product.variants | json | escape }}"
+          data-variant-images="{{ variant_images_json | strip | escape }}"
           novalidate
         >
           <input type="hidden" name="id" value="{{ current_variant.id }}" data-variant-id>
@@ -509,6 +538,9 @@
     var variantData = [];
     try { variantData = JSON.parse(form.dataset.variants); } catch (e) {}
 
+    var variantImages = {};
+    try { variantImages = JSON.parse(form.dataset.variantImages || '{}'); } catch (e) {}
+
     var variantInput = form.querySelector('[data-variant-id]');
     var stickyVariant = document.querySelector('[data-sticky-variant]');
     var priceEl       = document.querySelector('[data-product-price]');
@@ -566,10 +598,21 @@
           : atcBtn.dataset.soldOutText;
       }
 
-      /* gallery image */
+      /* gallery image — sized URLs from data-variant-images, not the raw CDN
+         original in the variant JSON. Also refreshes srcset, dimensions and alt,
+         which previously kept describing the image being replaced. */
       if (variant.featured_image) {
         var mainImg = document.getElementById('ProductMainImg-' + form.dataset.productId);
-        if (mainImg) mainImg.src = variant.featured_image.src;
+        var vImg    = variantImages[variant.id];
+        if (mainImg && vImg) {
+          mainImg.src    = vImg.src;
+          mainImg.srcset = vImg.srcset;
+          mainImg.width  = vImg.w;
+          mainImg.height = vImg.h;
+          mainImg.alt    = vImg.alt;
+        } else if (mainImg) {
+          mainImg.src = variant.featured_image.src;
+        }
       }
 
       /* URL */
