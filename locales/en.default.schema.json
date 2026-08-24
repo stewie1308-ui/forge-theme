@@ -169,6 +169,19 @@
         "brand_description": {
           "label": "Brand description"
         },
+        "header__newsletter": {
+          "content": "Newsletter"
+        },
+        "show_newsletter": {
+          "label": "Show newsletter signup",
+          "info": "Subscribers are created as customers with the tag `newsletter`."
+        },
+        "newsletter_heading": {
+          "label": "Newsletter heading"
+        },
+        "newsletter_text": {
+          "label": "Newsletter text"
+        },
         "header__1": {
           "content": "Column 1"
         },
