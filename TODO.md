@@ -38,14 +38,12 @@ conflict. All three are already pushed live to the Forge draft theme.
   images or a variant image, so neither code path has ever rendered.
 
 ### 2. Code work not yet started
-- **Item 3** — schema.org `logo` still uses `settings.share_image` (1200×630 landscape). Needs
-  a dedicated brand-logo setting; omit `logo` entirely when unset rather than substituting the
-  social image. Remember any new schema string now needs a `t:` key *and* an entry in
-  `locales/en.default.schema.json`.
 - **Item 8** — footer newsletter. `{% form 'customer' %}`; the password page has a working one
   to copy.
 - **Item 4** — collection filtering does a full page reload. The biggest remaining rework, and
   where the orphaned `.spinner` from the sweep finally gets a purpose.
+
+Any new schema string needs both a `t:` key and an entry in `locales/en.default.schema.json`.
 
 ### 3. Decisions and tidying
 - Additional storefront locales — only `en.default.json` exists.
@@ -378,9 +376,26 @@ increased without the text moving; verified visually that the drawer layout is u
 
 ## 🟢 SEO / structured data polish
 
-### 3. Organization logo uses the social share image
-`snippets/structured_data.liquid:81` uses `settings.share_image` (1200×630 landscape) as the
-schema.org `logo`. Google wants an actual logo. Consider a dedicated setting.
+### 3. Organization logo uses the social share image — DONE 2026-08-24
+`snippets/structured_data.liquid` no longer substitutes `settings.share_image` (1200×630
+landscape) for the schema.org Organization `logo`. A dedicated `brand_logo` image_picker
+setting was added in a new "Brand" group in `config/settings_schema.json`, with its two
+`t:` keys in `locales/en.default.schema.json` and `"brand_logo": ""` added to all three
+presets in `config/settings_data.json`. When it is unset the `logo` property is omitted
+entirely instead of falling back to the social image, so the theme no longer tells Google
+that a 1200×630 share graphic is the brand mark. The setting info line says it is
+structured-data only and points merchants at the Header section for the visible logo.
+
+Verified 2026-08-24 on development theme #190576787765 (pushed there, not to the Forge draft).
+Empty branch: the Organization block parses and omits `logo` entirely. Populated branch: set
+`brand_logo` from Files in the theme editor and the block gained an absolute https CDN URL with
+`width=400` applied, delivering 400×400 — above Google's 112×112 minimum. The theme editor shows
+the new Brand group between Social media and Favicon with both strings resolving, no raw `t:`
+keys. The test image is still set on that dev theme; the next `theme push` overwrites it.
+
+Known limit: `image_url: width: 400` constrains width only, so a very wide logo (say 1000×100)
+would be delivered 400×40, under Google's 112px minimum height. The setting info steers
+merchants to square or near-square rather than the code enforcing it.
 
 ---
 

@@ -885,6 +885,15 @@
         }
       }
     },
+    "brand": {
+      "name": "Brand",
+      "settings": {
+        "brand_logo": {
+          "label": "Brand logo",
+          "info": "Used for search engine structured data only (schema.org Organization); it is not shown on the storefront. Square or near-square, at least 112×112px. Set the visible logo in the Header section."
+        }
+      }
+    },
     "favicon": {
       "name": "Favicon",
       "settings": {

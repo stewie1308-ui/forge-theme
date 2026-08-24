@@ -347,6 +347,17 @@
     ]
   },
   {
+    "name": "t:settings_schema.brand.name",
+    "settings": [
+      {
+        "type": "image_picker",
+        "id": "brand_logo",
+        "label": "t:settings_schema.brand.settings.brand_logo.label",
+        "info": "t:settings_schema.brand.settings.brand_logo.info"
+      }
+    ]
+  },
+  {
     "name": "t:settings_schema.favicon.name",
     "settings": [
       {

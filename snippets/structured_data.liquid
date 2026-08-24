@@ -87,8 +87,8 @@
   "@type": "Organization",
   "name": {{ shop.name | json }},
   "url": {{ request.origin | json }}
-  {%- if settings.share_image -%}
-    ,"logo": {{ settings.share_image | image_url: width: 400 | prepend: 'https:' | json }}
+  {%- if settings.brand_logo != blank -%}
+    ,"logo": {{ settings.brand_logo | image_url: width: 400 | prepend: 'https:' | json }}
   {%- endif -%}
 }
 </script>
